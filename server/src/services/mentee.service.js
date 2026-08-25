@@ -1,4 +1,4 @@
-const { User, Profile, Class, Meeting } = require("../models");
+const { User, Profile, Class, Meeting, Task } = require("../models");
 const { bcrypt } = require("../helpers");
 
 class MenteeService {
@@ -56,6 +56,16 @@ class MenteeService {
             {
               model: Meeting,
               as: "meetings",
+            },
+            {
+              model: User,
+              as: "mentor",
+              attributes: ["id", "name"],
+            },
+            {
+              model: Task,
+              as: "tasks",
+              attributes: ["id", "name"],
             },
           ],
         },

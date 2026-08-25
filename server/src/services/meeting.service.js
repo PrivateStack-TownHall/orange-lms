@@ -175,6 +175,12 @@ class MeetingService {
               as: "mentor",
               attributes: ["id", "name"],
             },
+            {
+              model: User,
+              as: "mentees",
+              attributes: ["id", "name", "email"],
+              through: { attributes: [] },
+            },
           ],
         },
         {
@@ -185,17 +191,25 @@ class MeetingService {
         {
           model: Task,
           as: "tasks",
-          attributes: ["id", "name"],
+          attributes: [
+            "id",
+            "name",
+            "description",
+            "maxScore",
+            "dueDate",
+            "status",
+            "fileUrl",
+          ],
         },
         {
           model: Note,
           as: "notes",
-          attributes: ["id", "name"],
+          attributes: ["id", "name", "description", "fileUrl", "createdAt"],
         },
         {
           model: Material,
           as: "materials",
-          attributes: ["id", "name"],
+          attributes: ["id", "name", "description", "type", "fileUrl", "createdAt"],
         },
       ],
     });
