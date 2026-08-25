@@ -1,4 +1,8 @@
-const { SubmissionCriteriaScore } = require("../models");
+const {
+  SubmissionCriteriaScore,
+  TaskCriteria,
+  AssessmentResult,
+} = require("../models");
 
 class SubmissionCriteriaScoreService {
   static async create(currentUser, data) {
@@ -6,17 +10,51 @@ class SubmissionCriteriaScoreService {
       throw new Error("Permission denied");
     }
 
+    const assessment = await AssessmentResult.findByPk(data.AssessmentResultId);
+
+    if (!assessment) {
+      throw new Error("Assessment result not found");
+    }
+
+    const criteria = await TaskCriteria.findByPk(data.TaskCriteriaId);
+
+    if (!criteria) {
+      throw new Error("Task criteria not found");
+    }
+
     return SubmissionCriteriaScore.create(data);
   }
 
   static async findAllByAssessment(AssessmentResultId) {
     return SubmissionCriteriaScore.findAll({
-      where: { AssessmentResultId },
+      where: {
+        AssessmentResultId,
+      },
+
+      include: [
+        {
+          model: TaskCriteria,
+          as: "criteria",
+        },
+      ],
+
+      order: [["id", "ASC"]],
     });
   }
 
   static async findById(id) {
-    return SubmissionCriteriaScore.findByPk(id);
+    return SubmissionCriteriaScore.findByPk(id, {
+      include: [
+        {
+          model: TaskCriteria,
+          as: "criteria",
+        },
+        {
+          model: AssessmentResult,
+          as: "assessment",
+        },
+      ],
+    });
   }
 
   static async update(id, data, currentUser) {
@@ -30,7 +68,9 @@ class SubmissionCriteriaScoreService {
       throw new Error("Score not found");
     }
 
-    return score.update(data);
+    await score.update(data);
+
+    return this.findById(id);
   }
 
   static async delete(id, currentUser) {
@@ -44,7 +84,9 @@ class SubmissionCriteriaScoreService {
       throw new Error("Score not found");
     }
 
-    return score.destroy();
+    await score.destroy();
+
+    return true;
   }
 }
 

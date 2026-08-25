@@ -61,6 +61,27 @@ class AttendanceController {
       next(error);
     }
   }
+
+  // tambahan new feature
+  static async getById(req, res, next) {
+    try {
+      const attendance = await attendanceService.findById(req.params.id);
+
+      res.status(200).json(attendance);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getSummary(req, res, next) {
+    try {
+      const summary = await attendanceService.getSummary(req.params.meetingId);
+
+      res.status(200).json(summary);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = AttendanceController;

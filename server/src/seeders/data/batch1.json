@@ -1,296 +1,416 @@
 {
   "users": [
     {
-      "name": "Owner",
-      "email": "owner@example.com",
+      "id": 1,
+      "name": "Vincent",
+      "email": "vincent@mail.com",
       "password": "123",
       "role": "Owner",
-      "avatarUrl": "https://picsum.photos/200/100?random=1",
-      "isActive": true
+      "avatarUrl": "https://example.com/avatars/user1.png",
+      "isActive": true,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
     },
     {
-      "name": "Admin 1",
-      "email": "admin1@example.com",
+      "id": 2,
+      "name": "Ncent",
+      "email": "ncent@mail.com",
       "password": "123",
       "role": "Admin",
-      "avatarUrl": "https://picsum.photos/200/100?random=2",
-      "isActive": true
+      "avatarUrl": "https://example.com/avatars/user2.png",
+      "isActive": true,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
     },
     {
-      "name": "Admin 2",
-      "email": "admin2@example.com",
+      "id": 3,
+      "name": "Dina",
+      "email": "dina@mail.com",
       "password": "123",
       "role": "Admin",
-      "avatarUrl": "https://picsum.photos/200/100?random=3",
-      "isActive": true
+      "avatarUrl": "https://example.com/avatars/user3.png",
+      "isActive": true,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
     },
     {
-      "name": "Mentor React",
-      "email": "mentor1@example.com",
+      "id": 4,
+      "name": "Michael",
+      "email": "michael@mail.com",
       "password": "123",
       "role": "Mentor",
-      "avatarUrl": "https://picsum.photos/200/100?random=4",
-      "isActive": true
+      "avatarUrl": "https://example.com/avatars/user4.png",
+      "isActive": true,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
     },
     {
-      "name": "Mentor Backend",
-      "email": "mentor2@example.com",
+      "id": 5,
+      "name": "Jonathan",
+      "email": "jonathan@mail.com",
       "password": "123",
       "role": "Mentor",
-      "avatarUrl": "https://picsum.photos/200/100?random=5",
-      "isActive": true
+      "avatarUrl": "https://example.com/avatars/user5.png",
+      "isActive": true,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
     },
     {
-      "name": "Mentor Database",
-      "email": "mentor3@example.com",
+      "id": 6,
+      "name": "Sarah",
+      "email": "sarah@mail.com",
       "password": "123",
       "role": "Mentor",
-      "avatarUrl": "https://picsum.photos/200/100?random=6",
-      "isActive": true
+      "avatarUrl": "https://example.com/avatars/user6.png",
+      "isActive": true,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
     },
     {
-      "name": "Mentee 1",
-      "email": "mentee1@example.com",
+      "id": 7,
+      "name": "Gilang",
+      "email": "gilang@mail.com",
       "password": "123",
       "role": "Mentee",
-      "avatarUrl": "https://picsum.photos/200/100?random=7",
-      "isActive": true
+      "avatarUrl": "https://example.com/avatars/user7.png",
+      "isActive": true,
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
     },
     {
-      "name": "Mentee 2",
-      "email": "mentee2@example.com",
+      "id": 8,
+      "name": "Hannah",
+      "email": "hannah@mail.com",
       "password": "123",
       "role": "Mentee",
-      "avatarUrl": "https://picsum.photos/200/100?random=8",
-      "isActive": true
+      "avatarUrl": "https://example.com/avatars/user8.png",
+      "isActive": true,
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
     },
     {
-      "name": "Mentee 3",
-      "email": "mentee3@example.com",
+      "id": 9,
+      "name": "Indra",
+      "email": "indra@mail.com",
       "password": "123",
       "role": "Mentee",
-      "avatarUrl": "https://picsum.photos/200/100?random=9",
-      "isActive": true
+      "avatarUrl": "https://example.com/avatars/user9.png",
+      "isActive": true,
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
     },
     {
-      "name": "Mentee 4",
-      "email": "mentee4@example.com",
+      "id": 10,
+      "name": "Jessica",
+      "email": "jessica@mail.com",
       "password": "123",
       "role": "Mentee",
-      "avatarUrl": "https://picsum.photos/200/100?random=10",
-      "isActive": true
+      "avatarUrl": "https://example.com/avatars/user10.png",
+      "isActive": true,
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
     },
     {
-      "name": "Mentee 5",
-      "email": "mentee5@example.com",
+      "id": 11,
+      "name": "Kartika",
+      "email": "kartika@mail.com",
       "password": "123",
       "role": "Mentee",
-      "avatarUrl": "https://picsum.photos/200/100?random=11",
-      "isActive": true
+      "avatarUrl": "https://example.com/avatars/user11.png",
+      "isActive": true,
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
     },
     {
-      "name": "Mentee 6",
-      "email": "mentee6@example.com",
+      "id": 12,
+      "name": "Lukman",
+      "email": "lukman@mail.com",
       "password": "123",
       "role": "Mentee",
-      "avatarUrl": "https://picsum.photos/200/100?random=12",
-      "isActive": true
+      "avatarUrl": "https://example.com/avatars/user12.png",
+      "isActive": true,
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
     },
     {
-      "name": "Mentee 7",
-      "email": "mentee7@example.com",
+      "id": 13,
+      "name": "Michelle",
+      "email": "michelle@mail.com",
       "password": "123",
       "role": "Mentee",
-      "avatarUrl": "https://picsum.photos/200/100?random=13",
-      "isActive": true
+      "avatarUrl": "https://example.com/avatars/user13.png",
+      "isActive": true,
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
     },
     {
-      "name": "Mentee 8",
-      "email": "mentee8@example.com",
+      "id": 14,
+      "name": "Nanda",
+      "email": "nanda@mail.com",
       "password": "123",
       "role": "Mentee",
-      "avatarUrl": "https://picsum.photos/200/100?random=14",
-      "isActive": true
+      "avatarUrl": "https://example.com/avatars/user14.png",
+      "isActive": true,
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
     },
     {
-      "name": "Mentee 9",
-      "email": "mentee9@example.com",
+      "id": 15,
+      "name": "Olivia",
+      "email": "olivia@mail.com",
       "password": "123",
       "role": "Mentee",
-      "avatarUrl": "https://picsum.photos/200/100?random=15",
-      "isActive": true
-    },
-    {
-      "name": "Mentee 10",
-      "email": "mentee10@example.com",
-      "password": "123",
-      "role": "Mentee",
-      "avatarUrl": "https://picsum.photos/200/100?random=16",
-      "isActive": true
+      "avatarUrl": "https://example.com/avatars/user15.png",
+      "isActive": true,
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
     }
   ],
   "profiles": [
     {
+      "id": 1,
       "UserId": 1,
       "age": 35,
+      "gender": "Male",
+      "address": "Jl. Sudirman No. 1",
       "city": "Jakarta",
-      "background": "System Owner",
-      "phoneNumber": "08120000001"
+      "country": "Indonesia",
+      "background": "Pendiri dan pemilik platform bootcamp ini.",
+      "phoneNumber": "081234567001",
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
     },
     {
+      "id": 2,
       "UserId": 2,
       "age": 30,
+      "gender": "Male",
+      "address": "Jl. Gatot Subroto No. 2",
       "city": "Jakarta",
-      "background": "Administrator",
-      "phoneNumber": "08120000002"
+      "country": "Indonesia",
+      "background": "Bertanggung jawab atas operasional platform.",
+      "phoneNumber": "081234567002",
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
     },
     {
+      "id": 3,
       "UserId": 3,
-      "age": 29,
-      "city": "Bandung",
-      "background": "Administrator",
-      "phoneNumber": "08120000003"
-    },
-    {
-      "UserId": 4,
       "age": 28,
+      "gender": "Female",
+      "address": "Jl. Thamrin No. 3",
       "city": "Jakarta",
-      "background": "React Specialist",
-      "phoneNumber": "08120000004"
+      "country": "Indonesia",
+      "background": "Mengelola data kelas dan pengguna.",
+      "phoneNumber": "081234567003",
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
     },
     {
+      "id": 4,
+      "UserId": 4,
+      "age": 32,
+      "gender": "Male",
+      "address": "Jl. Diponegoro No. 4",
+      "city": "Bandung",
+      "country": "Indonesia",
+      "background": "Mentor JavaScript dengan 8 tahun pengalaman frontend dan backend.",
+      "phoneNumber": "081234567004",
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 5,
       "UserId": 5,
-      "age": 31,
-      "city": "Surabaya",
-      "background": "Backend Specialist",
-      "phoneNumber": "08120000005"
+      "age": 34,
+      "gender": "Male",
+      "address": "Jl. Asia Afrika No. 5",
+      "city": "Bandung",
+      "country": "Indonesia",
+      "background": "Mentor Front End, spesialis React dan UI/UX.",
+      "phoneNumber": "081234567005",
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
     },
     {
+      "id": 6,
       "UserId": 6,
-      "age": 33,
-      "city": "Medan",
-      "background": "Database Specialist",
-      "phoneNumber": "08120000006"
+      "age": 31,
+      "gender": "Female",
+      "address": "Jl. Pahlawan No. 6",
+      "city": "Surabaya",
+      "country": "Indonesia",
+      "background": "Mentor Back End, spesialis Node.js dan database.",
+      "phoneNumber": "081234567006",
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
     },
     {
+      "id": 7,
       "UserId": 7,
-      "age": 21,
-      "city": "Jakarta"
+      "age": 22,
+      "gender": "Male",
+      "address": "Jl. Merdeka No. 7",
+      "city": "Jakarta",
+      "country": "Indonesia",
+      "background": "Mahasiswa semester akhir, tertarik dengan web development.",
+      "phoneNumber": "081234567007",
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
     },
     {
+      "id": 8,
       "UserId": 8,
-      "age": 22,
-      "city": "Bandung"
-    },
-    {
-      "UserId": 9,
-      "age": 20,
-      "city": "Surabaya"
-    },
-    {
-      "UserId": 10,
       "age": 24,
-      "city": "Bogor"
+      "gender": "Female",
+      "address": "Jl. Kartini No. 8",
+      "city": "Yogyakarta",
+      "country": "Indonesia",
+      "background": "Fresh graduate jurusan Sistem Informasi.",
+      "phoneNumber": "081234567008",
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
     },
     {
-      "UserId": 11,
-      "age": 19,
-      "city": "Bekasi"
+      "id": 9,
+      "UserId": 9,
+      "age": 26,
+      "gender": "Male",
+      "address": "Jl. Veteran No. 9",
+      "city": "Semarang",
+      "country": "Indonesia",
+      "background": "Career switcher dari bidang akuntansi ke IT.",
+      "phoneNumber": "081234567009",
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
     },
     {
-      "UserId": 12,
+      "id": 10,
+      "UserId": 10,
       "age": 23,
-      "city": "Depok"
+      "gender": "Female",
+      "address": "Jl. Ahmad Yani No. 10",
+      "city": "Malang",
+      "country": "Indonesia",
+      "background": "Mahasiswa aktif yang mengikuti bootcamp paralel dengan kuliah.",
+      "phoneNumber": "081234567010",
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
     },
     {
-      "UserId": 13,
-      "age": 20,
-      "city": "Tangerang"
+      "id": 11,
+      "UserId": 11,
+      "age": 27,
+      "gender": "Female",
+      "address": "Jl. Sutomo No. 11",
+      "city": "Medan",
+      "country": "Indonesia",
+      "background": "Sebelumnya bekerja sebagai admin, ingin pindah karir ke tech.",
+      "phoneNumber": "081234567011",
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
     },
     {
-      "UserId": 14,
-      "age": 22,
-      "city": "Semarang"
-    },
-    {
-      "UserId": 15,
+      "id": 12,
+      "UserId": 12,
       "age": 25,
-      "city": "Yogyakarta"
+      "gender": "Male",
+      "address": "Jl. Imam Bonjol No. 12",
+      "city": "Bali",
+      "country": "Indonesia",
+      "background": "Freelancer desain grafis yang ingin belajar coding.",
+      "phoneNumber": "081234567012",
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
     },
     {
-      "UserId": 16,
+      "id": 13,
+      "UserId": 13,
       "age": 21,
-      "city": "Malang"
+      "gender": "Female",
+      "address": "Jl. Cendrawasih No. 13",
+      "city": "Makassar",
+      "country": "Indonesia",
+      "background": "Mahasiswa jurusan Teknik Informatika.",
+      "phoneNumber": "081234567013",
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
+    },
+    {
+      "id": 14,
+      "UserId": 14,
+      "age": 29,
+      "gender": "Male",
+      "address": "Jl. Diponegoro No. 14",
+      "city": "Palembang",
+      "country": "Indonesia",
+      "background": "Pernah bekerja di bidang marketing, kini fokus belajar backend.",
+      "phoneNumber": "081234567014",
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
+    },
+    {
+      "id": 15,
+      "UserId": 15,
+      "age": 24,
+      "gender": "Female",
+      "address": "Jl. Gajah Mada No. 15",
+      "city": "Denpasar",
+      "country": "Indonesia",
+      "background": "Lulusan desain komunikasi visual yang tertarik pada front end development.",
+      "phoneNumber": "081234567015",
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
     }
   ],
   "classes": [
     {
-      "code": "FSJS-01",
-      "name": "Fullstack JavaScript",
-      "description": "Fullstack learning path",
-      "category": "Fullstack",
+      "id": 1,
+      "code": "JSB-2025-01",
+      "name": "JavaScript Basic",
+      "description": "Kelas dasar untuk mempelajari fundamental bahasa JavaScript, mulai dari variabel, tipe data, fungsi, hingga konsep OOP dan asynchronous programming.",
+      "category": "Programming Fundamentals",
       "MentorId": 4,
-      "createdBy": 2,
-      "level": "Intermediate",
-      "status": "Active"
+      "createdBy": 1,
+      "level": "Beginner",
+      "startDate": "2025-02-01T00:00:00.000Z",
+      "endDate": "2025-04-01T00:00:00.000Z",
+      "status": "Active",
+      "imageUrl": "https://example.com/classes/javascript-basic.png",
+      "createdAt": "2025-01-10T00:00:00.000Z",
+      "updatedAt": "2025-01-10T00:00:00.000Z"
     },
     {
-      "code": "REACT-01",
-      "name": "React Advanced",
-      "description": "Advanced React architecture",
-      "category": "Frontend",
+      "id": 2,
+      "code": "FE-2025-01",
+      "name": "Front End",
+      "description": "Kelas pengembangan front end yang mencakup HTML, CSS, Tailwind, React, dan praktik membangun antarmuka pengguna yang responsif.",
+      "category": "Web Development",
       "MentorId": 5,
-      "createdBy": 2,
-      "level": "Advanced",
-      "status": "Active"
-    },
-    {
-      "code": "DB-01",
-      "name": "Database Engineering",
-      "description": "PostgreSQL and optimization",
-      "category": "Backend",
-      "MentorId": 6,
-      "createdBy": 3,
+      "createdBy": 1,
       "level": "Intermediate",
-      "status": "Active"
-    }
-  ],
-  "meetings": [
-    {
-      "ClassId": 1,
-      "meetingNumber": 1,
-      "name": "JavaScript Fundamentals",
-      "createdBy": 2
+      "startDate": "2025-02-01T00:00:00.000Z",
+      "endDate": "2025-05-01T00:00:00.000Z",
+      "status": "Active",
+      "imageUrl": "https://example.com/classes/front-end.png",
+      "createdAt": "2025-01-10T00:00:00.000Z",
+      "updatedAt": "2025-01-10T00:00:00.000Z"
     },
     {
-      "ClassId": 1,
-      "meetingNumber": 2,
-      "name": "Node.js MVC",
-      "createdBy": 2
-    },
-    {
-      "ClassId": 2,
-      "meetingNumber": 1,
-      "name": "React Hooks",
-      "createdBy": 2
-    },
-    {
-      "ClassId": 2,
-      "meetingNumber": 2,
-      "name": "Redux Toolkit",
-      "createdBy": 2
-    },
-    {
-      "ClassId": 3,
-      "meetingNumber": 1,
-      "name": "PostgreSQL Basics",
-      "createdBy": 3
-    },
-    {
-      "ClassId": 3,
-      "meetingNumber": 2,
-      "name": "Database Relations",
-      "createdBy": 3
+      "id": 3,
+      "code": "BE-2025-01",
+      "name": "Back End",
+      "description": "Kelas pengembangan back end yang membahas Node.js, Express, database relasional dengan Sequelize, autentikasi, dan pembuatan REST API.",
+      "category": "Web Development",
+      "MentorId": 6,
+      "createdBy": 1,
+      "level": "Intermediate",
+      "startDate": "2025-02-01T00:00:00.000Z",
+      "endDate": "2025-05-01T00:00:00.000Z",
+      "status": "Active",
+      "imageUrl": "https://example.com/classes/back-end.png",
+      "createdAt": "2025-01-10T00:00:00.000Z",
+      "updatedAt": "2025-01-10T00:00:00.000Z"
     }
   ]
 }

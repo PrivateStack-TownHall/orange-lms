@@ -5,7 +5,7 @@ import PublicRoute from "../guards/PublicRoute";
 
 import AuthLayout from "@/layouts/AuthLayout";
 
-import Login from "@/pages/auth/login";
+import Login from "@/pages/auth/Login";
 
 const authRoutes = {
   path: "/auth",

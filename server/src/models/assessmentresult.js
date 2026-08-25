@@ -1,4 +1,5 @@
 "use strict";
+
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
@@ -15,6 +16,8 @@ module.exports = (sequelize, DataTypes) => {
 
       AssessmentResult.hasMany(models.SubmissionCriteriaScore, {
         foreignKey: "AssessmentResultId",
+        as: "scores",
+
         onDelete: "CASCADE",
       });
     }
@@ -24,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       TaskSubmissionId: DataTypes.INTEGER,
       gradedBy: DataTypes.INTEGER,
-      finalScore: DataTypes.DECIMAL,
+      finalScore: DataTypes.DECIMAL(5, 2),
       mentorFeedback: DataTypes.TEXT,
       gradedAt: DataTypes.DATE,
     },

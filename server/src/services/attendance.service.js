@@ -1,4 +1,4 @@
-const { Attendance } = require("../models");
+const { Attendance, User, Meeting } = require("../models");
 
 class AttendanceService {
   static async markAttendance(currentUser, data) {
@@ -6,22 +6,78 @@ class AttendanceService {
       throw new Error("Permission denied");
     }
 
+    const existing = await Attendance.findOne({
+      where: {
+        MeetingId: data.MeetingId,
+        UserId: data.UserId,
+      },
+    });
+
+    if (existing) {
+      throw new Error("Attendance already exists for this user");
+    }
+
     return Attendance.create({
       ...data,
-      gradedBy: currentUser.id,
-      gradedAt: new Date(),
+      checkedBy: currentUser.id,
+      checkInAt: new Date(),
     });
   }
 
   static async findAllByMeeting(MeetingId) {
     return Attendance.findAll({
-      where: { MeetingId },
+      where: {
+        MeetingId,
+      },
+
+      include: [
+        {
+          model: User,
+          attributes: ["id", "name", "email"],
+        },
+        {
+          model: User,
+          as: "checker",
+          attributes: ["id", "name"],
+        },
+      ],
+
+      order: [["id", "ASC"]],
     });
   }
 
   static async findByUser(UserId) {
     return Attendance.findAll({
-      where: { UserId },
+      where: {
+        UserId,
+      },
+
+      include: [
+        {
+          model: Meeting,
+        },
+      ],
+
+      order: [["id", "DESC"]],
+    });
+  }
+
+  static async findById(id) {
+    return Attendance.findByPk(id, {
+      include: [
+        {
+          model: User,
+          attributes: ["id", "name", "email"],
+        },
+        {
+          model: User,
+          as: "checker",
+          attributes: ["id", "name"],
+        },
+        {
+          model: Meeting,
+        },
+      ],
     });
   }
 
@@ -36,7 +92,12 @@ class AttendanceService {
       throw new Error("Attendance not found");
     }
 
-    return attendance.update(data);
+    await attendance.update({
+      ...data,
+      checkedBy: currentUser.id,
+    });
+
+    return this.findById(id);
   }
 
   static async delete(id, currentUser) {
@@ -50,7 +111,30 @@ class AttendanceService {
       throw new Error("Attendance not found");
     }
 
-    return attendance.destroy();
+    await attendance.destroy();
+
+    return true;
+  }
+
+  // tambahan new feature
+  static async getSummary(MeetingId) {
+    const attendances = await Attendance.findAll({
+      where: {
+        MeetingId,
+      },
+    });
+
+    return {
+      total: attendances.length,
+
+      present: attendances.filter((x) => x.status === "Present").length,
+
+      late: attendances.filter((x) => x.status === "Late").length,
+
+      absent: attendances.filter((x) => x.status === "Absent").length,
+
+      excused: attendances.filter((x) => x.status === "Excused").length,
+    };
   }
 }
 

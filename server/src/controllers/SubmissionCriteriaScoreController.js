@@ -14,18 +14,6 @@ class SubmissionCriteriaScoreController {
     }
   }
 
-  // static async getBySubmission(req, res, next) {
-  //   try {
-  //     const scores = await submissionCriteriaScoreService.findAllBySubmission(
-  //       req.params.assessmentResultId,
-  //     );
-
-  //     res.status(200).json(scores);
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
-
   static async getByAssessment(req, res, next) {
     try {
       const scores = await submissionCriteriaScoreService.findAllByAssessment(
@@ -33,6 +21,18 @@ class SubmissionCriteriaScoreController {
       );
 
       res.status(200).json(scores);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getById(req, res, next) {
+    try {
+      const score = await submissionCriteriaScoreService.findById(
+        req.params.id,
+      );
+
+      res.status(200).json(score);
     } catch (error) {
       next(error);
     }
@@ -57,7 +57,7 @@ class SubmissionCriteriaScoreController {
       await submissionCriteriaScoreService.delete(req.params.id, req.user);
 
       res.status(200).json({
-        message: "Score deleted",
+        message: "Score deleted successfully",
       });
     } catch (error) {
       next(error);

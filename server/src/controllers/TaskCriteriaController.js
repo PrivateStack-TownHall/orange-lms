@@ -23,6 +23,16 @@ class TaskCriteriaController {
     }
   }
 
+  static async getSummary(req, res, next) {
+    try {
+      const summary = await taskCriteriaService.getSummary(req.params.taskId);
+
+      res.status(200).json(summary);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async getById(req, res, next) {
     try {
       const criteria = await taskCriteriaService.findById(req.params.id);
@@ -52,7 +62,7 @@ class TaskCriteriaController {
       await taskCriteriaService.delete(req.params.id, req.user);
 
       res.status(200).json({
-        message: "Criteria deleted",
+        message: "Criteria deleted successfully",
       });
     } catch (error) {
       next(error);

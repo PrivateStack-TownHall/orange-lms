@@ -23,10 +23,15 @@ class MaterialController {
 
   static async create(req, res, next) {
     try {
+      const payload = {
+        ...req.body,
+        fileUrl: req.file?.path || req.body.fileUrl,
+      };
+
       const material = await materialService.create(
         req.user,
         req.params.meetingId,
-        req.body,
+        payload,
       );
       res.status(201).json(material);
     } catch (err) {
@@ -45,9 +50,14 @@ class MaterialController {
 
   static async update(req, res, next) {
     try {
+      const payload = {
+        ...req.body,
+        fileUrl: req.file?.path || req.body.fileUrl,
+      };
+
       const material = await materialService.update(
         req.params.id,
-        req.body,
+        payload,
         req.user,
       );
       res.json(material);

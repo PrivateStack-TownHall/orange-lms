@@ -1,236 +1,341 @@
 {
-   "attendances": [
+   "notes": [
       {
-         "MeetingId": 1,
-         "UserId": 4,
-         "status": "Present",
-         "checkedBy": 4
-      },
-      {
-         "MeetingId": 1,
-         "UserId": 7,
-         "status": "Present",
-         "checkedBy": 4
-      },
-      {
-         "MeetingId": 1,
-         "UserId": 8,
-         "status": "Present",
-         "checkedBy": 4
-      },
-      {
-         "MeetingId": 3,
-         "UserId": 5,
-         "status": "Present",
-         "checkedBy": 5
-      },
-      {
-         "MeetingId": 3,
-         "UserId": 10,
-         "status": "Present",
-         "checkedBy": 5
-      },
-      {
-         "MeetingId": 5,
-         "UserId": 6,
-         "status": "Present",
-         "checkedBy": 6
-      },
-      {
-         "MeetingId": 5,
-         "UserId": 13,
-         "status": "Present",
-         "checkedBy": 6
-      }
-   ],
-   "taskCriteria": [
-      {
-         "TaskId": 1,
-         "title": "Array Logic",
-         "percentage": 35,
-         "description": "Correct array manipulation",
-         "createdBy": 4
-      },
-      {
-         "TaskId": 1,
-         "title": "Code Efficiency",
-         "percentage": 35,
-         "description": "Efficient implementation",
-         "createdBy": 4
-      },
-      {
-         "TaskId": 1,
-         "title": "Code Readability",
-         "percentage": 30,
-         "description": "Clean readable code",
-         "createdBy": 4
-      },
-      {
-         "TaskId": 3,
-         "title": "UI Consistency",
-         "percentage": 25,
-         "description": "Visual consistency",
-         "createdBy": 5
-      },
-      {
-         "TaskId": 3,
-         "title": "Hooks Usage",
-         "percentage": 35,
-         "description": "Proper hook usage",
-         "createdBy": 5
-      },
-      {
-         "TaskId": 3,
-         "title": "Component Structure",
-         "percentage": 40,
-         "description": "Reusable architecture",
-         "createdBy": 5
-      },
-      {
-         "TaskId": 5,
-         "title": "SQL Accuracy",
-         "percentage": 40,
-         "description": "Correct query logic",
-         "createdBy": 6
-      },
-      {
-         "TaskId": 5,
-         "title": "Optimization",
-         "percentage": 30,
-         "description": "Efficient query",
-         "createdBy": 6
-      },
-      {
-         "TaskId": 5,
-         "title": "Schema Understanding",
-         "percentage": 30,
-         "description": "Database understanding",
-         "createdBy": 6
-      }
-   ],
-   "assessmentResults": [
-      {
-         "TaskSubmissionId": 1,
-         "gradedBy": 4,
-         "finalScore": 88,
-         "mentorFeedback": "Good logic, improve readability"
-      },
-      {
-         "TaskSubmissionId": 2,
-         "gradedBy": 4,
-         "finalScore": 92,
-         "mentorFeedback": "Excellent work"
-      },
-      {
-         "TaskSubmissionId": 3,
-         "gradedBy": 5,
-         "finalScore": 85,
-         "mentorFeedback": "Improve hook structure"
-      },
-      {
-         "TaskSubmissionId": 4,
-         "gradedBy": 6,
-         "finalScore": 90,
-         "mentorFeedback": "Strong database understanding"
-      }
-   ],
-   "submissionCriteriaScores": [
-      {
-         "AssessmentResultId": 1,
-         "TaskCriteriaId": 1,
-         "score": 30,
-         "note": "Good logic"
-      },
-      {
-         "AssessmentResultId": 1,
-         "TaskCriteriaId": 2,
-         "score": 31,
-         "note": "Efficient enough"
-      },
-      {
-         "AssessmentResultId": 1,
-         "TaskCriteriaId": 3,
-         "score": 27,
-         "note": "Can improve naming"
-      },
-      {
-         "AssessmentResultId": 2,
-         "TaskCriteriaId": 1,
-         "score": 33
-      },
-      {
-         "AssessmentResultId": 2,
-         "TaskCriteriaId": 2,
-         "score": 32
-      },
-      {
-         "AssessmentResultId": 2,
-         "TaskCriteriaId": 3,
-         "score": 27
-      },
-      {
-         "AssessmentResultId": 3,
-         "TaskCriteriaId": 4,
-         "score": 21
-      },
-      {
-         "AssessmentResultId": 3,
-         "TaskCriteriaId": 5,
-         "score": 30
-      },
-      {
-         "AssessmentResultId": 3,
-         "TaskCriteriaId": 6,
-         "score": 34
-      },
-      {
-         "AssessmentResultId": 4,
-         "TaskCriteriaId": 7,
-         "score": 36
-      },
-      {
-         "AssessmentResultId": 4,
-         "TaskCriteriaId": 8,
-         "score": 27
-      },
-      {
-         "AssessmentResultId": 4,
-         "TaskCriteriaId": 9,
-         "score": 27
-      }
-   ],
-   "historyClasses": [
-      {
+         "id": 1,
          "ClassId": 1,
-         "UserId": 7,
-         "roleInClass": "Mentee",
-         "status": "Completed",
-         "finalScore": 88,
-         "attendancePercentage": 95
+         "MeetingId": 1,
+         "createdBy": 4,
+         "name": "Catatan: Git dan GitHub",
+         "description": "Ringkasan perintah dasar Git (init, add, commit, push, pull, branch, merge) serta workflow kolaborasi menggunakan GitHub (fork, clone, pull request).",
+         "fileUrl": "https://example.com/notes/jsb-1.pdf",
+         "createdAt": "2025-02-03T21:30:00.000Z",
+         "updatedAt": "2025-02-03T21:30:00.000Z"
       },
       {
+         "id": 2,
          "ClassId": 1,
-         "UserId": 8,
-         "roleInClass": "Mentee",
-         "status": "Completed",
-         "finalScore": 92,
-         "attendancePercentage": 100
+         "MeetingId": 2,
+         "createdBy": 4,
+         "name": "Catatan: Algoritma dan Pseudocode",
+         "description": "Ringkasan konsep algoritma, langkah-langkah penulisan pseudocode, dan contoh penerapannya pada studi kasus sederhana.",
+         "fileUrl": "https://example.com/notes/jsb-2.pdf",
+         "createdAt": "2025-02-05T21:30:00.000Z",
+         "updatedAt": "2025-02-05T21:30:00.000Z"
       },
       {
+         "id": 3,
+         "ClassId": 1,
+         "MeetingId": 3,
+         "createdBy": 4,
+         "name": "Catatan: Variabel, Tipe Data, dan Operator",
+         "description": "Ringkasan jenis-jenis variabel (var, let, const), tipe data primitif di JavaScript, serta penggunaan operator aritmatika, perbandingan, dan logika.",
+         "fileUrl": "https://example.com/notes/jsb-3.pdf",
+         "createdAt": "2025-02-10T21:30:00.000Z",
+         "updatedAt": "2025-02-10T21:30:00.000Z"
+      },
+      {
+         "id": 4,
          "ClassId": 2,
-         "UserId": 10,
-         "roleInClass": "Mentee",
-         "status": "Completed",
-         "finalScore": 85,
-         "attendancePercentage": 90
+         "MeetingId": 9,
+         "createdBy": 5,
+         "name": "Catatan: Pengenalan HTML dan Semantic Tag",
+         "description": "Ringkasan struktur dokumen HTML, elemen semantik (header, nav, main, footer), dan praktik terbaik penulisan markup yang accessible.",
+         "fileUrl": "https://example.com/notes/fe-1.pdf",
+         "createdAt": "2025-02-03T21:30:00.000Z",
+         "updatedAt": "2025-02-03T21:30:00.000Z"
       },
       {
+         "id": 5,
+         "ClassId": 2,
+         "MeetingId": 10,
+         "createdBy": 5,
+         "name": "Catatan: CSS Dasar dan Layout",
+         "description": "Ringkasan box model, selector CSS, serta perbandingan layout menggunakan flexbox dan grid dengan contoh kasus.",
+         "fileUrl": "https://example.com/notes/fe-2.pdf",
+         "createdAt": "2025-02-05T21:30:00.000Z",
+         "updatedAt": "2025-02-05T21:30:00.000Z"
+      },
+      {
+         "id": 6,
+         "ClassId": 2,
+         "MeetingId": 11,
+         "createdBy": 5,
+         "name": "Catatan: Responsive Design dan TailwindCSS",
+         "description": "Ringkasan breakpoint pada responsive design serta daftar utility class TailwindCSS yang sering digunakan dalam membangun layout.",
+         "fileUrl": "https://example.com/notes/fe-3.pdf",
+         "createdAt": "2025-02-10T21:30:00.000Z",
+         "updatedAt": "2025-02-10T21:30:00.000Z"
+      },
+      {
+         "id": 7,
          "ClassId": 3,
-         "UserId": 13,
-         "roleInClass": "Mentee",
-         "status": "Completed",
-         "finalScore": 90,
-         "attendancePercentage": 100
+         "MeetingId": 17,
+         "createdBy": 6,
+         "name": "Catatan: Pengenalan Node.js dan NPM",
+         "description": "Ringkasan arsitektur Node.js, event loop, module system (CommonJS), serta cara mengelola dependency menggunakan NPM.",
+         "fileUrl": "https://example.com/notes/be-1.pdf",
+         "createdAt": "2025-02-03T21:30:00.000Z",
+         "updatedAt": "2025-02-03T21:30:00.000Z"
+      },
+      {
+         "id": 8,
+         "ClassId": 3,
+         "MeetingId": 18,
+         "createdBy": 6,
+         "name": "Catatan: Membangun REST API dengan Express",
+         "description": "Ringkasan setup server Express, struktur routing, middleware, serta praktik penanganan request dan response.",
+         "fileUrl": "https://example.com/notes/be-2.pdf",
+         "createdAt": "2025-02-05T21:30:00.000Z",
+         "updatedAt": "2025-02-05T21:30:00.000Z"
+      },
+      {
+         "id": 9,
+         "ClassId": 3,
+         "MeetingId": 19,
+         "createdBy": 6,
+         "name": "Catatan: Database Relasional dan SQL Dasar",
+         "description": "Ringkasan konsep tabel, relasi (one-to-many, many-to-many), serta perintah SQL dasar seperti SELECT, INSERT, UPDATE, dan JOIN.",
+         "fileUrl": "https://example.com/notes/be-3.pdf",
+         "createdAt": "2025-02-10T21:30:00.000Z",
+         "updatedAt": "2025-02-10T21:30:00.000Z"
+      }
+   ],
+   "tasks": [
+      {
+         "id": 1,
+         "ClassId": 1,
+         "MeetingId": 1,
+         "name": "Membuat Repository dan Pull Request Pertama",
+         "description": "Buat repository baru di GitHub, lakukan beberapa commit, buat branch baru, dan ajukan pull request ke branch utama.",
+         "createdBy": 4,
+         "dueDate": "2025-02-07T23:59:00.000Z",
+         "maxScore": 100,
+         "status": "Published",
+         "fileUrl": "https://example.com/tasks/jsb-1.pdf",
+         "createdAt": "2025-02-03T21:30:00.000Z",
+         "updatedAt": "2025-02-03T21:30:00.000Z"
+      },
+      {
+         "id": 2,
+         "ClassId": 1,
+         "MeetingId": 2,
+         "name": "Menulis Pseudocode untuk 3 Studi Kasus",
+         "description": "Buat pseudocode untuk tiga studi kasus sederhana (misal: cek bilangan prima, mencari nilai terbesar dalam array, dan konversi suhu).",
+         "createdBy": 4,
+         "dueDate": "2025-02-09T23:59:00.000Z",
+         "maxScore": 100,
+         "status": "Published",
+         "fileUrl": "https://example.com/tasks/jsb-2.pdf",
+         "createdAt": "2025-02-05T21:30:00.000Z",
+         "updatedAt": "2025-02-05T21:30:00.000Z"
+      },
+      {
+         "id": 3,
+         "ClassId": 1,
+         "MeetingId": 3,
+         "name": "Latihan Variabel, Tipe Data, dan Operator",
+         "description": "Selesaikan latihan soal terkait deklarasi variabel, konversi tipe data, dan penggunaan operator aritmatika serta logika dalam JavaScript.",
+         "createdBy": 4,
+         "dueDate": "2025-02-14T23:59:00.000Z",
+         "maxScore": 100,
+         "status": "Published",
+         "fileUrl": "https://example.com/tasks/jsb-3.pdf",
+         "createdAt": "2025-02-10T21:30:00.000Z",
+         "updatedAt": "2025-02-10T21:30:00.000Z"
+      },
+      {
+         "id": 4,
+         "ClassId": 2,
+         "MeetingId": 9,
+         "name": "Membangun Halaman Profil dengan HTML Semantik",
+         "description": "Buat halaman profil sederhana menggunakan elemen HTML semantik seperti header, main, section, article, dan footer.",
+         "createdBy": 5,
+         "dueDate": "2025-02-07T23:59:00.000Z",
+         "maxScore": 100,
+         "status": "Published",
+         "fileUrl": "https://example.com/tasks/fe-1.pdf",
+         "createdAt": "2025-02-03T21:30:00.000Z",
+         "updatedAt": "2025-02-03T21:30:00.000Z"
+      },
+      {
+         "id": 5,
+         "ClassId": 2,
+         "MeetingId": 10,
+         "name": "Membuat Layout Landing Page dengan Flexbox dan Grid",
+         "description": "Implementasikan layout landing page (header, hero section, fitur, footer) menggunakan kombinasi flexbox dan grid.",
+         "createdBy": 5,
+         "dueDate": "2025-02-09T23:59:00.000Z",
+         "maxScore": 100,
+         "status": "Published",
+         "fileUrl": "https://example.com/tasks/fe-2.pdf",
+         "createdAt": "2025-02-05T21:30:00.000Z",
+         "updatedAt": "2025-02-05T21:30:00.000Z"
+      },
+      {
+         "id": 6,
+         "ClassId": 2,
+         "MeetingId": 11,
+         "name": "Membuat Halaman Responsive dengan TailwindCSS",
+         "description": "Konversi layout landing page sebelumnya menjadi responsive menggunakan TailwindCSS dengan dukungan tampilan mobile, tablet, dan desktop.",
+         "createdBy": 5,
+         "dueDate": "2025-02-14T23:59:00.000Z",
+         "maxScore": 100,
+         "status": "Published",
+         "fileUrl": "https://example.com/tasks/fe-3.pdf",
+         "createdAt": "2025-02-10T21:30:00.000Z",
+         "updatedAt": "2025-02-10T21:30:00.000Z"
+      },
+      {
+         "id": 7,
+         "ClassId": 3,
+         "MeetingId": 17,
+         "name": "Membuat Script Node.js dan Package Sederhana",
+         "description": "Buat script Node.js sederhana yang membaca file lokal dan mengelola dependency menggunakan package.json serta NPM.",
+         "createdBy": 6,
+         "dueDate": "2025-02-07T23:59:00.000Z",
+         "maxScore": 100,
+         "status": "Published",
+         "fileUrl": "https://example.com/tasks/be-1.pdf",
+         "createdAt": "2025-02-03T21:30:00.000Z",
+         "updatedAt": "2025-02-03T21:30:00.000Z"
+      },
+      {
+         "id": 8,
+         "ClassId": 3,
+         "MeetingId": 18,
+         "name": "Membuat REST API CRUD Sederhana dengan Express",
+         "description": "Bangun REST API CRUD sederhana (misal: data buku atau produk) menggunakan Express dengan routing dan middleware dasar.",
+         "createdBy": 6,
+         "dueDate": "2025-02-09T23:59:00.000Z",
+         "maxScore": 100,
+         "status": "Published",
+         "fileUrl": "https://example.com/tasks/be-2.pdf",
+         "createdAt": "2025-02-05T21:30:00.000Z",
+         "updatedAt": "2025-02-05T21:30:00.000Z"
+      },
+      {
+         "id": 9,
+         "ClassId": 3,
+         "MeetingId": 19,
+         "name": "Merancang Skema Database dan Query SQL",
+         "description": "Rancang skema database relasional untuk studi kasus toko online (minimal 3 tabel dengan relasi) dan tulis beberapa query SQL dasar.",
+         "createdBy": 6,
+         "dueDate": "2025-02-14T23:59:00.000Z",
+         "maxScore": 100,
+         "status": "Published",
+         "fileUrl": "https://example.com/tasks/be-3.pdf",
+         "createdAt": "2025-02-10T21:30:00.000Z",
+         "updatedAt": "2025-02-10T21:30:00.000Z"
+      }
+   ],
+   "materials": [
+      {
+         "id": 1,
+         "ClassId": 1,
+         "MeetingId": 1,
+         "name": "Slide: Git dan GitHub",
+         "description": "Materi presentasi mengenai konsep version control, instalasi Git, perintah dasar, dan workflow kolaborasi di GitHub.",
+         "type": "Slide",
+         "uploadedBy": 4,
+         "fileUrl": "https://example.com/materials/jsb-1.pptx",
+         "createdAt": "2025-02-03T18:00:00.000Z",
+         "updatedAt": "2025-02-03T18:00:00.000Z"
+      },
+      {
+         "id": 2,
+         "ClassId": 1,
+         "MeetingId": 2,
+         "name": "Slide: Algoritma dan Pseudocode",
+         "description": "Materi presentasi mengenai dasar berpikir algoritmik, notasi flowchart, dan contoh penulisan pseudocode.",
+         "type": "Slide",
+         "uploadedBy": 4,
+         "fileUrl": "https://example.com/materials/jsb-2.pptx",
+         "createdAt": "2025-02-05T18:00:00.000Z",
+         "updatedAt": "2025-02-05T18:00:00.000Z"
+      },
+      {
+         "id": 3,
+         "ClassId": 1,
+         "MeetingId": 3,
+         "name": "Slide: Variabel, Tipe Data, dan Operator",
+         "description": "Materi presentasi mengenai deklarasi variabel, tipe data primitif, dan jenis-jenis operator di JavaScript.",
+         "type": "Slide",
+         "uploadedBy": 4,
+         "fileUrl": "https://example.com/materials/jsb-3.pptx",
+         "createdAt": "2025-02-10T18:00:00.000Z",
+         "updatedAt": "2025-02-10T18:00:00.000Z"
+      },
+      {
+         "id": 4,
+         "ClassId": 2,
+         "MeetingId": 9,
+         "name": "Slide: Pengenalan HTML dan Semantic Tag",
+         "description": "Materi presentasi mengenai struktur dasar HTML, elemen semantik, dan praktik terbaik penulisan markup.",
+         "type": "Slide",
+         "uploadedBy": 5,
+         "fileUrl": "https://example.com/materials/fe-1.pptx",
+         "createdAt": "2025-02-03T18:00:00.000Z",
+         "updatedAt": "2025-02-03T18:00:00.000Z"
+      },
+      {
+         "id": 5,
+         "ClassId": 2,
+         "MeetingId": 10,
+         "name": "Slide: CSS Dasar dan Layout",
+         "description": "Materi presentasi mengenai box model, selector CSS, dan perbandingan layout flexbox dengan grid.",
+         "type": "Slide",
+         "uploadedBy": 5,
+         "fileUrl": "https://example.com/materials/fe-2.pptx",
+         "createdAt": "2025-02-05T18:00:00.000Z",
+         "updatedAt": "2025-02-05T18:00:00.000Z"
+      },
+      {
+         "id": 6,
+         "ClassId": 2,
+         "MeetingId": 11,
+         "name": "Slide: Responsive Design dan TailwindCSS",
+         "description": "Materi presentasi mengenai konsep responsive design, media query, dan pengenalan utility-first framework TailwindCSS.",
+         "type": "Slide",
+         "uploadedBy": 5,
+         "fileUrl": "https://example.com/materials/fe-3.pptx",
+         "createdAt": "2025-02-10T18:00:00.000Z",
+         "updatedAt": "2025-02-10T18:00:00.000Z"
+      },
+      {
+         "id": 7,
+         "ClassId": 3,
+         "MeetingId": 17,
+         "name": "Slide: Pengenalan Node.js dan NPM",
+         "description": "Materi presentasi mengenai arsitektur Node.js, event loop, module system, dan pengelolaan package dengan NPM.",
+         "type": "Slide",
+         "uploadedBy": 6,
+         "fileUrl": "https://example.com/materials/be-1.pptx",
+         "createdAt": "2025-02-03T18:00:00.000Z",
+         "updatedAt": "2025-02-03T18:00:00.000Z"
+      },
+      {
+         "id": 8,
+         "ClassId": 3,
+         "MeetingId": 18,
+         "name": "Slide: Membangun REST API dengan Express",
+         "description": "Materi presentasi mengenai setup server Express, routing, middleware, dan penanganan request/response.",
+         "type": "Slide",
+         "uploadedBy": 6,
+         "fileUrl": "https://example.com/materials/be-2.pptx",
+         "createdAt": "2025-02-05T18:00:00.000Z",
+         "updatedAt": "2025-02-05T18:00:00.000Z"
+      },
+      {
+         "id": 9,
+         "ClassId": 3,
+         "MeetingId": 19,
+         "name": "Slide: Database Relasional dan SQL Dasar",
+         "description": "Materi presentasi mengenai konsep tabel, relasi antar tabel, dan perintah SQL dasar.",
+         "type": "Slide",
+         "uploadedBy": 6,
+         "fileUrl": "https://example.com/materials/be-3.pptx",
+         "createdAt": "2025-02-10T18:00:00.000Z",
+         "updatedAt": "2025-02-10T18:00:00.000Z"
       }
    ]
 }

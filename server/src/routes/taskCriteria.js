@@ -1,13 +1,21 @@
 const express = require("express");
+
 const router = express.Router({ mergeParams: true });
 
 const { TaskCriteriaController } = require("../controllers");
+
 const { authorization } = require("../middlewares");
 
 router.get(
-  "/task/:taskId",
+  "/tasks/:taskId",
   authorization("taskCriteria", "read"),
   TaskCriteriaController.getByTask,
+);
+
+router.get(
+  "/tasks/:taskId/summary",
+  authorization("taskCriteria", "read"),
+  TaskCriteriaController.getSummary,
 );
 
 router.post(

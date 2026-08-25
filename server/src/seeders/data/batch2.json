@@ -1,220 +1,522 @@
 {
-   "tasks": [
+   "meetings": [
       {
+         "id": 1,
          "ClassId": 1,
-         "MeetingId": 1,
-         "name": "JavaScript Array Challenge",
-         "description": "Solve array manipulation exercises",
+         "meetingNumber": 1,
+         "name": "Git dan GitHub",
+         "description": "Pengenalan version control, dasar penggunaan Git, dan kolaborasi menggunakan GitHub.",
+         "meetingDate": "2025-02-03T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/jsb-1.png",
          "createdBy": 4,
-         "maxScore": 100,
-         "status": "Published"
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
       },
       {
+         "id": 2,
          "ClassId": 1,
-         "MeetingId": 2,
-         "name": "Build MVC CLI App",
-         "description": "Create CLI app using MVC pattern",
+         "meetingNumber": 2,
+         "name": "Algoritma dan Pseudocode",
+         "description": "Memahami dasar berpikir algoritmik dan menuliskan pseudocode sebelum implementasi.",
+         "meetingDate": "2025-02-05T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/jsb-2.png",
          "createdBy": 4,
-         "maxScore": 100,
-         "status": "Published"
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
       },
       {
+         "id": 3,
+         "ClassId": 1,
+         "meetingNumber": 3,
+         "name": "Variabel, Tipe Data, dan Operator",
+         "description": "Pengenalan variabel, tipe data primitif, serta operator aritmatika, perbandingan, dan logika di JavaScript.",
+         "meetingDate": "2025-02-10T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/jsb-3.png",
+         "createdBy": 4,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
+      },
+      {
+         "id": 4,
+         "ClassId": 1,
+         "meetingNumber": 4,
+         "name": "Percabangan dan Perulangan",
+         "description": "Penggunaan if-else, switch case, serta loop seperti for, while, dan do-while.",
+         "meetingDate": "2025-02-12T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/jsb-4.png",
+         "createdBy": 4,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
+      },
+      {
+         "id": 5,
+         "ClassId": 1,
+         "meetingNumber": 5,
+         "name": "Fungsi dan Scope",
+         "description": "Pendalaman tentang deklarasi fungsi, function expression, arrow function, dan konsep scope di JavaScript.",
+         "meetingDate": "2025-02-17T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/jsb-5.png",
+         "createdBy": 4,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
+      },
+      {
+         "id": 6,
+         "ClassId": 1,
+         "meetingNumber": 6,
+         "name": "Array dan Object",
+         "description": "Manipulasi data menggunakan array dan object, termasuk method bawaan seperti map, filter, dan reduce.",
+         "meetingDate": "2025-02-19T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/jsb-6.png",
+         "createdBy": 4,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
+      },
+      {
+         "id": 7,
+         "ClassId": 1,
+         "meetingNumber": 7,
+         "name": "Asynchronous JavaScript",
+         "description": "Konsep callback, promise, dan async/await untuk menangani operasi asynchronous.",
+         "meetingDate": "2025-02-24T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/jsb-7.png",
+         "createdBy": 4,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
+      },
+      {
+         "id": 8,
+         "ClassId": 1,
+         "meetingNumber": 8,
+         "name": "OOP dan Final Project",
+         "description": "Pengenalan konsep object-oriented programming di JavaScript serta pengarahan final project kelas.",
+         "meetingDate": "2025-02-26T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/jsb-8.png",
+         "createdBy": 4,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
+      },
+      {
+         "id": 9,
          "ClassId": 2,
-         "MeetingId": 3,
-         "name": "React Hooks Dashboard",
-         "description": "Build dashboard with hooks",
+         "meetingNumber": 1,
+         "name": "Pengenalan HTML dan Semantic Tag",
+         "description": "Struktur dasar HTML, elemen semantik, dan praktik terbaik penulisan markup.",
+         "meetingDate": "2025-02-03T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/fe-1.png",
          "createdBy": 5,
-         "maxScore": 100,
-         "status": "Published"
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
       },
       {
+         "id": 10,
          "ClassId": 2,
-         "MeetingId": 4,
-         "name": "Redux Toolkit Todo App",
-         "description": "Create advanced todo app",
+         "meetingNumber": 2,
+         "name": "CSS Dasar dan Layout",
+         "description": "Styling dasar dengan CSS, box model, serta layout menggunakan flexbox dan grid.",
+         "meetingDate": "2025-02-05T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/fe-2.png",
          "createdBy": 5,
-         "maxScore": 100,
-         "status": "Published"
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
       },
       {
-         "ClassId": 3,
-         "MeetingId": 5,
-         "name": "SQL Query Practice",
-         "description": "Write relational SQL queries",
-         "createdBy": 6,
-         "maxScore": 100,
-         "status": "Published"
-      },
-      {
-         "ClassId": 3,
-         "MeetingId": 6,
-         "name": "Database Schema Design",
-         "description": "Design normalized database schema",
-         "createdBy": 6,
-         "maxScore": 100,
-         "status": "Published"
-      }
-   ],
-   "notes": [
-      {
-         "ClassId": 1,
-         "MeetingId": 1,
-         "createdBy": 4,
-         "name": "JS Array Notes",
-         "description": "Important array methods"
-      },
-      {
-         "ClassId": 1,
-         "MeetingId": 2,
-         "createdBy": 4,
-         "name": "MVC Notes",
-         "description": "Controller and Service pattern"
-      },
-      {
+         "id": 11,
          "ClassId": 2,
-         "MeetingId": 3,
+         "meetingNumber": 3,
+         "name": "Responsive Design dan TailwindCSS",
+         "description": "Konsep responsive design dengan media query serta penggunaan utility-first framework TailwindCSS.",
+         "meetingDate": "2025-02-10T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/fe-3.png",
          "createdBy": 5,
-         "name": "Hooks Notes",
-         "description": "useEffect and useMemo"
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
       },
       {
-         "ClassId": 3,
-         "MeetingId": 5,
-         "createdBy": 6,
-         "name": "PostgreSQL Notes",
-         "description": "Database basics"
-      }
-   ],
-   "materials": [
-      {
-         "ClassId": 1,
-         "MeetingId": 1,
-         "name": "Array Slides",
-         "description": "PDF slides",
-         "type": "PDF",
-         "uploadedBy": 4
-      },
-      {
+         "id": 12,
          "ClassId": 2,
-         "MeetingId": 3,
-         "name": "Hooks Cheatsheet",
-         "description": "React hooks summary",
-         "type": "PDF",
-         "uploadedBy": 5
+         "meetingNumber": 4,
+         "name": "DOM Manipulation",
+         "description": "Mengakses dan memanipulasi elemen halaman web menggunakan Document Object Model.",
+         "meetingDate": "2025-02-12T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/fe-4.png",
+         "createdBy": 5,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
       },
       {
+         "id": 13,
+         "ClassId": 2,
+         "meetingNumber": 5,
+         "name": "Pengenalan React dan Component",
+         "description": "Dasar-dasar React, JSX, component, props, dan rendering UI berbasis komponen.",
+         "meetingDate": "2025-02-17T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/fe-5.png",
+         "createdBy": 5,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
+      },
+      {
+         "id": 14,
+         "ClassId": 2,
+         "meetingNumber": 6,
+         "name": "State, Props, dan React Hooks",
+         "description": "Pengelolaan state dengan useState, useEffect, dan hooks lainnya dalam React.",
+         "meetingDate": "2025-02-19T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/fe-6.png",
+         "createdBy": 5,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
+      },
+      {
+         "id": 15,
+         "ClassId": 2,
+         "meetingNumber": 7,
+         "name": "Routing dan Konsumsi API",
+         "description": "Navigasi antar halaman dengan React Router serta pengambilan data dari REST API.",
+         "meetingDate": "2025-02-24T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/fe-7.png",
+         "createdBy": 5,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
+      },
+      {
+         "id": 16,
+         "ClassId": 2,
+         "meetingNumber": 8,
+         "name": "State Management dan Final Project",
+         "description": "Pengenalan state management (Zustand/Redux) serta pengarahan final project Front End.",
+         "meetingDate": "2025-02-26T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/fe-8.png",
+         "createdBy": 5,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
+      },
+      {
+         "id": 17,
          "ClassId": 3,
-         "MeetingId": 5,
-         "name": "SQL Cheatsheet",
-         "description": "Basic SQL reference",
-         "type": "PDF",
-         "uploadedBy": 6
+         "meetingNumber": 1,
+         "name": "Pengenalan Node.js dan NPM",
+         "description": "Dasar-dasar runtime Node.js, module system, dan pengelolaan package dengan NPM.",
+         "meetingDate": "2025-02-03T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/be-1.png",
+         "createdBy": 6,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
+      },
+      {
+         "id": 18,
+         "ClassId": 3,
+         "meetingNumber": 2,
+         "name": "Membangun REST API dengan Express",
+         "description": "Setup server Express, routing, middleware, dan pembuatan endpoint REST API dasar.",
+         "meetingDate": "2025-02-05T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/be-2.png",
+         "createdBy": 6,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
+      },
+      {
+         "id": 19,
+         "ClassId": 3,
+         "meetingNumber": 3,
+         "name": "Database Relasional dan SQL Dasar",
+         "description": "Konsep database relasional, query SQL dasar, dan perancangan skema tabel.",
+         "meetingDate": "2025-02-10T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/be-3.png",
+         "createdBy": 6,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
+      },
+      {
+         "id": 20,
+         "ClassId": 3,
+         "meetingNumber": 4,
+         "name": "ORM dengan Sequelize",
+         "description": "Penggunaan Sequelize untuk migration, model, asosiasi, dan seeding data.",
+         "meetingDate": "2025-02-12T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/be-4.png",
+         "createdBy": 6,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
+      },
+      {
+         "id": 21,
+         "ClassId": 3,
+         "meetingNumber": 5,
+         "name": "Autentikasi dan Otorisasi",
+         "description": "Implementasi autentikasi menggunakan JWT, hashing password, dan role-based authorization.",
+         "meetingDate": "2025-02-17T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/be-5.png",
+         "createdBy": 6,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
+      },
+      {
+         "id": 22,
+         "ClassId": 3,
+         "meetingNumber": 6,
+         "name": "Error Handling dan Validasi",
+         "description": "Penanganan error secara terstruktur dan validasi input menggunakan library seperti Joi atau express-validator.",
+         "meetingDate": "2025-02-19T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/be-6.png",
+         "createdBy": 6,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
+      },
+      {
+         "id": 23,
+         "ClassId": 3,
+         "meetingNumber": 7,
+         "name": "Testing dan Dokumentasi API",
+         "description": "Pengujian API menggunakan Postman/Jest serta pembuatan dokumentasi API yang baik.",
+         "meetingDate": "2025-02-24T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/be-7.png",
+         "createdBy": 6,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
+      },
+      {
+         "id": 24,
+         "ClassId": 3,
+         "meetingNumber": 8,
+         "name": "Deployment dan Final Project",
+         "description": "Deployment aplikasi backend ke server/cloud serta pengarahan final project Back End.",
+         "meetingDate": "2025-02-26T00:00:00.000Z",
+         "startHour": "19:00:00",
+         "finishHour": "21:00:00",
+         "imageUrl": "https://example.com/meetings/be-8.png",
+         "createdBy": 6,
+         "createdAt": "2025-01-15T00:00:00.000Z",
+         "updatedAt": "2025-01-15T00:00:00.000Z"
       }
    ],
    "classUsers": [
       {
+         "id": 1,
          "ClassId": 1,
          "UserId": 4,
          "roleInClass": "Mentor",
-         "status": "Active"
+         "progressPercentage": 100.00,
+         "status": "Active",
+         "assignedBy": 1,
+         "joinedAt": "2025-01-20T00:00:00.000Z",
+         "createdAt": "2025-01-20T00:00:00.000Z",
+         "updatedAt": "2025-01-20T00:00:00.000Z"
       },
       {
+         "id": 2,
          "ClassId": 2,
          "UserId": 5,
          "roleInClass": "Mentor",
-         "status": "Active"
+         "progressPercentage": 100.00,
+         "status": "Active",
+         "assignedBy": 1,
+         "joinedAt": "2025-01-20T00:00:00.000Z",
+         "createdAt": "2025-01-20T00:00:00.000Z",
+         "updatedAt": "2025-01-20T00:00:00.000Z"
       },
       {
+         "id": 3,
          "ClassId": 3,
          "UserId": 6,
          "roleInClass": "Mentor",
-         "status": "Active"
+         "progressPercentage": 100.00,
+         "status": "Active",
+         "assignedBy": 1,
+         "joinedAt": "2025-01-20T00:00:00.000Z",
+         "createdAt": "2025-01-20T00:00:00.000Z",
+         "updatedAt": "2025-01-20T00:00:00.000Z"
       },
       {
+         "id": 4,
          "ClassId": 1,
          "UserId": 7,
          "roleInClass": "Mentee",
-         "status": "Active"
+         "progressPercentage": 75.00,
+         "status": "Active",
+         "assignedBy": 2,
+         "joinedAt": "2025-01-25T00:00:00.000Z",
+         "createdAt": "2025-01-25T00:00:00.000Z",
+         "updatedAt": "2025-01-25T00:00:00.000Z"
       },
       {
+         "id": 5,
          "ClassId": 1,
          "UserId": 8,
          "roleInClass": "Mentee",
-         "status": "Active"
+         "progressPercentage": 62.50,
+         "status": "Active",
+         "assignedBy": 2,
+         "joinedAt": "2025-01-25T00:00:00.000Z",
+         "createdAt": "2025-01-25T00:00:00.000Z",
+         "updatedAt": "2025-01-25T00:00:00.000Z"
       },
       {
+         "id": 6,
          "ClassId": 1,
          "UserId": 9,
          "roleInClass": "Mentee",
-         "status": "Active"
+         "progressPercentage": 50.00,
+         "status": "Active",
+         "assignedBy": 2,
+         "joinedAt": "2025-01-25T00:00:00.000Z",
+         "createdAt": "2025-01-25T00:00:00.000Z",
+         "updatedAt": "2025-01-25T00:00:00.000Z"
       },
       {
+         "id": 7,
+         "ClassId": 1,
+         "UserId": 10,
+         "roleInClass": "Mentee",
+         "progressPercentage": 87.50,
+         "status": "Active",
+         "assignedBy": 2,
+         "joinedAt": "2025-01-25T00:00:00.000Z",
+         "createdAt": "2025-01-25T00:00:00.000Z",
+         "updatedAt": "2025-01-25T00:00:00.000Z"
+      },
+      {
+         "id": 8,
          "ClassId": 2,
          "UserId": 10,
          "roleInClass": "Mentee",
-         "status": "Active"
+         "progressPercentage": 37.50,
+         "status": "Active",
+         "assignedBy": 2,
+         "joinedAt": "2025-01-25T00:00:00.000Z",
+         "createdAt": "2025-01-25T00:00:00.000Z",
+         "updatedAt": "2025-01-25T00:00:00.000Z"
       },
       {
+         "id": 9,
          "ClassId": 2,
          "UserId": 11,
          "roleInClass": "Mentee",
-         "status": "Active"
+         "progressPercentage": 75.00,
+         "status": "Active",
+         "assignedBy": 2,
+         "joinedAt": "2025-01-25T00:00:00.000Z",
+         "createdAt": "2025-01-25T00:00:00.000Z",
+         "updatedAt": "2025-01-25T00:00:00.000Z"
       },
       {
+         "id": 10,
          "ClassId": 2,
          "UserId": 12,
          "roleInClass": "Mentee",
-         "status": "Active"
+         "progressPercentage": 62.50,
+         "status": "Active",
+         "assignedBy": 3,
+         "joinedAt": "2025-01-25T00:00:00.000Z",
+         "createdAt": "2025-01-25T00:00:00.000Z",
+         "updatedAt": "2025-01-25T00:00:00.000Z"
       },
       {
+         "id": 11,
+         "ClassId": 2,
+         "UserId": 15,
+         "roleInClass": "Mentee",
+         "progressPercentage": 100.00,
+         "status": "Active",
+         "assignedBy": 3,
+         "joinedAt": "2025-01-25T00:00:00.000Z",
+         "createdAt": "2025-01-25T00:00:00.000Z",
+         "updatedAt": "2025-01-25T00:00:00.000Z"
+      },
+      {
+         "id": 12,
+         "ClassId": 3,
+         "UserId": 12,
+         "roleInClass": "Mentee",
+         "progressPercentage": 50.00,
+         "status": "Active",
+         "assignedBy": 3,
+         "joinedAt": "2025-01-25T00:00:00.000Z",
+         "createdAt": "2025-01-25T00:00:00.000Z",
+         "updatedAt": "2025-01-25T00:00:00.000Z"
+      },
+      {
+         "id": 13,
          "ClassId": 3,
          "UserId": 13,
          "roleInClass": "Mentee",
-         "status": "Active"
+         "progressPercentage": 87.50,
+         "status": "Active",
+         "assignedBy": 3,
+         "joinedAt": "2025-01-25T00:00:00.000Z",
+         "createdAt": "2025-01-25T00:00:00.000Z",
+         "updatedAt": "2025-01-25T00:00:00.000Z"
       },
       {
+         "id": 14,
          "ClassId": 3,
          "UserId": 14,
          "roleInClass": "Mentee",
-         "status": "Active"
+         "progressPercentage": 62.50,
+         "status": "Active",
+         "assignedBy": 3,
+         "joinedAt": "2025-01-25T00:00:00.000Z",
+         "createdAt": "2025-01-25T00:00:00.000Z",
+         "updatedAt": "2025-01-25T00:00:00.000Z"
       },
       {
+         "id": 15,
          "ClassId": 3,
-         "UserId": 15,
+         "UserId": 9,
          "roleInClass": "Mentee",
-         "status": "Active"
-      },
-      {
-         "ClassId": 3,
-         "UserId": 16,
-         "roleInClass": "Mentee",
-         "status": "Active"
-      }
-   ],
-   "taskSubmissions": [
-      {
-         "TaskId": 1,
-         "UserId": 7,
-         "submissionUrl": "submission-task1-user7.zip",
-         "status": "Submitted"
-      },
-      {
-         "TaskId": 1,
-         "UserId": 8,
-         "submissionUrl": "submission-task1-user8.zip",
-         "status": "Submitted"
-      },
-      {
-         "TaskId": 3,
-         "UserId": 10,
-         "submissionUrl": "submission-task3-user10.zip",
-         "status": "Submitted"
-      },
-      {
-         "TaskId": 5,
-         "UserId": 13,
-         "submissionUrl": "submission-task5-user13.zip",
-         "status": "Submitted"
+         "progressPercentage": 25.00,
+         "status": "Active",
+         "assignedBy": 2,
+         "joinedAt": "2025-01-25T00:00:00.000Z",
+         "createdAt": "2025-01-25T00:00:00.000Z",
+         "updatedAt": "2025-01-25T00:00:00.000Z"
       }
    ]
 }

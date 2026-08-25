@@ -11,6 +11,16 @@ class HistoryClassController {
     }
   }
 
+  static async getSummary(req, res, next) {
+    try {
+      const summary = await historyClassService.getSummary();
+
+      res.status(200).json(summary);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async getById(req, res, next) {
     try {
       const history = await historyClassService.findById(req.params.id);
@@ -49,7 +59,7 @@ class HistoryClassController {
       await historyClassService.delete(req.params.id, req.user);
 
       res.status(200).json({
-        message: "History deleted",
+        message: "History deleted successfully",
       });
     } catch (error) {
       next(error);

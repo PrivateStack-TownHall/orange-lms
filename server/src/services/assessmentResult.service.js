@@ -1,9 +1,24 @@
-const { AssessmentResult } = require("../models");
+const {
+  AssessmentResult,
+  TaskSubmission,
+  SubmissionCriteriaScore,
+  User,
+} = require("../models");
 
 class AssessmentResultService {
   static async create(currentUser, data) {
     if (!["Admin", "Owner", "Mentor"].includes(currentUser.role)) {
       throw new Error("Permission denied");
+    }
+
+    const existing = await AssessmentResult.findOne({
+      where: {
+        TaskSubmissionId: data.TaskSubmissionId,
+      },
+    });
+
+    if (existing) {
+      throw new Error("Assessment result already exists for this submission");
     }
 
     return AssessmentResult.create({
@@ -14,17 +29,56 @@ class AssessmentResultService {
   }
 
   static async findAll() {
-    return AssessmentResult.findAll();
+    return AssessmentResult.findAll({
+      include: [
+        {
+          model: TaskSubmission,
+        },
+        {
+          model: User,
+          as: "grader",
+          attributes: ["id", "name", "email"],
+        },
+      ],
+
+      order: [["id", "DESC"]],
+    });
   }
 
   static async findBySubmission(TaskSubmissionId) {
     return AssessmentResult.findOne({
-      where: { TaskSubmissionId },
+      where: {
+        TaskSubmissionId,
+      },
+
+      include: [
+        {
+          model: SubmissionCriteriaScore,
+          as: "scores",
+        },
+        {
+          model: User,
+          as: "grader",
+          attributes: ["id", "name", "email"],
+        },
+      ],
     });
   }
 
   static async findById(id) {
-    return AssessmentResult.findByPk(id);
+    return AssessmentResult.findByPk(id, {
+      include: [
+        {
+          model: SubmissionCriteriaScore,
+          as: "scores",
+        },
+        {
+          model: User,
+          as: "grader",
+          attributes: ["id", "name", "email"],
+        },
+      ],
+    });
   }
 
   static async update(id, data, currentUser) {
@@ -38,7 +92,9 @@ class AssessmentResultService {
       throw new Error("Assessment result not found");
     }
 
-    return result.update(data);
+    await result.update(data);
+
+    return this.findById(id);
   }
 
   static async delete(id, currentUser) {
@@ -52,7 +108,9 @@ class AssessmentResultService {
       throw new Error("Assessment result not found");
     }
 
-    return result.destroy();
+    await result.destroy();
+
+    return true;
   }
 }
 

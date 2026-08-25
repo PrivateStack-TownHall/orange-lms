@@ -21,6 +21,16 @@ class AssessmentResultController {
     }
   }
 
+  static async getById(req, res, next) {
+    try {
+      const result = await assessmentResultService.findById(req.params.id);
+
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async getBySubmission(req, res, next) {
     try {
       const result = await assessmentResultService.findBySubmission(
@@ -52,7 +62,7 @@ class AssessmentResultController {
       await assessmentResultService.delete(req.params.id, req.user);
 
       res.status(200).json({
-        message: "Assessment deleted",
+        message: "Assessment deleted successfully",
       });
     } catch (error) {
       next(error);

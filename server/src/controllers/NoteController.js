@@ -21,10 +21,15 @@ class NoteController {
 
   static async create(req, res, next) {
     try {
+      const payload = {
+        ...req.body,
+        fileUrl: req.file?.path || req.body.fileUrl,
+      };
+
       const note = await noteService.create(
         req.user,
         req.params.meetingId,
-        req.body,
+        payload,
       );
       res.status(201).json(note);
     } catch (err) {
@@ -43,7 +48,12 @@ class NoteController {
 
   static async update(req, res, next) {
     try {
-      const note = await noteService.update(req.params.id, req.body, req.user);
+      const payload = {
+        ...req.body,
+        fileUrl: req.file?.path || req.body.fileUrl,
+      };
+
+      const note = await noteService.update(req.params.id, payload, req.user);
       res.json(note);
     } catch (err) {
       next(err);

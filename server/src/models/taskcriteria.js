@@ -1,4 +1,5 @@
 "use strict";
+
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
@@ -24,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       TaskId: DataTypes.INTEGER,
       title: DataTypes.STRING,
-      percentage: DataTypes.DECIMAL,
+      percentage: DataTypes.DECIMAL(5, 2),
       description: DataTypes.TEXT,
       createdBy: DataTypes.INTEGER,
     },

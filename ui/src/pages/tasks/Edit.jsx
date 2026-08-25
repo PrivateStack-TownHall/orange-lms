@@ -5,15 +5,26 @@ import Form from "@/components/ui/forms/Form";
 
 import LoadingPage from "@/components/ui/loading/LoadingPage";
 
-import SuccessPopup from "@/components/ui/popup/SuccessPopup";
-import ErrorPopup from "@/components/ui/popup/ErrorPopup";
+import SuccessPopup from "@/components/ui/popup/SuccessPopUp";
+import ErrorPopup from "@/components/ui/popup/ErrorPopUp";
 
 import useForm from "@/hooks/useForm";
 import useClassMeetingOptions from "@/hooks/useClassMeetingOptions";
 
-import { noteSchema } from "@/schemas";
+import { taskSchema } from "@/schemas";
 
-import NoteService from "@/services/modules/note.service";
+import TaskService from "@/services/modules/task.service";
+
+const flattenTask = (task) => ({
+  ClassId: task?.ClassId || task?.Class?.id || "",
+  MeetingId: task?.MeetingId || task?.Meeting?.id || "",
+  name: task?.name || "",
+  description: task?.description || "",
+  dueDate: task?.dueDate?.slice(0, 10) || "",
+  maxScore: task?.maxScore || "",
+  status: task?.status || "",
+  fileUrl: task?.fileUrl || "",
+});
 
 const Edit = () => {
   const { id } = useParams();
@@ -25,28 +36,25 @@ const Edit = () => {
   const [error, setError] = useState("");
 
   const [openSuccess, setOpenSuccess] = useState(false);
-
   const [openError, setOpenError] = useState(false);
 
-  const { values, handleChange, setValues } = useForm(noteSchema);
+  const { values, handleChange, setValues } = useForm(taskSchema);
 
-  const schema = useClassMeetingOptions(values, setValues, noteSchema, true);
+  const schema = useClassMeetingOptions(values, setValues, taskSchema, true);
 
   useEffect(() => {
-    const fetchNote = async () => {
+    const fetchTask = async () => {
       try {
-        setLoading(true);
+        const res = await TaskService.getById(id);
 
-        const res = await NoteService.getById(id);
-
-        setValues(flattenNote(res.data));
+        setValues(flattenTask(res.data));
       } catch (error) {
         console.error(error);
 
         setError(
           error?.response?.data?.message ||
             error?.message ||
-            "Failed to load note",
+            "Failed to load task",
         );
 
         setOpenError(true);
@@ -55,17 +63,18 @@ const Edit = () => {
       }
     };
 
-    fetchNote();
+    fetchTask();
   }, [id, setValues]);
 
-  const handleSubmit = async (payload) => {
+  const handleSubmit = async (formData) => {
     try {
       setLoading(true);
 
-      await NoteService.update(id, {
-        ...payload,
-        ClassId: Number(payload.ClassId),
-        MeetingId: Number(payload.MeetingId),
+      await TaskService.update(id, {
+        ...formData,
+        ClassId: Number(formData.ClassId),
+        MeetingId: Number(formData.MeetingId),
+        maxScore: Number(formData.maxScore),
       });
 
       setOpenSuccess(true);
@@ -75,7 +84,7 @@ const Edit = () => {
       setError(
         error?.response?.data?.message ||
           error?.message ||
-          "Failed to update note",
+          "Failed to update task",
       );
 
       setOpenError(true);
@@ -87,52 +96,40 @@ const Edit = () => {
   const handleSuccessClose = () => {
     setOpenSuccess(false);
 
-    navigate("/notes");
+    navigate("/tasks");
   };
 
   if (loading) {
-    return <LoadingPage title="Loading Note..." />;
+    return <LoadingPage title="Loading Task..." />;
   }
 
   return (
     <>
       <Form
-        title="Edit Note"
-        description="Update note information"
+        title="Edit Task"
+        description="Update task information"
         schema={schema}
         values={values}
         onChange={handleChange}
         onSubmit={handleSubmit}
-        submitLabel="Update Note"
+        submitLabel="Update Task"
       />
 
       <SuccessPopup
         open={openSuccess}
         onClose={handleSuccessClose}
-        title="Note Updated"
-        message="Note has been updated successfully."
+        title="Task Updated"
+        message="Task has been updated successfully."
       />
 
       <ErrorPopup
         open={openError}
         onClose={() => setOpenError(false)}
-        title="Update Note Failed"
+        title="Update Task Failed"
         message={error}
       />
     </>
   );
 };
-
-const flattenNote = (note) => ({
-  ClassId: note?.ClassId || note?.Class?.id || "",
-
-  MeetingId: note?.MeetingId || note?.Meeting?.id || "",
-
-  name: note?.name || "",
-
-  description: note?.description || "",
-
-  fileUrl: note?.fileUrl || "",
-});
 
 export default Edit;

@@ -1,6 +1,6 @@
-import ConfirmPopup from "@/components/ui/popup/ConfirmPopup";
-import ErrorPopup from "@/components/ui/popup/ErrorPopup";
-import SuccessPopup from "@/components/ui/popup/SuccessPopup";
+import ConfirmPopUp from "@/components/ui/popup/ConfirmPopUp";
+import ErrorPopUp from "@/components/ui/popup/ErrorPopUp";
+import SuccessPopUp from "@/components/ui/popup/SuccessPopUp";
 
 import usePopupStore from "@/app/store/popupStore";
 
@@ -17,7 +17,7 @@ const PopupProvider = () => {
 
   return (
     <>
-      <ConfirmPopup
+      <ConfirmPopUp
         open={confirm.open}
         title={confirm.title}
         message={confirm.message}
@@ -33,14 +33,14 @@ const PopupProvider = () => {
         }}
       />
 
-      <ErrorPopup
+      <ErrorPopUp
         open={error.open}
         title={error.title}
         message={error.message}
         onClose={closeError}
       />
 
-      <SuccessPopup
+      <SuccessPopUp
         open={success.open}
         title={success.title}
         message={success.message}

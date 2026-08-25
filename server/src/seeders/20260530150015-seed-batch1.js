@@ -4,8 +4,11 @@ const fs = require("fs");
 const path = require("path");
 const bcrypt = require("bcrypt");
 
-const data = JSON.parse(
+const batch1 = JSON.parse(
   fs.readFileSync(path.join(__dirname, "data", "batch1.json"), "utf-8"),
+);
+const batch2 = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "data", "batch2.json"), "utf-8"),
 );
 
 module.exports = {
@@ -15,7 +18,7 @@ module.exports = {
     /**
      * USERS
      */
-    const users = data.users.map((user) => ({
+    const users = batch1.users.map((user) => ({
       ...user,
       password: bcrypt.hashSync(user.password, 10),
       createdAt: now,
@@ -27,7 +30,7 @@ module.exports = {
     /**
      * PROFILES
      */
-    const profiles = data.profiles.map((profile) => ({
+    const profiles = batch1.profiles.map((profile) => ({
       ...profile,
       createdAt: now,
       updatedAt: now,
@@ -38,7 +41,7 @@ module.exports = {
     /**
      * CLASSES
      */
-    const classes = data.classes.map((cls) => ({
+    const classes = batch1.classes.map((cls) => ({
       ...cls,
       createdAt: now,
       updatedAt: now,
@@ -49,7 +52,7 @@ module.exports = {
     /**
      * MEETINGS
      */
-    const meetings = data.meetings.map((meeting) => ({
+    const meetings = batch2.meetings.map((meeting) => ({
       ...meeting,
       createdAt: now,
       updatedAt: now,

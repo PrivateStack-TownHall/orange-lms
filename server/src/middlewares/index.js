@@ -4,4 +4,6 @@ const authorization = require("./authorization");
 
 const ErrorHandling = require("./ErrorHandling");
 
-module.exports = { authentication, authorization, ErrorHandling };
+const upload = require("./multer");
+
+module.exports = { authentication, authorization, ErrorHandling, upload };

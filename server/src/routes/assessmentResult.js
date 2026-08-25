@@ -1,7 +1,9 @@
 const express = require("express");
+
 const router = express.Router();
 
 const { AssessmentResultController } = require("../controllers");
+
 const { authorization } = require("../middlewares");
 
 router.get(
@@ -10,16 +12,22 @@ router.get(
   AssessmentResultController.getAll,
 );
 
-router.post(
-  "/",
-  authorization("assessmentResult", "create"),
-  AssessmentResultController.create,
+router.get(
+  "/:id",
+  authorization("assessmentResult", "read"),
+  AssessmentResultController.getById,
 );
 
 router.get(
   "/submission/:submissionId",
   authorization("assessmentResult", "read"),
   AssessmentResultController.getBySubmission,
+);
+
+router.post(
+  "/",
+  authorization("assessmentResult", "create"),
+  AssessmentResultController.create,
 );
 
 router.put(

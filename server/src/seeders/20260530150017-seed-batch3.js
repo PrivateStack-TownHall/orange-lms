@@ -3,8 +3,11 @@
 const fs = require("fs");
 const path = require("path");
 
-const data = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "data", "batch3.json"), "utf-8"),
+const batch4 = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "data", "batch4.json"), "utf-8"),
+);
+const batch5 = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "data", "batch5.json"), "utf-8"),
 );
 
 module.exports = {
@@ -14,7 +17,7 @@ module.exports = {
     /**
      * ATTENDANCES
      */
-    const attendances = data.attendances.map((attendance) => ({
+    const attendances = batch5.attendances.map((attendance) => ({
       ...attendance,
       createdAt: now,
       updatedAt: now,
@@ -23,9 +26,9 @@ module.exports = {
     await queryInterface.bulkInsert("Attendances", attendances, {});
 
     /**
-     * TASK CRITERIA
+     * TASK CRITERIAS
      */
-    const taskCriteria = data.taskCriteria.map((criteria) => ({
+    const taskCriteria = batch4.taskCriterias.map((criteria) => ({
       ...criteria,
       createdAt: now,
       updatedAt: now,
@@ -36,7 +39,7 @@ module.exports = {
     /**
      * ASSESSMENT RESULTS
      */
-    const assessmentResults = data.assessmentResults.map((result) => ({
+    const assessmentResults = batch4.assessmentResults.map((result) => ({
       ...result,
       createdAt: now,
       updatedAt: now,
@@ -47,7 +50,7 @@ module.exports = {
     /**
      * SUBMISSION CRITERIA SCORES
      */
-    const submissionCriteriaScores = data.submissionCriteriaScores.map(
+    const submissionCriteriaScores = batch4.submissionCriteriaScores.map(
       (score) => ({
         ...score,
         createdAt: now,
@@ -64,7 +67,7 @@ module.exports = {
     /**
      * HISTORY CLASSES
      */
-    const historyClasses = data.historyClasses.map((history) => ({
+    const historyClasses = batch5.historyClasses.map((history) => ({
       ...history,
       createdAt: now,
       updatedAt: now,

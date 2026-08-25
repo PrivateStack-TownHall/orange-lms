@@ -3,8 +3,14 @@
 const fs = require("fs");
 const path = require("path");
 
-const data = JSON.parse(
+const batch2 = JSON.parse(
   fs.readFileSync(path.join(__dirname, "data", "batch2.json"), "utf-8"),
+);
+const batch3 = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "data", "batch3.json"), "utf-8"),
+);
+const batch4 = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "data", "batch4.json"), "utf-8"),
 );
 
 module.exports = {
@@ -12,42 +18,9 @@ module.exports = {
     const now = new Date();
 
     /**
-     * TASKS
-     */
-    const tasks = data.tasks.map((task) => ({
-      ...task,
-      createdAt: now,
-      updatedAt: now,
-    }));
-
-    await queryInterface.bulkInsert("Tasks", tasks, {});
-
-    /**
-     * NOTES
-     */
-    const notes = data.notes.map((note) => ({
-      ...note,
-      createdAt: now,
-      updatedAt: now,
-    }));
-
-    await queryInterface.bulkInsert("Notes", notes, {});
-
-    /**
-     * MATERIALS
-     */
-    const materials = data.materials.map((material) => ({
-      ...material,
-      createdAt: now,
-      updatedAt: now,
-    }));
-
-    await queryInterface.bulkInsert("Materials", materials, {});
-
-    /**
      * CLASS USERS
      */
-    const classUsers = data.classUsers.map((item) => ({
+    const classUsers = batch2.classUsers.map((item) => ({
       ...item,
       createdAt: now,
       updatedAt: now,
@@ -56,9 +29,42 @@ module.exports = {
     await queryInterface.bulkInsert("ClassUsers", classUsers, {});
 
     /**
+     * NOTES
+     */
+    const notes = batch3.notes.map((note) => ({
+      ...note,
+      createdAt: now,
+      updatedAt: now,
+    }));
+
+    await queryInterface.bulkInsert("Notes", notes, {});
+
+    /**
+     * TASKS
+     */
+    const tasks = batch3.tasks.map((task) => ({
+      ...task,
+      createdAt: now,
+      updatedAt: now,
+    }));
+
+    await queryInterface.bulkInsert("Tasks", tasks, {});
+
+    /**
+     * MATERIALS
+     */
+    const materials = batch3.materials.map((material) => ({
+      ...material,
+      createdAt: now,
+      updatedAt: now,
+    }));
+
+    await queryInterface.bulkInsert("Materials", materials, {});
+
+    /**
      * TASK SUBMISSIONS
      */
-    const taskSubmissions = data.taskSubmissions.map((submission) => ({
+    const taskSubmissions = batch4.taskSubmissions.map((submission) => ({
       ...submission,
       createdAt: now,
       updatedAt: now,
@@ -69,9 +75,9 @@ module.exports = {
 
   async down(queryInterface, Sequelize) {
     await queryInterface.bulkDelete("TaskSubmissions", null, {});
-    await queryInterface.bulkDelete("ClassUsers", null, {});
     await queryInterface.bulkDelete("Materials", null, {});
-    await queryInterface.bulkDelete("Notes", null, {});
     await queryInterface.bulkDelete("Tasks", null, {});
+    await queryInterface.bulkDelete("Notes", null, {});
+    await queryInterface.bulkDelete("ClassUsers", null, {});
   },
 };

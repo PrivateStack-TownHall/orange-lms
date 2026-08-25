@@ -16,7 +16,7 @@ import EmailInput from "../inputs/EmailInput";
 import NumberInput from "../inputs/NumberInput";
 import TextArea from "../inputs/TextArea";
 import Select from "../inputs/Select";
-import Checkbox from "../inputs/Checkbox";
+import Checkbox from "../inputs/CheckBox";
 import RadioButton from "../inputs/RadioButton";
 import DateInput from "../inputs/DateInput";
 import TimeInput from "../inputs/TimeInput";

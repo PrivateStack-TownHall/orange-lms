@@ -10,9 +10,7 @@ import ProfileService from "@/services/modules/profile.service";
 
 const EditProfile = () => {
   const navigate = useNavigate();
-
   const { user } = useSelector((state) => state.auth);
-
   const [loading, setLoading] = useState(false);
 
   const [error, setError] = useState("");

@@ -1,0 +1,166 @@
+{
+  "taskCriterias": [
+    { "id": 1, "TaskId": 1, "title": "Penggunaan Git Workflow", "percentage": 40.00, "description": "Ketepatan penggunaan branch, commit, dan merge sesuai workflow yang diajarkan.", "createdBy": 4, "createdAt": "2025-02-03T21:30:00.000Z", "updatedAt": "2025-02-03T21:30:00.000Z" },
+    { "id": 2, "TaskId": 1, "title": "Kualitas Commit Message", "percentage": 30.00, "description": "Kejelasan dan konsistensi penulisan commit message.", "createdBy": 4, "createdAt": "2025-02-03T21:30:00.000Z", "updatedAt": "2025-02-03T21:30:00.000Z" },
+    { "id": 3, "TaskId": 1, "title": "Kelengkapan Pull Request", "percentage": 30.00, "description": "Kelengkapan deskripsi dan isi pull request yang diajukan.", "createdBy": 4, "createdAt": "2025-02-03T21:30:00.000Z", "updatedAt": "2025-02-03T21:30:00.000Z" },
+
+    { "id": 4, "TaskId": 2, "title": "Logika Algoritma", "percentage": 50.00, "description": "Ketepatan logika algoritma yang dituangkan dalam pseudocode.", "createdBy": 4, "createdAt": "2025-02-05T21:30:00.000Z", "updatedAt": "2025-02-05T21:30:00.000Z" },
+    { "id": 5, "TaskId": 2, "title": "Kelengkapan 3 Studi Kasus", "percentage": 30.00, "description": "Kelengkapan pengerjaan ketiga studi kasus yang diminta.", "createdBy": 4, "createdAt": "2025-02-05T21:30:00.000Z", "updatedAt": "2025-02-05T21:30:00.000Z" },
+    { "id": 6, "TaskId": 2, "title": "Kejelasan Penulisan", "percentage": 20.00, "description": "Kejelasan dan keterbacaan pseudocode yang ditulis.", "createdBy": 4, "createdAt": "2025-02-05T21:30:00.000Z", "updatedAt": "2025-02-05T21:30:00.000Z" },
+
+    { "id": 7, "TaskId": 3, "title": "Ketepatan Output", "percentage": 50.00, "description": "Output program sesuai dengan hasil yang diharapkan.", "createdBy": 4, "createdAt": "2025-02-10T21:30:00.000Z", "updatedAt": "2025-02-10T21:30:00.000Z" },
+    { "id": 8, "TaskId": 3, "title": "Penggunaan Tipe Data yang Sesuai", "percentage": 30.00, "description": "Ketepatan pemilihan tipe data untuk setiap variabel.", "createdBy": 4, "createdAt": "2025-02-10T21:30:00.000Z", "updatedAt": "2025-02-10T21:30:00.000Z" },
+    { "id": 9, "TaskId": 3, "title": "Code Style", "percentage": 20.00, "description": "Kerapian penulisan kode dan konsistensi penamaan variabel.", "createdBy": 4, "createdAt": "2025-02-10T21:30:00.000Z", "updatedAt": "2025-02-10T21:30:00.000Z" },
+
+    { "id": 10, "TaskId": 4, "title": "Penggunaan Tag Semantik", "percentage": 50.00, "description": "Ketepatan penggunaan elemen HTML semantik sesuai konteks.", "createdBy": 5, "createdAt": "2025-02-03T21:30:00.000Z", "updatedAt": "2025-02-03T21:30:00.000Z" },
+    { "id": 11, "TaskId": 4, "title": "Struktur & Aksesibilitas", "percentage": 30.00, "description": "Struktur dokumen yang logis dan mendukung aksesibilitas.", "createdBy": 5, "createdAt": "2025-02-03T21:30:00.000Z", "updatedAt": "2025-02-03T21:30:00.000Z" },
+    { "id": 12, "TaskId": 4, "title": "Kerapian Markup", "percentage": 20.00, "description": "Indentasi dan kerapian penulisan markup HTML.", "createdBy": 5, "createdAt": "2025-02-03T21:30:00.000Z", "updatedAt": "2025-02-03T21:30:00.000Z" },
+
+    { "id": 13, "TaskId": 5, "title": "Kesesuaian Layout dengan Desain", "percentage": 50.00, "description": "Hasil layout sesuai dengan referensi desain yang diberikan.", "createdBy": 5, "createdAt": "2025-02-05T21:30:00.000Z", "updatedAt": "2025-02-05T21:30:00.000Z" },
+    { "id": 14, "TaskId": 5, "title": "Penggunaan Flexbox/Grid", "percentage": 30.00, "description": "Ketepatan penggunaan flexbox dan/atau grid untuk membangun layout.", "createdBy": 5, "createdAt": "2025-02-05T21:30:00.000Z", "updatedAt": "2025-02-05T21:30:00.000Z" },
+    { "id": 15, "TaskId": 5, "title": "Responsivitas Dasar", "percentage": 20.00, "description": "Layout tetap rapi pada ukuran layar yang berbeda secara dasar.", "createdBy": 5, "createdAt": "2025-02-05T21:30:00.000Z", "updatedAt": "2025-02-05T21:30:00.000Z" },
+
+    { "id": 16, "TaskId": 6, "title": "Responsivitas Multi-Device", "percentage": 50.00, "description": "Tampilan responsif pada mobile, tablet, dan desktop.", "createdBy": 5, "createdAt": "2025-02-10T21:30:00.000Z", "updatedAt": "2025-02-10T21:30:00.000Z" },
+    { "id": 17, "TaskId": 6, "title": "Konsistensi Utility Class", "percentage": 30.00, "description": "Penggunaan utility class TailwindCSS yang konsisten dan efisien.", "createdBy": 5, "createdAt": "2025-02-10T21:30:00.000Z", "updatedAt": "2025-02-10T21:30:00.000Z" },
+    { "id": 18, "TaskId": 6, "title": "Estetika UI", "percentage": 20.00, "description": "Tampilan visual menarik dan nyaman digunakan.", "createdBy": 5, "createdAt": "2025-02-10T21:30:00.000Z", "updatedAt": "2025-02-10T21:30:00.000Z" },
+
+    { "id": 19, "TaskId": 7, "title": "Fungsionalitas Script", "percentage": 50.00, "description": "Script berjalan sesuai fungsi yang diharapkan tanpa error.", "createdBy": 6, "createdAt": "2025-02-03T21:30:00.000Z", "updatedAt": "2025-02-03T21:30:00.000Z" },
+    { "id": 20, "TaskId": 7, "title": "Pengelolaan Dependency", "percentage": 30.00, "description": "Pengelolaan package.json dan dependency menggunakan NPM dengan benar.", "createdBy": 6, "createdAt": "2025-02-03T21:30:00.000Z", "updatedAt": "2025-02-03T21:30:00.000Z" },
+    { "id": 21, "TaskId": 7, "title": "Struktur Kode", "percentage": 20.00, "description": "Pengorganisasian file dan struktur kode yang rapi.", "createdBy": 6, "createdAt": "2025-02-03T21:30:00.000Z", "updatedAt": "2025-02-03T21:30:00.000Z" },
+
+    { "id": 22, "TaskId": 8, "title": "Kelengkapan Endpoint CRUD", "percentage": 50.00, "description": "Seluruh endpoint CRUD (create, read, update, delete) berfungsi dengan baik.", "createdBy": 6, "createdAt": "2025-02-05T21:30:00.000Z", "updatedAt": "2025-02-05T21:30:00.000Z" },
+    { "id": 23, "TaskId": 8, "title": "Penggunaan Middleware", "percentage": 30.00, "description": "Implementasi middleware untuk logging, validasi, atau autentikasi dasar.", "createdBy": 6, "createdAt": "2025-02-05T21:30:00.000Z", "updatedAt": "2025-02-05T21:30:00.000Z" },
+    { "id": 24, "TaskId": 8, "title": "Penanganan Error", "percentage": 20.00, "description": "Penanganan error dan response status code yang tepat.", "createdBy": 6, "createdAt": "2025-02-05T21:30:00.000Z", "updatedAt": "2025-02-05T21:30:00.000Z" },
+
+    { "id": 25, "TaskId": 9, "title": "Ketepatan Skema & Relasi", "percentage": 50.00, "description": "Skema database dan relasi antar tabel sesuai studi kasus.", "createdBy": 6, "createdAt": "2025-02-10T21:30:00.000Z", "updatedAt": "2025-02-10T21:30:00.000Z" },
+    { "id": 26, "TaskId": 9, "title": "Kebenaran Query SQL", "percentage": 30.00, "description": "Query SQL yang ditulis menghasilkan output yang benar.", "createdBy": 6, "createdAt": "2025-02-10T21:30:00.000Z", "updatedAt": "2025-02-10T21:30:00.000Z" },
+    { "id": 27, "TaskId": 9, "title": "Normalisasi Database", "percentage": 20.00, "description": "Skema database mengikuti prinsip normalisasi yang baik.", "createdBy": 6, "createdAt": "2025-02-10T21:30:00.000Z", "updatedAt": "2025-02-10T21:30:00.000Z" }
+  ],
+
+  "taskSubmissions": [
+    { "id": 1, "TaskId": 1, "UserId": 7, "submissionUrl": "https://github.com/gilang/jsb-task1", "submissionFileUrl": null, "submittedNote": "Sudah saya buat repo dan PR sesuai instruksi.", "feedback": "Workflow Git sudah benar, commit message bisa lebih deskriptif.", "score": 88, "status": "Reviewed", "submittedAt": "2025-02-06T20:00:00.000Z", "reviewedAt": "2025-02-07T10:00:00.000Z", "createdAt": "2025-02-06T20:00:00.000Z", "updatedAt": "2025-02-07T10:00:00.000Z" },
+    { "id": 2, "TaskId": 1, "UserId": 8, "submissionUrl": "https://github.com/hannah/jsb-task1", "submissionFileUrl": null, "submittedNote": "Repository dan pull request sudah selesai.", "feedback": "Bagus, tapi PR belum ada deskripsi.", "score": 80, "status": "Reviewed", "submittedAt": "2025-02-07T19:00:00.000Z", "reviewedAt": "2025-02-08T09:00:00.000Z", "createdAt": "2025-02-07T19:00:00.000Z", "updatedAt": "2025-02-08T09:00:00.000Z" },
+    { "id": 3, "TaskId": 1, "UserId": 9, "submissionUrl": "https://github.com/indra/jsb-task1", "submissionFileUrl": null, "submittedNote": "Mohon direview, masih belajar branching.", "feedback": null, "score": null, "status": "Submitted", "submittedAt": "2025-02-07T22:00:00.000Z", "reviewedAt": null, "createdAt": "2025-02-07T22:00:00.000Z", "updatedAt": "2025-02-07T22:00:00.000Z" },
+    { "id": 4, "TaskId": 1, "UserId": 10, "submissionUrl": "https://github.com/joko/jsb-task1", "submissionFileUrl": null, "submittedNote": "Maaf telat submit, kemarin ada kendala koneksi.", "feedback": null, "score": null, "status": "Late", "submittedAt": "2025-02-08T15:00:00.000Z", "reviewedAt": null, "createdAt": "2025-02-08T15:00:00.000Z", "updatedAt": "2025-02-08T15:00:00.000Z" },
+
+    { "id": 5, "TaskId": 2, "UserId": 7, "submissionUrl": "https://github.com/gilang/jsb-task2", "submissionFileUrl": "https://example.com/submissions/jsb2-gilang.pdf", "submittedNote": "Tiga pseudocode sudah saya lampirkan.", "feedback": "Logika sudah tepat dan jelas.", "score": 92, "status": "Reviewed", "submittedAt": "2025-02-08T20:00:00.000Z", "reviewedAt": "2025-02-09T10:00:00.000Z", "createdAt": "2025-02-08T20:00:00.000Z", "updatedAt": "2025-02-09T10:00:00.000Z" },
+    { "id": 6, "TaskId": 2, "UserId": 8, "submissionUrl": "https://github.com/hannah/jsb-task2", "submissionFileUrl": "https://example.com/submissions/jsb2-hannah.pdf", "submittedNote": "Sudah selesai 3 studi kasus.", "feedback": null, "score": null, "status": "Submitted", "submittedAt": "2025-02-09T21:00:00.000Z", "reviewedAt": null, "createdAt": "2025-02-09T21:00:00.000Z", "updatedAt": "2025-02-09T21:00:00.000Z" },
+    { "id": 7, "TaskId": 2, "UserId": 9, "submissionUrl": "https://github.com/indra/jsb-task2", "submissionFileUrl": "https://example.com/submissions/jsb2-indra.pdf", "submittedNote": "Pseudocode untuk konversi suhu agak kurang yakin.", "feedback": "Konversi suhu kurang tepat, tolong dicek ulang rumusnya.", "score": 70, "status": "Reviewed", "submittedAt": "2025-02-09T22:30:00.000Z", "reviewedAt": "2025-02-10T11:00:00.000Z", "createdAt": "2025-02-09T22:30:00.000Z", "updatedAt": "2025-02-10T11:00:00.000Z" },
+
+    { "id": 8, "TaskId": 3, "UserId": 7, "submissionUrl": "https://github.com/gilang/jsb-task3", "submissionFileUrl": null, "submittedNote": "Latihan variabel dan operator sudah saya kerjakan.", "feedback": "Output sudah benar, code style rapi.", "score": 95, "status": "Reviewed", "submittedAt": "2025-02-13T20:00:00.000Z", "reviewedAt": "2025-02-14T10:00:00.000Z", "createdAt": "2025-02-13T20:00:00.000Z", "updatedAt": "2025-02-14T10:00:00.000Z" },
+    { "id": 9, "TaskId": 3, "UserId": 9, "submissionUrl": "https://github.com/indra/jsb-task3", "submissionFileUrl": null, "submittedNote": "Mohon koreksi jika ada yang salah.", "feedback": null, "score": null, "status": "Submitted", "submittedAt": "2025-02-14T21:00:00.000Z", "reviewedAt": null, "createdAt": "2025-02-14T21:00:00.000Z", "updatedAt": "2025-02-14T21:00:00.000Z" },
+    { "id": 10, "TaskId": 3, "UserId": 10, "submissionUrl": "https://github.com/joko/jsb-task3", "submissionFileUrl": null, "submittedNote": "Submit telat lagi, mohon maaf.", "feedback": null, "score": null, "status": "Late", "submittedAt": "2025-02-15T08:00:00.000Z", "reviewedAt": null, "createdAt": "2025-02-15T08:00:00.000Z", "updatedAt": "2025-02-15T08:00:00.000Z" },
+
+    { "id": 11, "TaskId": 4, "UserId": 10, "submissionUrl": "https://joko-profile.vercel.app", "submissionFileUrl": null, "submittedNote": "Halaman profil sudah online di Vercel.", "feedback": "Penggunaan tag semantik sudah baik, footer bisa ditambah info kontak.", "score": 85, "status": "Reviewed", "submittedAt": "2025-02-06T20:00:00.000Z", "reviewedAt": "2025-02-07T10:00:00.000Z", "createdAt": "2025-02-06T20:00:00.000Z", "updatedAt": "2025-02-07T10:00:00.000Z" },
+    { "id": 12, "TaskId": 4, "UserId": 11, "submissionUrl": "https://kartika-profile.vercel.app", "submissionFileUrl": null, "submittedNote": "Sudah saya deploy, mohon direview.", "feedback": null, "score": null, "status": "Submitted", "submittedAt": "2025-02-07T19:00:00.000Z", "reviewedAt": null, "createdAt": "2025-02-07T19:00:00.000Z", "updatedAt": "2025-02-07T19:00:00.000Z" },
+    { "id": 13, "TaskId": 4, "UserId": 12, "submissionUrl": "https://lukman-profile.vercel.app", "submissionFileUrl": null, "submittedNote": "Halaman profil dengan struktur semantik selesai.", "feedback": "Struktur sudah bagus dan accessible.", "score": 90, "status": "Reviewed", "submittedAt": "2025-02-07T21:00:00.000Z", "reviewedAt": "2025-02-08T09:30:00.000Z", "createdAt": "2025-02-07T21:00:00.000Z", "updatedAt": "2025-02-08T09:30:00.000Z" },
+    { "id": 14, "TaskId": 4, "UserId": 15, "submissionUrl": "https://olivia-profile.vercel.app", "submissionFileUrl": null, "submittedNote": "Maaf telat, baru sempat deploy hari ini.", "feedback": null, "score": null, "status": "Late", "submittedAt": "2025-02-08T16:00:00.000Z", "reviewedAt": null, "createdAt": "2025-02-08T16:00:00.000Z", "updatedAt": "2025-02-08T16:00:00.000Z" },
+
+    { "id": 15, "TaskId": 5, "UserId": 10, "submissionUrl": "https://joko-landing.vercel.app", "submissionFileUrl": null, "submittedNote": "Landing page dengan flexbox dan grid sudah jadi.", "feedback": "Layout sesuai desain, grid pada bagian fitur sangat rapi.", "score": 91, "status": "Reviewed", "submittedAt": "2025-02-08T20:00:00.000Z", "reviewedAt": "2025-02-09T10:00:00.000Z", "createdAt": "2025-02-08T20:00:00.000Z", "updatedAt": "2025-02-09T10:00:00.000Z" },
+    { "id": 16, "TaskId": 5, "UserId": 11, "submissionUrl": "https://kartika-landing.vercel.app", "submissionFileUrl": null, "submittedNote": "Sudah selesai, sebagian masih pakai float karena belum lancar grid.", "feedback": "Sebagian layout masih kurang sesuai, coba perbanyak pakai grid.", "score": 72, "status": "Reviewed", "submittedAt": "2025-02-09T19:00:00.000Z", "reviewedAt": "2025-02-10T09:00:00.000Z", "createdAt": "2025-02-09T19:00:00.000Z", "updatedAt": "2025-02-10T09:00:00.000Z" },
+    { "id": 17, "TaskId": 5, "UserId": 15, "submissionUrl": "https://olivia-landing.vercel.app", "submissionFileUrl": null, "submittedNote": "Mohon direview, terima kasih.", "feedback": null, "score": null, "status": "Submitted", "submittedAt": "2025-02-09T22:00:00.000Z", "reviewedAt": null, "createdAt": "2025-02-09T22:00:00.000Z", "updatedAt": "2025-02-09T22:00:00.000Z" },
+
+    { "id": 18, "TaskId": 6, "UserId": 10, "submissionUrl": "https://joko-responsive.vercel.app", "submissionFileUrl": null, "submittedNote": "Sudah responsive di mobile, tablet, dan desktop.", "feedback": "Responsivitas sangat baik, tampilan rapi di semua device.", "score": 93, "status": "Reviewed", "submittedAt": "2025-02-13T20:00:00.000Z", "reviewedAt": "2025-02-14T10:00:00.000Z", "createdAt": "2025-02-13T20:00:00.000Z", "updatedAt": "2025-02-14T10:00:00.000Z" },
+    { "id": 19, "TaskId": 6, "UserId": 12, "submissionUrl": "https://lukman-responsive.vercel.app", "submissionFileUrl": null, "submittedNote": "Sudah saya kerjakan, mohon feedback.", "feedback": null, "score": null, "status": "Submitted", "submittedAt": "2025-02-14T21:00:00.000Z", "reviewedAt": null, "createdAt": "2025-02-14T21:00:00.000Z", "updatedAt": "2025-02-14T21:00:00.000Z" },
+
+    { "id": 20, "TaskId": 7, "UserId": 9, "submissionUrl": "https://github.com/indra/be-task1", "submissionFileUrl": null, "submittedNote": "Script Node.js sudah jalan dan baca file lokal.", "feedback": "Fungsionalitas bagus, struktur folder bisa lebih rapi.", "score": 84, "status": "Reviewed", "submittedAt": "2025-02-06T20:00:00.000Z", "reviewedAt": "2025-02-07T10:00:00.000Z", "createdAt": "2025-02-06T20:00:00.000Z", "updatedAt": "2025-02-07T10:00:00.000Z" },
+    { "id": 21, "TaskId": 7, "UserId": 12, "submissionUrl": "https://github.com/lukman/be-task1", "submissionFileUrl": null, "submittedNote": "Sudah selesai, package.json terlampir.", "feedback": null, "score": null, "status": "Submitted", "submittedAt": "2025-02-07T19:00:00.000Z", "reviewedAt": null, "createdAt": "2025-02-07T19:00:00.000Z", "updatedAt": "2025-02-07T19:00:00.000Z" },
+    { "id": 22, "TaskId": 7, "UserId": 13, "submissionUrl": "https://github.com/michelle/be-task1", "submissionFileUrl": null, "submittedNote": "Script sudah selesai dan terdokumentasi.", "feedback": "Sangat baik, struktur kode jelas dan terorganisir.", "score": 96, "status": "Reviewed", "submittedAt": "2025-02-07T20:00:00.000Z", "reviewedAt": "2025-02-08T09:00:00.000Z", "createdAt": "2025-02-07T20:00:00.000Z", "updatedAt": "2025-02-08T09:00:00.000Z" },
+    { "id": 23, "TaskId": 7, "UserId": 14, "submissionUrl": "https://github.com/nanda/be-task1", "submissionFileUrl": null, "submittedNote": "Maaf telat submit, ada kendala di laptop.", "feedback": null, "score": null, "status": "Late", "submittedAt": "2025-02-08T15:00:00.000Z", "reviewedAt": null, "createdAt": "2025-02-08T15:00:00.000Z", "updatedAt": "2025-02-08T15:00:00.000Z" },
+
+    { "id": 24, "TaskId": 8, "UserId": 9, "submissionUrl": "https://github.com/indra/be-task2", "submissionFileUrl": null, "submittedNote": "REST API CRUD produk sudah selesai dan ditest dengan Postman.", "feedback": "Endpoint lengkap dan middleware sudah diterapkan dengan baik.", "score": 89, "status": "Reviewed", "submittedAt": "2025-02-08T20:00:00.000Z", "reviewedAt": "2025-02-09T10:00:00.000Z", "createdAt": "2025-02-08T20:00:00.000Z", "updatedAt": "2025-02-09T10:00:00.000Z" },
+    { "id": 25, "TaskId": 8, "UserId": 13, "submissionUrl": "https://github.com/michelle/be-task2", "submissionFileUrl": null, "submittedNote": "Sudah selesai, error handling masih sederhana.", "feedback": "Penanganan error perlu ditambahkan untuk kasus data tidak ditemukan.", "score": 78, "status": "Reviewed", "submittedAt": "2025-02-09T19:00:00.000Z", "reviewedAt": "2025-02-10T09:00:00.000Z", "createdAt": "2025-02-09T19:00:00.000Z", "updatedAt": "2025-02-10T09:00:00.000Z" },
+    { "id": 26, "TaskId": 8, "UserId": 14, "submissionUrl": "https://github.com/nanda/be-task2", "submissionFileUrl": null, "submittedNote": "Mohon direview, terima kasih.", "feedback": null, "score": null, "status": "Submitted", "submittedAt": "2025-02-09T22:00:00.000Z", "reviewedAt": null, "createdAt": "2025-02-09T22:00:00.000Z", "updatedAt": "2025-02-09T22:00:00.000Z" },
+
+    { "id": 27, "TaskId": 9, "UserId": 9, "submissionUrl": "https://github.com/indra/be-task3", "submissionFileUrl": "https://example.com/submissions/be3-indra.sql", "submittedNote": "Skema dan query SQL untuk toko online sudah saya buat.", "feedback": "Relasi antar tabel sudah tepat, query SQL berjalan dengan baik.", "score": 90, "status": "Reviewed", "submittedAt": "2025-02-13T20:00:00.000Z", "reviewedAt": "2025-02-14T10:00:00.000Z", "createdAt": "2025-02-13T20:00:00.000Z", "updatedAt": "2025-02-14T10:00:00.000Z" },
+    { "id": 28, "TaskId": 9, "UserId": 12, "submissionUrl": "https://github.com/lukman/be-task3", "submissionFileUrl": "https://example.com/submissions/be3-lukman.sql", "submittedNote": "Sudah selesai, mohon dicek normalisasinya.", "feedback": null, "score": null, "status": "Submitted", "submittedAt": "2025-02-14T21:00:00.000Z", "reviewedAt": null, "createdAt": "2025-02-14T21:00:00.000Z", "updatedAt": "2025-02-14T21:00:00.000Z" }
+  ],
+
+  "assessmentResults": [
+    { "id": 1, "TaskSubmissionId": 1, "gradedBy": 4, "finalScore": 88.00, "mentorFeedback": "Workflow Git sudah benar, commit message bisa lebih deskriptif.", "gradedAt": "2025-02-07T10:00:00.000Z", "createdAt": "2025-02-07T10:00:00.000Z", "updatedAt": "2025-02-07T10:00:00.000Z" },
+    { "id": 2, "TaskSubmissionId": 2, "gradedBy": 4, "finalScore": 80.00, "mentorFeedback": "Bagus, tapi PR belum ada deskripsi.", "gradedAt": "2025-02-08T09:00:00.000Z", "createdAt": "2025-02-08T09:00:00.000Z", "updatedAt": "2025-02-08T09:00:00.000Z" },
+
+    { "id": 3, "TaskSubmissionId": 5, "gradedBy": 4, "finalScore": 92.00, "mentorFeedback": "Logika sudah tepat dan jelas.", "gradedAt": "2025-02-09T10:00:00.000Z", "createdAt": "2025-02-09T10:00:00.000Z", "updatedAt": "2025-02-09T10:00:00.000Z" },
+    { "id": 4, "TaskSubmissionId": 7, "gradedBy": 4, "finalScore": 70.00, "mentorFeedback": "Konversi suhu kurang tepat, tolong dicek ulang rumusnya.", "gradedAt": "2025-02-10T11:00:00.000Z", "createdAt": "2025-02-10T11:00:00.000Z", "updatedAt": "2025-02-10T11:00:00.000Z" },
+
+    { "id": 5, "TaskSubmissionId": 8, "gradedBy": 4, "finalScore": 95.00, "mentorFeedback": "Output sudah benar, code style rapi.", "gradedAt": "2025-02-14T10:00:00.000Z", "createdAt": "2025-02-14T10:00:00.000Z", "updatedAt": "2025-02-14T10:00:00.000Z" },
+
+    { "id": 6, "TaskSubmissionId": 11, "gradedBy": 5, "finalScore": 85.00, "mentorFeedback": "Penggunaan tag semantik sudah baik, footer bisa ditambah info kontak.", "gradedAt": "2025-02-07T10:00:00.000Z", "createdAt": "2025-02-07T10:00:00.000Z", "updatedAt": "2025-02-07T10:00:00.000Z" },
+    { "id": 7, "TaskSubmissionId": 13, "gradedBy": 5, "finalScore": 90.00, "mentorFeedback": "Struktur sudah bagus dan accessible.", "gradedAt": "2025-02-08T09:30:00.000Z", "createdAt": "2025-02-08T09:30:00.000Z", "updatedAt": "2025-02-08T09:30:00.000Z" },
+
+    { "id": 8, "TaskSubmissionId": 15, "gradedBy": 5, "finalScore": 91.00, "mentorFeedback": "Layout sesuai desain, grid pada bagian fitur sangat rapi.", "gradedAt": "2025-02-09T10:00:00.000Z", "createdAt": "2025-02-09T10:00:00.000Z", "updatedAt": "2025-02-09T10:00:00.000Z" },
+    { "id": 9, "TaskSubmissionId": 16, "gradedBy": 5, "finalScore": 72.00, "mentorFeedback": "Sebagian layout masih kurang sesuai, coba perbanyak pakai grid.", "gradedAt": "2025-02-10T09:00:00.000Z", "createdAt": "2025-02-10T09:00:00.000Z", "updatedAt": "2025-02-10T09:00:00.000Z" },
+
+    { "id": 10, "TaskSubmissionId": 18, "gradedBy": 5, "finalScore": 93.00, "mentorFeedback": "Responsivitas sangat baik, tampilan rapi di semua device.", "gradedAt": "2025-02-14T10:00:00.000Z", "createdAt": "2025-02-14T10:00:00.000Z", "updatedAt": "2025-02-14T10:00:00.000Z" },
+
+    { "id": 11, "TaskSubmissionId": 20, "gradedBy": 6, "finalScore": 84.00, "mentorFeedback": "Fungsionalitas bagus, struktur folder bisa lebih rapi.", "gradedAt": "2025-02-07T10:00:00.000Z", "createdAt": "2025-02-07T10:00:00.000Z", "updatedAt": "2025-02-07T10:00:00.000Z" },
+    { "id": 12, "TaskSubmissionId": 22, "gradedBy": 6, "finalScore": 96.00, "mentorFeedback": "Sangat baik, struktur kode jelas dan terorganisir.", "gradedAt": "2025-02-08T09:00:00.000Z", "createdAt": "2025-02-08T09:00:00.000Z", "updatedAt": "2025-02-08T09:00:00.000Z" },
+
+    { "id": 13, "TaskSubmissionId": 24, "gradedBy": 6, "finalScore": 89.00, "mentorFeedback": "Endpoint lengkap dan middleware sudah diterapkan dengan baik.", "gradedAt": "2025-02-09T10:00:00.000Z", "createdAt": "2025-02-09T10:00:00.000Z", "updatedAt": "2025-02-09T10:00:00.000Z" },
+    { "id": 14, "TaskSubmissionId": 25, "gradedBy": 6, "finalScore": 78.00, "mentorFeedback": "Penanganan error perlu ditambahkan untuk kasus data tidak ditemukan.", "gradedAt": "2025-02-10T09:00:00.000Z", "createdAt": "2025-02-10T09:00:00.000Z", "updatedAt": "2025-02-10T09:00:00.000Z" },
+
+    { "id": 15, "TaskSubmissionId": 27, "gradedBy": 6, "finalScore": 90.00, "mentorFeedback": "Relasi antar tabel sudah tepat, query SQL berjalan dengan baik.", "gradedAt": "2025-02-14T10:00:00.000Z", "createdAt": "2025-02-14T10:00:00.000Z", "updatedAt": "2025-02-14T10:00:00.000Z" }
+  ],
+
+  "submissionCriteriaScores": [
+    { "id": 1, "AssessmentResultId": 1, "TaskCriteriaId": 1, "score": 90.00, "note": "Workflow branch & merge sudah sesuai." , "createdAt": "2025-02-07T10:00:00.000Z", "updatedAt": "2025-02-07T10:00:00.000Z" },
+    { "id": 2, "AssessmentResultId": 1, "TaskCriteriaId": 2, "score": 80.00, "note": "Commit message bisa lebih deskriptif.", "createdAt": "2025-02-07T10:00:00.000Z", "updatedAt": "2025-02-07T10:00:00.000Z" },
+    { "id": 3, "AssessmentResultId": 1, "TaskCriteriaId": 3, "score": 90.00, "note": "Pull request lengkap.", "createdAt": "2025-02-07T10:00:00.000Z", "updatedAt": "2025-02-07T10:00:00.000Z" },
+
+    { "id": 4, "AssessmentResultId": 2, "TaskCriteriaId": 1, "score": 85.00, "note": "Workflow sudah benar.", "createdAt": "2025-02-08T09:00:00.000Z", "updatedAt": "2025-02-08T09:00:00.000Z" },
+    { "id": 5, "AssessmentResultId": 2, "TaskCriteriaId": 2, "score": 75.00, "note": "Beberapa commit message kurang jelas.", "createdAt": "2025-02-08T09:00:00.000Z", "updatedAt": "2025-02-08T09:00:00.000Z" },
+    { "id": 6, "AssessmentResultId": 2, "TaskCriteriaId": 3, "score": 78.00, "note": "PR belum ada deskripsi.", "createdAt": "2025-02-08T09:00:00.000Z", "updatedAt": "2025-02-08T09:00:00.000Z" },
+
+    { "id": 7, "AssessmentResultId": 3, "TaskCriteriaId": 4, "score": 95.00, "note": "Logika algoritma tepat.", "createdAt": "2025-02-09T10:00:00.000Z", "updatedAt": "2025-02-09T10:00:00.000Z" },
+    { "id": 8, "AssessmentResultId": 3, "TaskCriteriaId": 5, "score": 90.00, "note": "3 studi kasus lengkap.", "createdAt": "2025-02-09T10:00:00.000Z", "updatedAt": "2025-02-09T10:00:00.000Z" },
+    { "id": 9, "AssessmentResultId": 3, "TaskCriteriaId": 6, "score": 88.00, "note": "Penulisan jelas dan rapi.", "createdAt": "2025-02-09T10:00:00.000Z", "updatedAt": "2025-02-09T10:00:00.000Z" },
+
+    { "id": 10, "AssessmentResultId": 4, "TaskCriteriaId": 4, "score": 75.00, "note": "Logika dasar benar.", "createdAt": "2025-02-10T11:00:00.000Z", "updatedAt": "2025-02-10T11:00:00.000Z" },
+    { "id": 11, "AssessmentResultId": 4, "TaskCriteriaId": 5, "score": 60.00, "note": "Konversi suhu kurang tepat.", "createdAt": "2025-02-10T11:00:00.000Z", "updatedAt": "2025-02-10T11:00:00.000Z" },
+    { "id": 12, "AssessmentResultId": 4, "TaskCriteriaId": 6, "score": 75.00, "note": "Penulisan cukup jelas.", "createdAt": "2025-02-10T11:00:00.000Z", "updatedAt": "2025-02-10T11:00:00.000Z" },
+
+    { "id": 13, "AssessmentResultId": 5, "TaskCriteriaId": 7, "score": 96.00, "note": "Output benar semua.", "createdAt": "2025-02-14T10:00:00.000Z", "updatedAt": "2025-02-14T10:00:00.000Z" },
+    { "id": 14, "AssessmentResultId": 5, "TaskCriteriaId": 8, "score": 95.00, "note": "Tipe data sudah sesuai.", "createdAt": "2025-02-14T10:00:00.000Z", "updatedAt": "2025-02-14T10:00:00.000Z" },
+    { "id": 15, "AssessmentResultId": 5, "TaskCriteriaId": 9, "score": 93.00, "note": "Code style rapi.", "createdAt": "2025-02-14T10:00:00.000Z", "updatedAt": "2025-02-14T10:00:00.000Z" },
+
+    { "id": 16, "AssessmentResultId": 6, "TaskCriteriaId": 10, "score": 88.00, "note": "Tag semantik tepat.", "createdAt": "2025-02-07T10:00:00.000Z", "updatedAt": "2025-02-07T10:00:00.000Z" },
+    { "id": 17, "AssessmentResultId": 6, "TaskCriteriaId": 11, "score": 82.00, "note": "Struktur baik, aksesibilitas cukup.", "createdAt": "2025-02-07T10:00:00.000Z", "updatedAt": "2025-02-07T10:00:00.000Z" },
+    { "id": 18, "AssessmentResultId": 6, "TaskCriteriaId": 12, "score": 83.00, "note": "Markup rapi.", "createdAt": "2025-02-07T10:00:00.000Z", "updatedAt": "2025-02-07T10:00:00.000Z" },
+
+    { "id": 19, "AssessmentResultId": 7, "TaskCriteriaId": 10, "score": 92.00, "note": "Penggunaan tag semantik sangat baik.", "createdAt": "2025-02-08T09:30:00.000Z", "updatedAt": "2025-02-08T09:30:00.000Z" },
+    { "id": 20, "AssessmentResultId": 7, "TaskCriteriaId": 11, "score": 90.00, "note": "Struktur logis dan accessible.", "createdAt": "2025-02-08T09:30:00.000Z", "updatedAt": "2025-02-08T09:30:00.000Z" },
+    { "id": 21, "AssessmentResultId": 7, "TaskCriteriaId": 12, "score": 86.00, "note": "Markup rapi dan konsisten.", "createdAt": "2025-02-08T09:30:00.000Z", "updatedAt": "2025-02-08T09:30:00.000Z" },
+
+    { "id": 22, "AssessmentResultId": 8, "TaskCriteriaId": 13, "score": 92.00, "note": "Layout sangat sesuai desain.", "createdAt": "2025-02-09T10:00:00.000Z", "updatedAt": "2025-02-09T10:00:00.000Z" },
+    { "id": 23, "AssessmentResultId": 8, "TaskCriteriaId": 14, "score": 90.00, "note": "Penggunaan grid sangat baik.", "createdAt": "2025-02-09T10:00:00.000Z", "updatedAt": "2025-02-09T10:00:00.000Z" },
+    { "id": 24, "AssessmentResultId": 8, "TaskCriteriaId": 15, "score": 90.00, "note": "Responsif dasar sudah baik.", "createdAt": "2025-02-09T10:00:00.000Z", "updatedAt": "2025-02-09T10:00:00.000Z" },
+
+    { "id": 25, "AssessmentResultId": 9, "TaskCriteriaId": 13, "score": 70.00, "note": "Layout sebagian kurang sesuai desain.", "createdAt": "2025-02-10T09:00:00.000Z", "updatedAt": "2025-02-10T09:00:00.000Z" },
+    { "id": 26, "AssessmentResultId": 9, "TaskCriteriaId": 14, "score": 65.00, "note": "Masih banyak menggunakan float, bukan grid.", "createdAt": "2025-02-10T09:00:00.000Z", "updatedAt": "2025-02-10T09:00:00.000Z" },
+    { "id": 27, "AssessmentResultId": 9, "TaskCriteriaId": 15, "score": 85.00, "note": "Responsivitas dasar cukup baik.", "createdAt": "2025-02-10T09:00:00.000Z", "updatedAt": "2025-02-10T09:00:00.000Z" },
+
+    { "id": 28, "AssessmentResultId": 10, "TaskCriteriaId": 16, "score": 95.00, "note": "Sangat responsif di semua device.", "createdAt": "2025-02-14T10:00:00.000Z", "updatedAt": "2025-02-14T10:00:00.000Z" },
+    { "id": 29, "AssessmentResultId": 10, "TaskCriteriaId": 17, "score": 92.00, "note": "Utility class konsisten.", "createdAt": "2025-02-14T10:00:00.000Z", "updatedAt": "2025-02-14T10:00:00.000Z" },
+    { "id": 30, "AssessmentResultId": 10, "TaskCriteriaId": 18, "score": 90.00, "note": "Estetika UI sangat baik.", "createdAt": "2025-02-14T10:00:00.000Z", "updatedAt": "2025-02-14T10:00:00.000Z" },
+
+    { "id": 31, "AssessmentResultId": 11, "TaskCriteriaId": 19, "score": 88.00, "note": "Script berjalan dengan baik.", "createdAt": "2025-02-07T10:00:00.000Z", "updatedAt": "2025-02-07T10:00:00.000Z" },
+    { "id": 32, "AssessmentResultId": 11, "TaskCriteriaId": 20, "score": 85.00, "note": "Dependency dikelola dengan baik.", "createdAt": "2025-02-07T10:00:00.000Z", "updatedAt": "2025-02-07T10:00:00.000Z" },
+    { "id": 33, "AssessmentResultId": 11, "TaskCriteriaId": 21, "score": 75.00, "note": "Struktur folder bisa lebih rapi.", "createdAt": "2025-02-07T10:00:00.000Z", "updatedAt": "2025-02-07T10:00:00.000Z" },
+
+    { "id": 34, "AssessmentResultId": 12, "TaskCriteriaId": 19, "score": 98.00, "note": "Script sangat fungsional.", "createdAt": "2025-02-08T09:00:00.000Z", "updatedAt": "2025-02-08T09:00:00.000Z" },
+    { "id": 35, "AssessmentResultId": 12, "TaskCriteriaId": 20, "score": 95.00, "note": "Dependency dikelola dengan sangat baik.", "createdAt": "2025-02-08T09:00:00.000Z", "updatedAt": "2025-02-08T09:00:00.000Z" },
+    { "id": 36, "AssessmentResultId": 12, "TaskCriteriaId": 21, "score": 95.00, "note": "Struktur kode terorganisir dengan baik.", "createdAt": "2025-02-08T09:00:00.000Z", "updatedAt": "2025-02-08T09:00:00.000Z" },
+
+    { "id": 37, "AssessmentResultId": 13, "TaskCriteriaId": 22, "score": 92.00, "note": "Semua endpoint CRUD lengkap.", "createdAt": "2025-02-09T10:00:00.000Z", "updatedAt": "2025-02-09T10:00:00.000Z" },
+    { "id": 38, "AssessmentResultId": 13, "TaskCriteriaId": 23, "score": 88.00, "note": "Middleware diterapkan dengan baik.", "createdAt": "2025-02-09T10:00:00.000Z", "updatedAt": "2025-02-09T10:00:00.000Z" },
+    { "id": 39, "AssessmentResultId": 13, "TaskCriteriaId": 24, "score": 82.00, "note": "Penanganan error cukup baik.", "createdAt": "2025-02-09T10:00:00.000Z", "updatedAt": "2025-02-09T10:00:00.000Z" },
+
+    { "id": 40, "AssessmentResultId": 14, "TaskCriteriaId": 22, "score": 85.00, "note": "Endpoint CRUD lengkap.", "createdAt": "2025-02-10T09:00:00.000Z", "updatedAt": "2025-02-10T09:00:00.000Z" },
+    { "id": 41, "AssessmentResultId": 14, "TaskCriteriaId": 23, "score": 75.00, "note": "Middleware dasar sudah ada.", "createdAt": "2025-02-10T09:00:00.000Z", "updatedAt": "2025-02-10T09:00:00.000Z" },
+    { "id": 42, "AssessmentResultId": 14, "TaskCriteriaId": 24, "score": 65.00, "note": "Penanganan error masih minim.", "createdAt": "2025-02-10T09:00:00.000Z", "updatedAt": "2025-02-10T09:00:00.000Z" },
+
+    { "id": 43, "AssessmentResultId": 15, "TaskCriteriaId": 25, "score": 92.00, "note": "Skema dan relasi sangat tepat.", "createdAt": "2025-02-14T10:00:00.000Z", "updatedAt": "2025-02-14T10:00:00.000Z" },
+    { "id": 44, "AssessmentResultId": 15, "TaskCriteriaId": 26, "score": 90.00, "note": "Query SQL benar dan efisien.", "createdAt": "2025-02-14T10:00:00.000Z", "updatedAt": "2025-02-14T10:00:00.000Z" },
+    { "id": 45, "AssessmentResultId": 15, "TaskCriteriaId": 27, "score": 85.00, "note": "Normalisasi sudah cukup baik.", "createdAt": "2025-02-14T10:00:00.000Z", "updatedAt": "2025-02-14T10:00:00.000Z" }
+  ]
+}

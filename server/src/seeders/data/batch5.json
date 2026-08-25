@@ -1,0 +1,67 @@
+{
+  "attendances": [
+    {
+      "id": 1,
+      "MeetingId": 1,
+      "UserId": 7,
+      "status": "Present",
+      "checkedBy": 4,
+      "checkInAt": "2025-02-03T18:55:00.000Z",
+      "notes": "Hadir tepat waktu.",
+      "createdAt": "2025-02-03T18:55:00.000Z",
+      "updatedAt": "2025-02-03T18:55:00.000Z"
+    },
+    {
+      "id": 2,
+      "MeetingId": 1,
+      "UserId": 8,
+      "status": "Late",
+      "checkedBy": 4,
+      "checkInAt": "2025-02-03T19:15:00.000Z",
+      "notes": "Terlambat 15 menit karena kendala jaringan.",
+      "createdAt": "2025-02-03T19:15:00.000Z",
+      "updatedAt": "2025-02-03T19:15:00.000Z"
+    },
+    {
+      "id": 3,
+      "MeetingId": 1,
+      "UserId": 9,
+      "status": "Absent",
+      "checkedBy": 4,
+      "checkInAt": null,
+      "notes": "Tidak hadir tanpa keterangan.",
+      "createdAt": "2025-02-03T21:00:00.000Z",
+      "updatedAt": "2025-02-03T21:00:00.000Z"
+    }
+  ],
+  "historyClasses": [
+    {
+      "id": 1,
+      "ClassId": 1,
+      "UserId": 7,
+      "roleInClass": "Mentee",
+      "status": "Completed",
+      "finalScore": 89.50,
+      "attendancePercentage": 100.00,
+      "completedAt": "2025-04-01T00:00:00.000Z",
+      "remarks": "Menyelesaikan seluruh tugas dengan konsisten dan performa sangat baik.",
+      "certificateUrl": "https://example.com/certificates/jsb-gilang.pdf",
+      "createdAt": "2025-04-01T00:00:00.000Z",
+      "updatedAt": "2025-04-01T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "ClassId": 1,
+      "UserId": 10,
+      "roleInClass": "Mentee",
+      "status": "Completed",
+      "finalScore": 72.00,
+      "attendancePercentage": 87.50,
+      "completedAt": "2025-04-01T00:00:00.000Z",
+      "remarks": "Sempat beberapa kali submit tugas terlambat, namun berhasil menyelesaikan kelas.",
+      "certificateUrl": "https://example.com/certificates/jsb-joko.pdf",
+      "createdAt": "2025-04-01T00:00:00.000Z",
+      "updatedAt": "2025-04-01T00:00:00.000Z"
+    }
+  ]
+}

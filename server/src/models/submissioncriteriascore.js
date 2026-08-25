@@ -1,4 +1,5 @@
 "use strict";
+
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
@@ -6,10 +7,12 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       SubmissionCriteriaScore.belongsTo(models.AssessmentResult, {
         foreignKey: "AssessmentResultId",
+        as: "assessment",
       });
 
       SubmissionCriteriaScore.belongsTo(models.TaskCriteria, {
         foreignKey: "TaskCriteriaId",
+        as: "criteria",
       });
     }
   }
@@ -18,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       AssessmentResultId: DataTypes.INTEGER,
       TaskCriteriaId: DataTypes.INTEGER,
-      score: DataTypes.DECIMAL,
+      score: DataTypes.DECIMAL(5, 2),
       note: DataTypes.TEXT,
     },
     {
