@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Folder } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Form from "@/components/ui/forms/Form";
@@ -105,6 +106,8 @@ const Edit = () => {
   return (
     <>
       <Form
+        icon={Folder}
+        color="blue"
         title="Edit Material"
         description="Update material information"
         schema={schema}
@@ -112,6 +115,7 @@ const Edit = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
         submitLabel="Update Material"
+        onCancel={() => navigate("/materials")}
       />
 
       <SuccessPopup

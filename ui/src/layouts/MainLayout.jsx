@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -6,6 +6,8 @@ import Sidebar from "../components/common/Sidebar";
 import TopBar from "../components/common/TopBar";
 
 const MainLayout = () => {
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
     <div className="flex h-screen bg-app text-app transition-all">
       {/* Sidebar */}
@@ -17,13 +19,14 @@ const MainLayout = () => {
         animate={{
           x: 0,
           opacity: 1,
+          width: collapsed ? 80 : "18%",
         }}
         transition={{
-          duration: 0.4,
+          duration: 0.3,
         }}
-        className="h-screen w-[18%] border-r border-gray-200 bg-[var(--color-surface)] shadow-sm"
+        className="relative h-screen shrink-0 border-r border-gray-200 bg-[var(--color-surface)] shadow-sm"
       >
-        <Sidebar />
+        <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((prev) => !prev)} />
       </motion.aside>
 
       {/* Main Area */}

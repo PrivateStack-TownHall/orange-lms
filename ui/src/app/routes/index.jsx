@@ -6,7 +6,7 @@ import ProtectedRoute from "./guards/ProtectedRoute";
 import MainLayout from "@/layouts/MainLayout";
 
 import Dashboard from "@/pages/dashboard";
-import NotFound from "@/pages/NotFound";
+import NotFound from "@/pages/notfound";
 
 // Route Modules
 import authRoutes from "./modules/auth.routes";

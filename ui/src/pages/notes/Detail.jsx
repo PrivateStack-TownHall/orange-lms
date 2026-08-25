@@ -1,12 +1,47 @@
-import { Award, BookOpen, Calendar, FileText, Users } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-import { Link } from "react-router-dom";
+import { StickyNote, BookOpen, Calendar, Users, FileText, Paperclip } from "lucide-react";
 
 import { can, formatDate } from "@/helpers";
 
-import ActionButton from "@/components/ui/buttons/ActionButton";
+import NoteService from "@/services/modules/note.service";
 
-const NoteDetail = ({ note, role, onDelete }) => {
+import ActionButton from "@/components/ui/buttons/ActionButton";
+import LoadingPage from "@/components/ui/loading/LoadingPage";
+import StatusBadge from "@/components/ui/status/StatusBadge";
+
+const Detail = ({ note: noteProp, role: roleProp, onDelete }) => {
+  const { id } = useParams();
+  const user = useSelector((state) => state.auth.user);
+  const role = roleProp || user?.role;
+
+  const [note, setNote] = useState(noteProp || null);
+  const [loading, setLoading] = useState(!noteProp && !!id);
+
+  useEffect(() => {
+    if (noteProp || !id) return;
+
+    const fetchNote = async () => {
+      try {
+        const res = await NoteService.getById(id);
+        setNote(res.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNote();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  if (loading) {
+    return <LoadingPage title="Loading Note..." />;
+  }
+
   if (!note) return null;
 
   return (
@@ -14,31 +49,35 @@ const NoteDetail = ({ note, role, onDelete }) => {
       {/* LEFT */}
       <div className="lg:col-span-1">
         <div className="rounded-sm border border-gray-200 bg-white p-5">
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center text-center">
             <div className="flex h-24 w-24 items-center justify-center rounded-sm bg-orange-100">
-              <Award size={40} className="text-orange-600" />
+              <StickyNote size={40} className="text-orange-600" />
             </div>
 
-            <h2 className="mt-4 text-center text-lg font-bold">{note.name}</h2>
+            <h2 className="mt-4 text-lg font-bold">{note.name}</h2>
 
-            <div className="mt-5 w-full space-y-4 text-sm">
-              <div>
-                <p className="text-xs text-gray-500">Created By</p>
+            <div className="mt-2 flex items-center gap-2 text-xs">
+              <StatusBadge status={note.status || "Published"} />
+              <span className="text-[var(--color-text-muted)]">NOTE-{String(note.id).padStart(4, "0")}</span>
+            </div>
 
-                <p>{note.creator?.name || "-"}</p>
-              </div>
+            <div className="mt-5 w-full space-y-4 text-left text-sm">
+              <SidebarField icon={Users} label="Created By">
+                {note.creator?.name || "-"}
+              </SidebarField>
             </div>
 
             <div className="mt-5 flex w-full gap-2">
               {can(role, "note", "update") && (
-                <Link to={`/notes/edit/${note.id}`}>
-                  <ActionButton action="edit" />
+                <Link to={`/notes/edit/${note.id}`} className="flex-1">
+                  <ActionButton action="edit" className="w-full justify-center py-2" />
                 </Link>
               )}
 
               {can(role, "note", "delete") && (
                 <ActionButton
                   action="delete"
+                  className="flex-1 justify-center py-2"
                   onClick={() => onDelete?.(note.id)}
                 />
               )}
@@ -49,79 +88,33 @@ const NoteDetail = ({ note, role, onDelete }) => {
 
       {/* RIGHT */}
       <div className="space-y-4 lg:col-span-3">
-        {/* Description */}
-        <div className="rounded-sm border border-gray-200 bg-white p-5">
-          <h3 className="mb-3 font-semibold">Description</h3>
+        <InfoCard icon={FileText} title="Description">
+          <p className="text-sm leading-6 text-gray-600">{note.description || "-"}</p>
+        </InfoCard>
 
-          <p className="text-sm leading-6 text-gray-600">
-            {note.description || "-"}
-          </p>
-        </div>
-
-        {/* Information */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="rounded-sm border border-gray-200 bg-white p-4">
-            <div className="mb-2 flex items-center gap-2">
-              <BookOpen size={18} className="text-orange-500" />
-
-              <span className="font-medium">Class</span>
-            </div>
-
+          <MetaCard icon={BookOpen} label="Class">
             <p className="font-semibold">{note.Class?.code || "-"}</p>
-
             <p className="text-sm text-gray-500">{note.Class?.name || "-"}</p>
-          </div>
+          </MetaCard>
 
-          <div className="rounded-sm border border-gray-200 bg-white p-4">
-            <div className="mb-2 flex items-center gap-2">
-              <Users size={18} className="text-orange-500" />
-
-              <span className="font-medium">Meeting</span>
-            </div>
-
-            <p className="font-semibold">
-              Meeting #{note.Meeting?.meetingNumber || "-"}
-            </p>
-
+          <MetaCard icon={Users} label="Meeting">
+            <p className="font-semibold">Meeting #{note.Meeting?.meetingNumber || "-"}</p>
             <p className="text-sm text-gray-500">{note.Meeting?.name || "-"}</p>
-          </div>
+          </MetaCard>
 
-          <div className="rounded-sm border border-gray-200 bg-white p-4">
-            <div className="mb-2 flex items-center gap-2">
-              <Calendar size={18} className="text-orange-500" />
+          <MetaCard icon={Calendar} label="Meeting Date">
+            <p>{note.Meeting?.meetingDate ? formatDate(note.Meeting.meetingDate) : "-"}</p>
+          </MetaCard>
 
-              <span className="font-medium">Meeting Date</span>
-            </div>
-
-            <p>
-              {note.Meeting?.meetingDate
-                ? formatDate(note.Meeting.meetingDate)
-                : "-"}
-            </p>
-          </div>
-
-          <div className="rounded-sm border border-gray-200 bg-white p-4">
-            <div className="mb-2 flex items-center gap-2">
-              <FileText size={18} className="text-orange-500" />
-
-              <span className="font-medium">Note Created</span>
-            </div>
-
+          <MetaCard icon={FileText} label="Note Created">
             <p>{note.createdAt ? formatDate(note.createdAt) : "-"}</p>
-          </div>
+          </MetaCard>
         </div>
 
-        {/* Attachment */}
-        <div className="rounded-sm border border-gray-200 bg-white p-5">
+        <InfoCard icon={Paperclip} title="Attachment">
           <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-semibold">Attachment</h3>
-
-              <p className="mt-1 text-sm text-gray-500">
-                Download note attachment if available
-              </p>
-            </div>
-
+            <p className="text-sm text-gray-500">Download note attachment if available</p>
             {note.fileUrl ? (
               <ActionButton action="download" href={note.fileUrl}>
                 Download File
@@ -130,10 +123,40 @@ const NoteDetail = ({ note, role, onDelete }) => {
               <span className="text-sm text-gray-500">No attachment</span>
             )}
           </div>
-        </div>
+        </InfoCard>
       </div>
     </div>
   );
 };
 
-export default NoteDetail;
+const SidebarField = ({ icon: Icon, label, children }) => (
+  <div className="flex items-start gap-2">
+    <Icon size={15} className="mt-0.5 shrink-0 text-[var(--color-text-muted)]" />
+    <div>
+      <p className="text-xs text-gray-500">{label}</p>
+      <div className="font-medium">{children}</div>
+    </div>
+  </div>
+);
+
+const InfoCard = ({ icon: Icon, title, children }) => (
+  <div className="rounded-sm border border-gray-200 bg-white p-5">
+    <div className="mb-3 flex items-center gap-2">
+      <Icon size={18} className="text-orange-500" />
+      <h3 className="font-semibold">{title}</h3>
+    </div>
+    {children}
+  </div>
+);
+
+const MetaCard = ({ icon: Icon, label, children }) => (
+  <div className="rounded-sm border border-gray-200 bg-white p-4">
+    <div className="mb-2 flex items-center gap-2">
+      <Icon size={18} className="text-orange-500" />
+      <span className="font-medium">{label}</span>
+    </div>
+    {children}
+  </div>
+);
+
+export default Detail;

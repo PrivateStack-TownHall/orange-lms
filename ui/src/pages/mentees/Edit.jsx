@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { GraduationCap } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Form from "@/components/ui/forms/Form";
@@ -93,6 +94,8 @@ const Edit = () => {
   return (
     <>
       <Form
+        icon={GraduationCap}
+        color="green"
         title="Edit Mentee"
         description="Update mentee information"
         schema={userSchema}
@@ -100,6 +103,7 @@ const Edit = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
         submitLabel="Update Mentee"
+        onCancel={() => navigate("/mentees")}
       />
 
       <SuccessPopup

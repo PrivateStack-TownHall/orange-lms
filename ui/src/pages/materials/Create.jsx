@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Folder } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import Form from "@/components/ui/forms/Form";
@@ -73,6 +74,8 @@ const Create = () => {
   return (
     <>
       <Form
+        icon={Folder}
+        color="blue"
         title="Create Material"
         description="Fill material information"
         schema={schema}
@@ -80,6 +83,7 @@ const Create = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
         submitLabel="Create Material"
+        onCancel={() => navigate("/materials")}
       />
 
       <SuccessPopup

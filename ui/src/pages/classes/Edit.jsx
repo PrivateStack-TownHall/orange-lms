@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { BookOpen } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Form from "@/components/ui/forms/Form";
@@ -124,6 +125,8 @@ const Edit = () => {
   return (
     <>
       <Form
+        icon={BookOpen}
+        color="orange"
         title="Edit Class"
         description="Update class information."
         schema={schema}
@@ -131,6 +134,7 @@ const Edit = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
         submitLabel="Update Class"
+        onCancel={() => navigate("/classes")}
       />
 
       <SuccessPopup
