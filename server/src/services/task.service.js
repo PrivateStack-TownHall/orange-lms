@@ -1,5 +1,6 @@
 const { Task, Meeting, Class, User } = require("../models");
 const ROLES = require("../constants/roles");
+const { logAudit, notifyUsers } = require("../helpers");
 
 class TaskService {
   static async findAllByMeeting(MeetingId) {
@@ -71,6 +72,7 @@ class TaskService {
                 attributes: [],
                 through: {
                   attributes: [],
+                  where: { roleInClass: "Mentee" },
                 },
                 where: {
                   id: currentUser.id,
@@ -102,7 +104,7 @@ class TaskService {
     });
   }
 
-  static async create(currentUser, meetingId, data) {
+  static async create(currentUser, meetingId, data, meta = {}) {
     if (![ROLES.ADMIN, ROLES.OWNER, ROLES.MENTOR].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
@@ -113,15 +115,40 @@ class TaskService {
       throw new Error("Meeting not found");
     }
 
-    return Task.create({
+    const task = await Task.create({
       ...data,
       MeetingId: Number(meetingId),
       ClassId: meeting.ClassId,
       createdBy: currentUser.id,
     });
+
+    await logAudit({
+      user: currentUser,
+      action: "CREATE",
+      resource: "Task",
+      resourceId: task.id,
+      resourceDetail: task.name,
+      meta,
+    });
+
+    const cls = await Class.findByPk(meeting.ClassId, {
+      include: [{ model: User, as: "mentees", attributes: ["id"], through: { attributes: [], where: { roleInClass: "Mentee" } } }],
+    });
+
+    await notifyUsers({
+      userIds: (cls?.mentees || []).map((m) => m.id),
+      type: "Task",
+      title: "New Task Assigned",
+      message: `${currentUser.name || "Mentor"} assigned a new task "${task.name}".`,
+      relatedType: "Task",
+      relatedId: task.id,
+      ClassId: meeting.ClassId,
+    });
+
+    return task;
   }
 
-  static async update(id, data, currentUser) {
+  static async update(id, data, currentUser, meta = {}) {
     if (![ROLES.ADMIN, ROLES.OWNER, ROLES.MENTOR].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
@@ -132,10 +159,21 @@ class TaskService {
       throw new Error("Task not found");
     }
 
-    return task.update(data);
+    await task.update(data);
+
+    await logAudit({
+      user: currentUser,
+      action: "UPDATE",
+      resource: "Task",
+      resourceId: task.id,
+      resourceDetail: task.name,
+      meta,
+    });
+
+    return task;
   }
 
-  static async delete(id, currentUser) {
+  static async delete(id, currentUser, meta = {}) {
     if (![ROLES.ADMIN, ROLES.OWNER, ROLES.MENTOR].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
@@ -145,6 +183,15 @@ class TaskService {
     if (!task) {
       throw new Error("Task not found");
     }
+
+    await logAudit({
+      user: currentUser,
+      action: "DELETE",
+      resource: "Task",
+      resourceId: task.id,
+      resourceDetail: task.name,
+      meta,
+    });
 
     return task.destroy();
   }

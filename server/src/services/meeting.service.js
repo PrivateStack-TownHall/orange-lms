@@ -1,6 +1,7 @@
 const { Meeting, Class, User, Task, Note, Material } = require("../models");
 
 const ROLES = require("../constants/roles");
+const { logAudit, notifyUsers } = require("../helpers");
 
 class MeetingService {
   static async findAllByClass(ClassId) {
@@ -128,6 +129,7 @@ class MeetingService {
                 attributes: [],
                 through: {
                   attributes: [],
+                  where: { roleInClass: "Mentee" },
                 },
                 where: {
                   id: currentUser.id,
@@ -179,7 +181,7 @@ class MeetingService {
               model: User,
               as: "mentees",
               attributes: ["id", "name", "email"],
-              through: { attributes: [] },
+              through: { attributes: [], where: { roleInClass: "Mentee" } },
             },
           ],
         },
@@ -215,19 +217,44 @@ class MeetingService {
     });
   }
 
-  static async create(currentUser, classId, data) {
+  static async create(currentUser, classId, data, meta = {}) {
     if (![ROLES.ADMIN, ROLES.OWNER, ROLES.MENTOR].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
 
-    return Meeting.create({
+    const meeting = await Meeting.create({
       ...data,
       ClassId: classId,
       createdBy: currentUser.id,
     });
+
+    await logAudit({
+      user: currentUser,
+      action: "CREATE",
+      resource: "Meeting",
+      resourceId: meeting.id,
+      resourceDetail: meeting.name,
+      meta,
+    });
+
+    const cls = await Class.findByPk(classId, {
+      include: [{ model: User, as: "mentees", attributes: ["id"], through: { attributes: [], where: { roleInClass: "Mentee" } } }],
+    });
+
+    await notifyUsers({
+      userIds: (cls?.mentees || []).map((m) => m.id),
+      type: "Meeting",
+      title: "Upcoming Meeting",
+      message: `Meeting "${meeting.name}" has been scheduled.`,
+      relatedType: "Meeting",
+      relatedId: meeting.id,
+      ClassId: classId,
+    });
+
+    return meeting;
   }
 
-  static async update(id, data, currentUser) {
+  static async update(id, data, currentUser, meta = {}) {
     if (![ROLES.ADMIN, ROLES.OWNER].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
@@ -238,10 +265,21 @@ class MeetingService {
       throw new Error("Meeting not found");
     }
 
-    return meeting.update(data);
+    await meeting.update(data);
+
+    await logAudit({
+      user: currentUser,
+      action: "UPDATE",
+      resource: "Meeting",
+      resourceId: meeting.id,
+      resourceDetail: meeting.name,
+      meta,
+    });
+
+    return meeting;
   }
 
-  static async delete(id, currentUser) {
+  static async delete(id, currentUser, meta = {}) {
     if (![ROLES.ADMIN, ROLES.OWNER].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
@@ -251,6 +289,15 @@ class MeetingService {
     if (!meeting) {
       throw new Error("Meeting not found");
     }
+
+    await logAudit({
+      user: currentUser,
+      action: "DELETE",
+      resource: "Meeting",
+      resourceId: meeting.id,
+      resourceDetail: meeting.name,
+      meta,
+    });
 
     return meeting.destroy();
   }

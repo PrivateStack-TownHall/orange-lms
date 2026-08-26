@@ -1,16 +1,27 @@
 const { User, Profile, Class, Meeting, Task } = require("../models");
-const { bcrypt } = require("../helpers");
+const { bcrypt, logAudit } = require("../helpers");
 
 class MenteeService {
-  static async create({ email, password, name }) {
+  static async create({ email, password, name }, currentUser, meta = {}) {
     const hashedPassword = await bcrypt.hashPassword(password);
 
-    return User.create({
+    const mentee = await User.create({
       email,
       password: hashedPassword,
       role: "Mentee",
       name,
     });
+
+    await logAudit({
+      user: currentUser,
+      action: "CREATE",
+      resource: "User",
+      resourceId: mentee.id,
+      resourceDetail: `Mentee: ${mentee.name}`,
+      meta,
+    });
+
+    return mentee;
   }
 
   static async findAll() {
@@ -27,6 +38,7 @@ class MenteeService {
         {
           model: Class,
           as: "enrolledClasses",
+          through: { attributes: [], where: { roleInClass: "Mentee" } },
         },
       ],
 
@@ -51,6 +63,7 @@ class MenteeService {
         {
           model: Class,
           as: "enrolledClasses",
+          through: { attributes: [], where: { roleInClass: "Mentee" } },
 
           include: [
             {
@@ -77,7 +90,7 @@ class MenteeService {
     });
   }
 
-  static async update(id, data) {
+  static async update(id, data, currentUser, meta = {}) {
     const user = await User.findByPk(id);
 
     if (!user) {
@@ -104,15 +117,35 @@ class MenteeService {
         phoneNumber: data.phoneNumber,
       });
     }
+
+    await logAudit({
+      user: currentUser,
+      action: "UPDATE",
+      resource: "User",
+      resourceId: user.id,
+      resourceDetail: `Mentee: ${user.name}`,
+      meta,
+    });
+
+    return this.findById(id);
   }
 
-  static async delete(id) {
+  static async delete(id, currentUser, meta = {}) {
     const user = await User.findByPk(id);
 
     if (!user) throw new Error("Mentee not found");
 
     await Profile.destroy({
       where: { UserId: id },
+    });
+
+    await logAudit({
+      user: currentUser,
+      action: "DELETE",
+      resource: "User",
+      resourceId: user.id,
+      resourceDetail: `Mentee: ${user.name}`,
+      meta,
     });
 
     await user.destroy();

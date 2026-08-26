@@ -1,16 +1,27 @@
 const { User, Profile, Class, Meeting, Task } = require("../models");
-const { bcrypt } = require("../helpers");
+const { bcrypt, logAudit } = require("../helpers");
 
 class MentorService {
-  static async create({ email, password, name }) {
+  static async create({ email, password, name }, currentUser, meta = {}) {
     const hashedPassword = await bcrypt.hashPassword(password);
 
-    return User.create({
+    const mentor = await User.create({
       email,
       password: hashedPassword,
       role: "Mentor",
       name,
     });
+
+    await logAudit({
+      user: currentUser,
+      action: "CREATE",
+      resource: "User",
+      resourceId: mentor.id,
+      resourceDetail: `Mentor: ${mentor.name}`,
+      meta,
+    });
+
+    return mentor;
   }
 
   static async findAll() {
@@ -61,7 +72,7 @@ class MentorService {
               model: User,
               as: "mentees",
               attributes: ["id", "name", "email"],
-              through: { attributes: [] },
+              through: { attributes: [], where: { roleInClass: "Mentee" } },
             },
             {
               model: Task,
@@ -78,7 +89,7 @@ class MentorService {
     });
   }
 
-  static async update(id, data) {
+  static async update(id, data, currentUser, meta = {}) {
     const user = await User.findByPk(id);
 
     if (!user) {
@@ -106,16 +117,34 @@ class MentorService {
       });
     }
 
+    await logAudit({
+      user: currentUser,
+      action: "UPDATE",
+      resource: "User",
+      resourceId: user.id,
+      resourceDetail: `Mentor: ${user.name}`,
+      meta,
+    });
+
     return this.findById(id);
   }
 
-  static async delete(id) {
+  static async delete(id, currentUser, meta = {}) {
     const user = await User.findByPk(id);
 
     if (!user) throw new Error("Mentor not found");
 
     await Profile.destroy({
       where: { UserId: id },
+    });
+
+    await logAudit({
+      user: currentUser,
+      action: "DELETE",
+      resource: "User",
+      resourceId: user.id,
+      resourceDetail: `Mentor: ${user.name}`,
+      meta,
     });
 
     await user.destroy();

@@ -3,9 +3,10 @@ const {
   TaskCriteria,
   AssessmentResult,
 } = require("../models");
+const { logAudit } = require("../helpers");
 
 class SubmissionCriteriaScoreService {
-  static async create(currentUser, data) {
+  static async create(currentUser, data, meta = {}) {
     if (!["Admin", "Owner", "Mentor"].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
@@ -22,7 +23,18 @@ class SubmissionCriteriaScoreService {
       throw new Error("Task criteria not found");
     }
 
-    return SubmissionCriteriaScore.create(data);
+    const score = await SubmissionCriteriaScore.create(data);
+
+    await logAudit({
+      user: currentUser,
+      action: "CREATE",
+      resource: "SubmissionCriteriaScore",
+      resourceId: score.id,
+      resourceDetail: criteria.title,
+      meta,
+    });
+
+    return score;
   }
 
   static async findAllByAssessment(AssessmentResultId) {
@@ -57,7 +69,7 @@ class SubmissionCriteriaScoreService {
     });
   }
 
-  static async update(id, data, currentUser) {
+  static async update(id, data, currentUser, meta = {}) {
     if (!["Admin", "Owner", "Mentor"].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
@@ -70,10 +82,18 @@ class SubmissionCriteriaScoreService {
 
     await score.update(data);
 
+    await logAudit({
+      user: currentUser,
+      action: "UPDATE",
+      resource: "SubmissionCriteriaScore",
+      resourceId: score.id,
+      meta,
+    });
+
     return this.findById(id);
   }
 
-  static async delete(id, currentUser) {
+  static async delete(id, currentUser, meta = {}) {
     if (!["Admin", "Owner"].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
@@ -83,6 +103,14 @@ class SubmissionCriteriaScoreService {
     if (!score) {
       throw new Error("Score not found");
     }
+
+    await logAudit({
+      user: currentUser,
+      action: "DELETE",
+      resource: "SubmissionCriteriaScore",
+      resourceId: score.id,
+      meta,
+    });
 
     await score.destroy();
 
