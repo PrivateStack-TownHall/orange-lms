@@ -1,34 +1,32 @@
 import React from "react";
-import { ArrowLeft } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const Breadcrumbs = ({ items = [], backTo, backLabel = "Back" }) => {
-  if (!items.length && !backTo) return null;
+const Breadcrumbs = ({ items = [] }) => {
+  if (!items.length) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-3">
-      {backTo && (
-        <Link
-          to={backTo}
-          className="inline-flex items-center gap-1 text-sm font-medium text-[var(--color-primary)] hover:underline"
-        >
-          <ArrowLeft size={16} />
-          {backLabel}
-        </Link>
-      )}
+    <nav className="flex flex-wrap items-center gap-1.5 text-sm text-[var(--color-text-muted)]">
+      {items.map((item, index) => {
+        const isLast = index === items.length - 1;
 
-      {items.length > 0 && (
-        <div className="text-xs text-[var(--color-text-muted)]">
-          {items.map((item, index) => (
-            <span key={item.to || item.label}>
-              {item.label}
+        return (
+          <span key={item.to || item.label} className="flex items-center gap-1.5">
+            {index > 0 && <ChevronRight size={14} className="text-gray-300" />}
 
-              {index < items.length - 1 && " / "}
-            </span>
-          ))}
-        </div>
-      )}
-    </div>
+            {item.to && !isLast ? (
+              <Link to={item.to} className="hover:text-[var(--color-primary)]">
+                {item.label}
+              </Link>
+            ) : (
+              <span className={isLast ? "font-medium text-[var(--color-text)]" : ""}>
+                {item.label}
+              </span>
+            )}
+          </span>
+        );
+      })}
+    </nav>
   );
 };
 

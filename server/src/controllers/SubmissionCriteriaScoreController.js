@@ -6,6 +6,7 @@ class SubmissionCriteriaScoreController {
       const score = await submissionCriteriaScoreService.create(
         req.user,
         req.body,
+        req.meta,
       );
 
       res.status(201).json(score);
@@ -44,6 +45,7 @@ class SubmissionCriteriaScoreController {
         req.params.id,
         req.body,
         req.user,
+        req.meta,
       );
 
       res.status(200).json(score);
@@ -54,7 +56,7 @@ class SubmissionCriteriaScoreController {
 
   static async delete(req, res, next) {
     try {
-      await submissionCriteriaScoreService.delete(req.params.id, req.user);
+      await submissionCriteriaScoreService.delete(req.params.id, req.user, req.meta);
 
       res.status(200).json({
         message: "Score deleted successfully",

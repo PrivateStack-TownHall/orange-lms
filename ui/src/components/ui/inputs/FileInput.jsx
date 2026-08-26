@@ -1,22 +1,39 @@
 import { Upload, File } from "lucide-react";
 
-const FileInput = ({ label, value, onChange, accept, disabled = false }) => {
-  return (
-    <div className="flex flex-col gap-2">
-      <label className="text-sm font-medium text-gray-600">{label}</label>
+import FieldShell from "./FieldShell";
 
+const FileInput = ({
+  label,
+  value,
+  onChange,
+  accept,
+  icon: IconProp,
+  color = "orange",
+  helper,
+  info,
+  error,
+  disabled = false,
+}) => {
+  const Icon = IconProp || Upload;
+
+  return (
+    <FieldShell
+      label={label}
+      icon={Icon}
+      color={color}
+      helper={helper}
+      info={info}
+      error={error}
+      disabled={disabled}
+    >
       <label
-        className={`cursor-pointer ${
-          disabled ? "pointer-events-none opacity-60" : ""
+        className={`flex w-full items-center gap-2 py-2.5 pl-3 pr-3 text-sm ${
+          disabled ? "cursor-not-allowed text-gray-400" : "cursor-pointer text-[var(--color-text-muted)]"
         }`}
       >
-        <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 transition hover:border-orange-300 hover:bg-orange-50/30">
-          <Upload size={18} className="text-orange-500" />
-
-          <span className="text-sm text-gray-600">
-            {value?.name || "Choose file"}
-          </span>
-        </div>
+        <span className="truncate">
+          {value?.name || "Choose file"}
+        </span>
 
         <input
           type="file"
@@ -26,14 +43,7 @@ const FileInput = ({ label, value, onChange, accept, disabled = false }) => {
           onChange={(e) => onChange(e.target.files?.[0] || null)}
         />
       </label>
-
-      {value?.name && (
-        <div className="flex items-center gap-2 text-xs text-gray-500">
-          <File size={14} />
-          {value.name}
-        </div>
-      )}
-    </div>
+    </FieldShell>
   );
 };
 

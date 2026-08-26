@@ -1,4 +1,5 @@
 const { Profile } = require("../models");
+const { logActivity } = require("../helpers");
 
 class ProfileService {
   static async findByUserId(UserId) {
@@ -12,14 +13,26 @@ class ProfileService {
       where: { UserId },
     });
 
+    let result;
+
     if (profile) {
-      return profile.update(data);
+      result = await profile.update(data);
+    } else {
+      result = await Profile.create({
+        UserId,
+        ...data,
+      });
     }
 
-    return Profile.create({
-      UserId,
-      ...data,
+    await logActivity({
+      user: { id: UserId },
+      activity: "Updated Profile",
+      description: "Updated profile information",
+      resourceType: "Profile",
+      resourceId: UserId,
     });
+
+    return result;
   }
 }
 

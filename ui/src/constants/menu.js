@@ -7,6 +7,9 @@ import {
   Archive,
   User,
   Users,
+  BarChart3,
+  Shield,
+  Activity,
 } from "lucide-react";
 
 import ROLES from "./roles";
@@ -76,6 +79,33 @@ export const MENU_BY_ROLE = {
         },
       ],
     },
+
+    {
+      title: "REPORTS",
+      items: [
+        {
+          name: "Reports",
+          icon: BarChart3,
+          path: ROUTES.REPORTS,
+        },
+      ],
+    },
+
+    {
+      title: "ADMINISTRATION",
+      items: [
+        {
+          name: "Audit Log",
+          icon: Shield,
+          path: ROUTES.AUDIT_LOG,
+        },
+        {
+          name: "User Activity",
+          icon: Activity,
+          path: ROUTES.USER_ACTIVITY,
+        },
+      ],
+    },
   ],
 
   [ROLES.ADMIN]: [
@@ -133,6 +163,22 @@ export const MENU_BY_ROLE = {
           name: "Mentees",
           icon: Users,
           path: ROUTES.MENTEES,
+        },
+      ],
+    },
+
+    {
+      title: "ADMINISTRATION",
+      items: [
+        {
+          name: "Audit Log",
+          icon: Shield,
+          path: ROUTES.AUDIT_LOG,
+        },
+        {
+          name: "User Activity",
+          icon: Activity,
+          path: ROUTES.USER_ACTIVITY,
         },
       ],
     },

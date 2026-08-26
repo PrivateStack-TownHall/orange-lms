@@ -14,8 +14,15 @@ const UI_PERMISSIONS = {
     material: ["read", "create", "update", "delete"],
 
     attendance: ["read", "create", "update", "delete"],
+    taskCriteria: ["read", "create", "update", "delete"],
+    score: ["read", "create", "update", "delete"],
 
     historyClass: ["read", "create", "update", "delete"],
+
+    notification: ["read", "update", "delete"],
+    auditLog: ["read"],
+    userActivity: ["read"],
+    reports: ["read"],
 
     profile: ["read", "update"],
     setting: ["read", "update"],
@@ -35,8 +42,15 @@ const UI_PERMISSIONS = {
     material: ["read", "create", "update", "delete"],
 
     attendance: ["read", "create", "update", "delete"],
+    taskCriteria: ["read", "create", "update", "delete"],
+    score: ["read", "create", "update", "delete"],
 
     historyClass: ["read", "create", "update"],
+
+    notification: ["read", "update", "delete"],
+    auditLog: ["read"],
+    userActivity: ["read"],
+    // Reports is intentionally Owner-only — Admin does NOT get this.
 
     profile: ["read", "update"],
     setting: ["read", "update"],
@@ -55,6 +69,10 @@ const UI_PERMISSIONS = {
     material: ["read", "create", "update", "delete"],
 
     attendance: ["read", "create", "update"],
+    taskCriteria: ["read", "create", "update"],
+    score: ["read", "create", "update"],
+
+    notification: ["read", "update", "delete"],
 
     profile: ["read", "update"],
     setting: ["read", "update"],
@@ -66,11 +84,15 @@ const UI_PERMISSIONS = {
     class: ["read"],
     meeting: ["read"],
 
-    task: ["read"],
+    task: ["read", "submit"],
     note: ["read"],
     material: ["read"],
 
     attendance: ["read"],
+    taskCriteria: ["read"],
+    score: ["read"],
+
+    notification: ["read", "update", "delete"],
 
     profile: ["read", "update"],
     setting: ["read", "update"],

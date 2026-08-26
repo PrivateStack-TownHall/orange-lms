@@ -23,6 +23,14 @@ const assessmentResultRoutes = require("./assessmentResult");
 const submissionCriteriaScoreRoutes = require("./submissionCriteriaScore");
 const historyClassRoutes = require("./historyClass");
 
+/**
+ * V4 Notifications, Logs & Reports Routes
+ */
+const notificationRoutes = require("./notification");
+const auditLogRoutes = require("./auditLog");
+const userActivityRoutes = require("./userActivity");
+const reportsRoutes = require("./reports");
+
 const { authentication } = require("../middlewares");
 
 /**
@@ -84,5 +92,13 @@ router.use("/task-criteria", taskCriteriaRoutes);
 router.use("/assessment-results", assessmentResultRoutes);
 router.use("/submission-scores", submissionCriteriaScoreRoutes);
 router.use("/history-classes", historyClassRoutes);
+
+/**
+ * V4 Notifications, Logs & Reports
+ */
+router.use("/notifications", notificationRoutes);
+router.use("/audit-logs", auditLogRoutes);
+router.use("/user-activities", userActivityRoutes);
+router.use("/reports", reportsRoutes);
 
 module.exports = router;

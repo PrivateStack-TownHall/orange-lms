@@ -3,7 +3,11 @@ const { assessmentResultService } = require("../services");
 class AssessmentResultController {
   static async create(req, res, next) {
     try {
-      const result = await assessmentResultService.create(req.user, req.body);
+      const result = await assessmentResultService.create(
+        req.user,
+        req.body,
+        req.meta,
+      );
 
       res.status(201).json(result);
     } catch (error) {
@@ -49,6 +53,7 @@ class AssessmentResultController {
         req.params.id,
         req.body,
         req.user,
+        req.meta,
       );
 
       res.status(200).json(result);
@@ -59,7 +64,7 @@ class AssessmentResultController {
 
   static async delete(req, res, next) {
     try {
-      await assessmentResultService.delete(req.params.id, req.user);
+      await assessmentResultService.delete(req.params.id, req.user, req.meta);
 
       res.status(200).json({
         message: "Assessment deleted successfully",
