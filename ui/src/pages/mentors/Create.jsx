@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { UserCog } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import Form from "@/components/ui/forms/Form";
 
-import SuccessPopup from "@/components/ui/popup/SuccessPopup";
-import ErrorPopup from "@/components/ui/popup/ErrorPopup";
+import SuccessPopup from "@/components/ui/popup/SuccessPopUp";
+import ErrorPopup from "@/components/ui/popup/ErrorPopUp";
 
 import useForm from "@/hooks/useForm";
 
@@ -52,6 +53,8 @@ const Create = () => {
   return (
     <>
       <Form
+        icon={UserCog}
+        color="green"
         title="Create Mentor"
         description="Fill mentor personal information"
         schema={userSchema}
@@ -59,6 +62,7 @@ const Create = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
         submitLabel="Create Mentor"
+        onCancel={() => navigate("/mentors")}
       />
 
       <SuccessPopup

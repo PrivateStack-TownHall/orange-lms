@@ -16,7 +16,7 @@ import EmailInput from "../inputs/EmailInput";
 import NumberInput from "../inputs/NumberInput";
 import TextArea from "../inputs/TextArea";
 import Select from "../inputs/Select";
-import Checkbox from "../inputs/Checkbox";
+import Checkbox from "../inputs/CheckBox";
 import RadioButton from "../inputs/RadioButton";
 import DateInput from "../inputs/DateInput";
 import TimeInput from "../inputs/TimeInput";
@@ -49,4 +49,18 @@ export const INPUT_ICONS = {
   file: FileInputIcon,
   password: Lock,
   id: Hash,
+};
+
+// Default icon-box tint per field type, used when a schema field doesn't
+// specify its own `color`.
+export const INPUT_COLORS = {
+  text: "orange",
+  email: "blue",
+  number: "orange",
+  textarea: "orange",
+  select: "purple",
+  date: "green",
+  time: "amber",
+  file: "orange",
+  password: "gray",
 };

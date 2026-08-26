@@ -26,6 +26,23 @@ class ErrorHandling {
       });
     }
 
+    if (error.message === "Permission denied") {
+      return res.status(403).json({
+        error: true,
+        message: "Permission denied",
+      });
+    }
+
+    if (
+      error.message === "Only mentee can submit task" ||
+      error.message === "Only owner can delete history"
+    ) {
+      return res.status(403).json({
+        error: true,
+        message: error.message,
+      });
+    }
+
     /**
      * User Access
      */
@@ -55,6 +72,15 @@ class ErrorHandling {
       "Task not found",
       "Note not found",
       "Material not found",
+      "Notification not found",
+      "Task criteria not found",
+      "Submission not found",
+      "Attendance not found",
+      "Assessment result not found",
+      "History class not found",
+      "Original class not found",
+      "Score not found",
+      "No participants found",
     ];
 
     if (notFoundErrors.includes(error.message)) {
@@ -65,10 +91,26 @@ class ErrorHandling {
     }
 
     /**
-     * Duplicate
+     * Duplicate / Conflict
      */
-    if (error.message === "Email already registered") {
+    const conflictErrors = [
+      "Email already registered",
+      "Assessment result already exists for this submission",
+      "Attendance already exists for this user",
+    ];
+
+    if (conflictErrors.includes(error.message)) {
       return res.status(409).json({
+        error: true,
+        message: error.message,
+      });
+    }
+
+    /**
+     * Business-rule validation
+     */
+    if (error.message === "Total criteria percentage cannot exceed 100%") {
+      return res.status(400).json({
         error: true,
         message: error.message,
       });

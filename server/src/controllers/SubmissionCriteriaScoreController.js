@@ -6,6 +6,7 @@ class SubmissionCriteriaScoreController {
       const score = await submissionCriteriaScoreService.create(
         req.user,
         req.body,
+        req.meta,
       );
 
       res.status(201).json(score);
@@ -13,18 +14,6 @@ class SubmissionCriteriaScoreController {
       next(error);
     }
   }
-
-  // static async getBySubmission(req, res, next) {
-  //   try {
-  //     const scores = await submissionCriteriaScoreService.findAllBySubmission(
-  //       req.params.assessmentResultId,
-  //     );
-
-  //     res.status(200).json(scores);
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
 
   static async getByAssessment(req, res, next) {
     try {
@@ -38,12 +27,25 @@ class SubmissionCriteriaScoreController {
     }
   }
 
+  static async getById(req, res, next) {
+    try {
+      const score = await submissionCriteriaScoreService.findById(
+        req.params.id,
+      );
+
+      res.status(200).json(score);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async update(req, res, next) {
     try {
       const score = await submissionCriteriaScoreService.update(
         req.params.id,
         req.body,
         req.user,
+        req.meta,
       );
 
       res.status(200).json(score);
@@ -54,10 +56,10 @@ class SubmissionCriteriaScoreController {
 
   static async delete(req, res, next) {
     try {
-      await submissionCriteriaScoreService.delete(req.params.id, req.user);
+      await submissionCriteriaScoreService.delete(req.params.id, req.user, req.meta);
 
       res.status(200).json({
-        message: "Score deleted",
+        message: "Score deleted successfully",
       });
     } catch (error) {
       next(error);

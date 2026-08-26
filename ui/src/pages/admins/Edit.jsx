@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { ShieldCheck } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Form from "@/components/ui/forms/Form";
 
-import SuccessPopup from "@/components/ui/popup/SuccessPopup";
-import ErrorPopup from "@/components/ui/popup/ErrorPopup";
+import SuccessPopup from "@/components/ui/popup/SuccessPopUp";
+import ErrorPopup from "@/components/ui/popup/ErrorPopUp";
 
 import useForm from "@/hooks/useForm";
 
@@ -98,6 +99,8 @@ const Edit = () => {
   return (
     <>
       <Form
+        icon={ShieldCheck}
+        color="green"
         title="Edit Admin"
         description="Update admin information"
         schema={userSchema}
@@ -105,6 +108,7 @@ const Edit = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
         submitLabel="Update Admin"
+        onCancel={() => navigate("/admins")}
       />
 
       <SuccessPopup

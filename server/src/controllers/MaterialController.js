@@ -23,10 +23,16 @@ class MaterialController {
 
   static async create(req, res, next) {
     try {
+      const payload = {
+        ...req.body,
+        fileUrl: req.file?.path || req.body.fileUrl,
+      };
+
       const material = await materialService.create(
         req.user,
         req.params.meetingId,
-        req.body,
+        payload,
+        req.meta,
       );
       res.status(201).json(material);
     } catch (err) {
@@ -45,10 +51,16 @@ class MaterialController {
 
   static async update(req, res, next) {
     try {
+      const payload = {
+        ...req.body,
+        fileUrl: req.file?.path || req.body.fileUrl,
+      };
+
       const material = await materialService.update(
         req.params.id,
-        req.body,
+        payload,
         req.user,
+        req.meta,
       );
       res.json(material);
     } catch (err) {
@@ -58,7 +70,7 @@ class MaterialController {
 
   static async delete(req, res, next) {
     try {
-      await materialService.delete(req.params.id, req.user);
+      await materialService.delete(req.params.id, req.user, req.meta);
       res.json({ message: "Material deleted" });
     } catch (err) {
       next(err);

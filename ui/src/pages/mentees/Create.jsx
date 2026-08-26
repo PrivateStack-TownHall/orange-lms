@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { GraduationCap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import Form from "@/components/ui/forms/Form";
 
-import SuccessPopup from "@/components/ui/popup/SuccessPopup";
-import ErrorPopup from "@/components/ui/popup/ErrorPopup";
+import SuccessPopup from "@/components/ui/popup/SuccessPopUp";
+import ErrorPopup from "@/components/ui/popup/ErrorPopUp";
 
 import useForm from "@/hooks/useForm";
 
@@ -49,6 +50,8 @@ const Create = () => {
   return (
     <>
       <Form
+        icon={GraduationCap}
+        color="green"
         title="Create Mentee"
         description="Fill mentee personal information"
         schema={userSchema}
@@ -56,6 +59,7 @@ const Create = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
         submitLabel="Create Mentee"
+        onCancel={() => navigate("/mentees")}
       />
 
       <SuccessPopup

@@ -1,12 +1,13 @@
 import { useState } from "react";
+import { StickyNote } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import Form from "@/components/ui/forms/Form";
 
 import LoadingPage from "@/components/ui/loading/LoadingPage";
 
-import SuccessPopup from "@/components/ui/popup/SuccessPopup";
-import ErrorPopup from "@/components/ui/popup/ErrorPopup";
+import SuccessPopup from "@/components/ui/popup/SuccessPopUp";
+import ErrorPopup from "@/components/ui/popup/ErrorPopUp";
 
 import useForm from "@/hooks/useForm";
 import useClassMeetingOptions from "@/hooks/useClassMeetingOptions";
@@ -67,6 +68,8 @@ const Create = () => {
   return (
     <>
       <Form
+        icon={StickyNote}
+        color="blue"
         title="Create Note"
         description="Fill note information"
         schema={schema}
@@ -74,6 +77,7 @@ const Create = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
         submitLabel="Create Note"
+        onCancel={() => navigate("/notes")}
       />
 
       <SuccessPopup

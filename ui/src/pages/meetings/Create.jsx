@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+import { Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import Form from "@/components/ui/forms/Form";
 import LoadingPage from "@/components/ui/loading/LoadingPage";
 
-import SuccessPopup from "@/components/ui/popup/SuccessPopup";
-import ErrorPopup from "@/components/ui/popup/ErrorPopup";
+import SuccessPopup from "@/components/ui/popup/SuccessPopUp";
+import ErrorPopup from "@/components/ui/popup/ErrorPopUp";
 
 import useForm from "@/hooks/useForm";
 
@@ -105,6 +106,8 @@ const Create = () => {
   return (
     <>
       <Form
+        icon={Calendar}
+        color="orange"
         title="Create Meeting"
         description="Create a new meeting."
         schema={schema}
@@ -112,6 +115,7 @@ const Create = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
         submitLabel="Create Meeting"
+        onCancel={() => navigate("/meetings")}
       />
 
       <SuccessPopup

@@ -24,6 +24,12 @@ const submissionCriteriaScoreService = require("./submissionCriteriaScore.servic
 const assessmentResultService = require("./assessmentResult.service");
 const historyClassService = require("./historyClass.service");
 
+// V4 - Notifications, Logs & Reports
+const notificationService = require("./notification.service");
+const auditLogService = require("./auditLog.service");
+const userActivityService = require("./userActivity.service");
+const reportsService = require("./reports.service");
+
 module.exports = {
   authService,
 
@@ -49,4 +55,9 @@ module.exports = {
   submissionCriteriaScoreService,
   assessmentResultService,
   historyClassService,
+
+  notificationService,
+  auditLogService,
+  userActivityService,
+  reportsService,
 };

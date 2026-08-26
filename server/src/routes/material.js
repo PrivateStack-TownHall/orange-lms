@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router({ mergeParams: true });
 
 const { MaterialController } = require("../controllers");
-const { authorization } = require("../middlewares");
+const { authorization, upload } = require("../middlewares");
 
 router.get(
   "/",
@@ -13,6 +13,7 @@ router.get(
 router.post(
   "/",
   authorization("material", "create"),
+  upload.single("file"),
   MaterialController.create,
 );
 
@@ -31,6 +32,7 @@ router.get(
 router.put(
   "/:id",
   authorization("material", "update"),
+  upload.single("file"),
   MaterialController.update,
 );
 

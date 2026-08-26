@@ -1,7 +1,9 @@
 const express = require("express");
+
 const router = express.Router({ mergeParams: true });
 
 const { AttendanceController } = require("../controllers");
+
 const { authorization } = require("../middlewares");
 
 router.get(
@@ -9,11 +11,21 @@ router.get(
   authorization("attendance", "read"),
   AttendanceController.getByMeeting,
 );
-
+router.get(
+  "/meeting/:meetingId/summary",
+  authorization("attendance", "read"),
+  AttendanceController.getSummary,
+);
 router.get(
   "/user/:userId",
   authorization("attendance", "read"),
   AttendanceController.getByUser,
+);
+
+router.get(
+  "/:id",
+  authorization("attendance", "read"),
+  AttendanceController.getById,
 );
 
 router.post(

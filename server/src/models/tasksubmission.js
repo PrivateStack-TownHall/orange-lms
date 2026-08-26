@@ -24,9 +24,13 @@ module.exports = (sequelize, DataTypes) => {
       TaskId: DataTypes.INTEGER,
       UserId: DataTypes.INTEGER,
       submissionUrl: DataTypes.STRING,
+      submissionFileUrl: DataTypes.STRING,
       submittedNote: DataTypes.TEXT,
+      feedback: DataTypes.TEXT,
+      score: DataTypes.INTEGER,
       status: DataTypes.STRING,
       submittedAt: DataTypes.DATE,
+      reviewedAt: DataTypes.DATE,
     },
     {
       sequelize,

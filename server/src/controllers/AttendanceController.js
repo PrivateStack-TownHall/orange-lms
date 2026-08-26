@@ -6,6 +6,7 @@ class AttendanceController {
       const attendance = await attendanceService.markAttendance(
         req.user,
         req.body,
+        req.meta,
       );
 
       res.status(201).json(attendance);
@@ -42,6 +43,7 @@ class AttendanceController {
         req.params.id,
         req.body,
         req.user,
+        req.meta,
       );
 
       res.status(200).json(attendance);
@@ -52,11 +54,32 @@ class AttendanceController {
 
   static async delete(req, res, next) {
     try {
-      await attendanceService.delete(req.params.id, req.user);
+      await attendanceService.delete(req.params.id, req.user, req.meta);
 
       res.status(200).json({
         message: "Attendance deleted",
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // tambahan new feature
+  static async getById(req, res, next) {
+    try {
+      const attendance = await attendanceService.findById(req.params.id);
+
+      res.status(200).json(attendance);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getSummary(req, res, next) {
+    try {
+      const summary = await attendanceService.getSummary(req.params.meetingId);
+
+      res.status(200).json(summary);
     } catch (error) {
       next(error);
     }

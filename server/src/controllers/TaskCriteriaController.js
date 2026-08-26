@@ -3,7 +3,11 @@ const { taskCriteriaService } = require("../services");
 class TaskCriteriaController {
   static async create(req, res, next) {
     try {
-      const criteria = await taskCriteriaService.create(req.user, req.body);
+      const criteria = await taskCriteriaService.create(
+        req.user,
+        req.body,
+        req.meta,
+      );
 
       res.status(201).json(criteria);
     } catch (error) {
@@ -18,6 +22,16 @@ class TaskCriteriaController {
       );
 
       res.status(200).json(criterias);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getSummary(req, res, next) {
+    try {
+      const summary = await taskCriteriaService.getSummary(req.params.taskId);
+
+      res.status(200).json(summary);
     } catch (error) {
       next(error);
     }
@@ -39,6 +53,7 @@ class TaskCriteriaController {
         req.params.id,
         req.body,
         req.user,
+        req.meta,
       );
 
       res.status(200).json(criteria);
@@ -49,10 +64,10 @@ class TaskCriteriaController {
 
   static async delete(req, res, next) {
     try {
-      await taskCriteriaService.delete(req.params.id, req.user);
+      await taskCriteriaService.delete(req.params.id, req.user, req.meta);
 
       res.status(200).json({
-        message: "Criteria deleted",
+        message: "Criteria deleted successfully",
       });
     } catch (error) {
       next(error);

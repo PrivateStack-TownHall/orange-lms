@@ -4,4 +4,14 @@ const authorization = require("./authorization");
 
 const ErrorHandling = require("./ErrorHandling");
 
-module.exports = { authentication, authorization, ErrorHandling };
+const upload = require("./multer");
+
+const requestMeta = require("./requestMeta");
+
+module.exports = {
+  authentication,
+  authorization,
+  ErrorHandling,
+  upload,
+  requestMeta,
+};
