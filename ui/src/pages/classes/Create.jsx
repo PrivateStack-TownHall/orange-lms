@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { BookOpen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import Form from "@/components/ui/forms/Form";
@@ -102,6 +103,8 @@ const Create = () => {
   return (
     <>
       <Form
+        icon={BookOpen}
+        color="orange"
         title="Create Class"
         description="Create a new learning class."
         schema={schema}
@@ -109,6 +112,7 @@ const Create = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
         submitLabel="Create Class"
+        onCancel={() => navigate("/classes")}
       />
 
       <SuccessPopup

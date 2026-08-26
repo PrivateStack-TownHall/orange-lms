@@ -50,3 +50,17 @@ export const INPUT_ICONS = {
   password: Lock,
   id: Hash,
 };
+
+// Default icon-box tint per field type, used when a schema field doesn't
+// specify its own `color`.
+export const INPUT_COLORS = {
+  text: "orange",
+  email: "blue",
+  number: "orange",
+  textarea: "orange",
+  select: "purple",
+  date: "green",
+  time: "amber",
+  file: "orange",
+  password: "gray",
+};

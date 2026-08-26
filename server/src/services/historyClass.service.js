@@ -1,4 +1,5 @@
 const { HistoryClass, Class, User, ClassUser } = require("../models");
+const { logAudit } = require("../helpers");
 
 class HistoryClassService {
   static async findAll() {
@@ -57,7 +58,7 @@ class HistoryClassService {
     };
   }
 
-  static async archive(classId, currentUser) {
+  static async archive(classId, currentUser, meta = {}) {
     if (!["Owner", "Admin"].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
@@ -126,10 +127,19 @@ class HistoryClassService {
       status: "Archived",
     });
 
+    await logAudit({
+      user: currentUser,
+      action: "UPDATE",
+      resource: "HistoryClass",
+      resourceId: cls.id,
+      resourceDetail: `Archived class "${cls.name}"`,
+      meta,
+    });
+
     return histories;
   }
 
-  static async restore(id, currentUser) {
+  static async restore(id, currentUser, meta = {}) {
     if (!["Owner", "Admin"].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
@@ -152,12 +162,21 @@ class HistoryClassService {
 
     await history.destroy();
 
+    await logAudit({
+      user: currentUser,
+      action: "UPDATE",
+      resource: "HistoryClass",
+      resourceId: cls.id,
+      resourceDetail: `Restored class "${cls.name}"`,
+      meta,
+    });
+
     return {
       message: "Class restored successfully",
     };
   }
 
-  static async delete(id, currentUser) {
+  static async delete(id, currentUser, meta = {}) {
     if (!["Owner"].includes(currentUser.role)) {
       throw new Error("Only owner can delete history");
     }
@@ -167,6 +186,14 @@ class HistoryClassService {
     if (!history) {
       throw new Error("History class not found");
     }
+
+    await logAudit({
+      user: currentUser,
+      action: "DELETE",
+      resource: "HistoryClass",
+      resourceId: history.id,
+      meta,
+    });
 
     await history.destroy();
 

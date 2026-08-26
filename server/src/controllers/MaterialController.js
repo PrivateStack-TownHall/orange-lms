@@ -32,6 +32,7 @@ class MaterialController {
         req.user,
         req.params.meetingId,
         payload,
+        req.meta,
       );
       res.status(201).json(material);
     } catch (err) {
@@ -59,6 +60,7 @@ class MaterialController {
         req.params.id,
         payload,
         req.user,
+        req.meta,
       );
       res.json(material);
     } catch (err) {
@@ -68,7 +70,7 @@ class MaterialController {
 
   static async delete(req, res, next) {
     try {
-      await materialService.delete(req.params.id, req.user);
+      await materialService.delete(req.params.id, req.user, req.meta);
       res.json({ message: "Material deleted" });
     } catch (err) {
       next(err);

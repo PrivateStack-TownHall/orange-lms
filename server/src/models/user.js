@@ -16,7 +16,12 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       User.belongsToMany(models.Class, {
-        through: models.ClassUser,
+        through: {
+          model: models.ClassUser,
+          where: {
+            roleInClass: "Mentee",
+          },
+        },
         foreignKey: "UserId",
         otherKey: "ClassId",
         as: "enrolledClasses",

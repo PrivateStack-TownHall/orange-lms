@@ -1,7 +1,8 @@
 const { Attendance, User, Meeting } = require("../models");
+const { logAudit, logActivity, notifyUsers } = require("../helpers");
 
 class AttendanceService {
-  static async markAttendance(currentUser, data) {
+  static async markAttendance(currentUser, data, meta = {}) {
     if (!["Admin", "Owner", "Mentor"].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
@@ -17,11 +18,43 @@ class AttendanceService {
       throw new Error("Attendance already exists for this user");
     }
 
-    return Attendance.create({
+    const attendance = await Attendance.create({
       ...data,
       checkedBy: currentUser.id,
       checkInAt: new Date(),
     });
+
+    const meeting = await Meeting.findByPk(data.MeetingId);
+
+    await logAudit({
+      user: currentUser,
+      action: "CREATE",
+      resource: "Attendance",
+      resourceId: attendance.id,
+      resourceDetail: `Meeting #${meeting?.meetingNumber || data.MeetingId}`,
+      meta,
+    });
+
+    await logActivity({
+      user: { id: data.UserId },
+      activity: "Attendance Recorded",
+      description: `Your attendance for Meeting #${meeting?.meetingNumber || ""} has been recorded.`,
+      ClassId: meeting?.ClassId,
+      resourceType: "Attendance",
+      resourceId: attendance.id,
+    });
+
+    await notifyUsers({
+      userIds: data.UserId,
+      type: "Attendance",
+      title: "Attendance Recorded",
+      message: `Your attendance for Meeting #${meeting?.meetingNumber || ""} has been recorded.`,
+      relatedType: "Attendance",
+      relatedId: attendance.id,
+      ClassId: meeting?.ClassId,
+    });
+
+    return attendance;
   }
 
   static async findAllByMeeting(MeetingId) {
@@ -81,7 +114,7 @@ class AttendanceService {
     });
   }
 
-  static async updateStatus(id, data, currentUser) {
+  static async updateStatus(id, data, currentUser, meta = {}) {
     if (!["Admin", "Owner", "Mentor"].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
@@ -97,10 +130,18 @@ class AttendanceService {
       checkedBy: currentUser.id,
     });
 
+    await logAudit({
+      user: currentUser,
+      action: "UPDATE",
+      resource: "Attendance",
+      resourceId: attendance.id,
+      meta,
+    });
+
     return this.findById(id);
   }
 
-  static async delete(id, currentUser) {
+  static async delete(id, currentUser, meta = {}) {
     if (!["Admin", "Owner"].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
@@ -110,6 +151,14 @@ class AttendanceService {
     if (!attendance) {
       throw new Error("Attendance not found");
     }
+
+    await logAudit({
+      user: currentUser,
+      action: "DELETE",
+      resource: "Attendance",
+      resourceId: attendance.id,
+      meta,
+    });
 
     await attendance.destroy();
 

@@ -21,6 +21,7 @@ import { useThemeStore } from "@/app/theme";
 import { can } from "@/helpers";
 
 import UserDropdown from "./UserDropdown";
+import NotificationBell from "./NotificationBell";
 
 const TopBar = () => {
   const { user } = useSelector((state) => state.auth);
@@ -200,7 +201,10 @@ const TopBar = () => {
       </div>
 
       {/* Right */}
-      <UserDropdown user={user} />
+      <div className="flex items-center gap-3">
+        <NotificationBell />
+        <UserDropdown user={user} />
+      </div>
     </header>
   );
 };

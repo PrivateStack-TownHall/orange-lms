@@ -29,6 +29,19 @@ class AuthService {
     localStorage.setItem("user", JSON.stringify(user));
   }
 
+  /**
+   * Notifies the backend so the logout gets recorded in AuditLog +
+   * UserActivity. Best-effort: if the request fails (e.g. token already
+   * expired), local session is still cleared right after via `logout()`.
+   */
+  static async logoutRequest() {
+    try {
+      await api.post(ENDPOINTS.AUTH_LOGOUT);
+    } catch {
+      // Ignore — local session clears regardless.
+    }
+  }
+
   static logout() {
     localStorage.removeItem("access_token");
     localStorage.removeItem("user");

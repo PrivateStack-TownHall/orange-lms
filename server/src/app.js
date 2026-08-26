@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 
 const routes = require("./routes");
 
-const { ErrorHandling } = require("./middlewares");
+const { ErrorHandling, requestMeta } = require("./middlewares");
 
 const app = express();
 
@@ -23,6 +23,9 @@ app.use(
     extended: true,
   }),
 );
+
+app.set("trust proxy", true);
+app.use(requestMeta);
 
 /**
  * =========================

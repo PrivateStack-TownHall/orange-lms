@@ -93,4 +93,24 @@ module.exports = {
     update: [ROLES.OWNER, ROLES.ADMIN],
     delete: [ROLES.OWNER],
   },
+
+  // Tambahan V4
+  notification: {
+    // Every role reads/manages only their own notifications (enforced in service)
+    read: [ROLES.OWNER, ROLES.ADMIN, ROLES.MENTOR, ROLES.MENTEE],
+    update: [ROLES.OWNER, ROLES.ADMIN, ROLES.MENTOR, ROLES.MENTEE],
+    delete: [ROLES.OWNER, ROLES.ADMIN, ROLES.MENTOR, ROLES.MENTEE],
+  },
+
+  auditLog: {
+    read: [ROLES.OWNER, ROLES.ADMIN],
+  },
+
+  userActivity: {
+    read: [ROLES.OWNER, ROLES.ADMIN],
+  },
+
+  reports: {
+    read: [ROLES.OWNER],
+  },
 };

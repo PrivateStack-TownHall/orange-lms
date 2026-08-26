@@ -21,7 +21,7 @@ class ClassController {
 
   static async create(req, res, next) {
     try {
-      const cls = await classService.create(req.body, req.user);
+      const cls = await classService.create(req.body, req.user, req.meta);
       res.status(201).json(cls);
     } catch (err) {
       next(err);
@@ -30,7 +30,12 @@ class ClassController {
 
   static async update(req, res, next) {
     try {
-      const cls = await classService.update(req.params.id, req.body, req.user);
+      const cls = await classService.update(
+        req.params.id,
+        req.body,
+        req.user,
+        req.meta,
+      );
       res.json(cls);
     } catch (err) {
       next(err);
@@ -39,7 +44,7 @@ class ClassController {
 
   static async delete(req, res, next) {
     try {
-      await classService.delete(req.params.id, req.user);
+      await classService.delete(req.params.id, req.user, req.meta);
       res.json({ message: "Class deleted" });
     } catch (err) {
       next(err);
@@ -48,10 +53,14 @@ class ClassController {
 
   static async enrollMentee(req, res, next) {
     try {
-      const enrollment = await classUserService.enrollMentee({
-        ClassId: req.params.id,
-        UserId: req.body.UserId,
-      });
+      const enrollment = await classUserService.enrollMentee(
+        {
+          ClassId: req.params.id,
+          UserId: req.body.UserId,
+        },
+        req.user,
+        req.meta,
+      );
       res.json(enrollment);
     } catch (err) {
       next(err);
@@ -64,6 +73,8 @@ class ClassController {
       const enrollments = await classUserService.enrollMentees(
         req.params.id,
         req.body.UserIds,
+        req.user,
+        req.meta,
       );
 
       res.json(enrollments);
@@ -77,6 +88,8 @@ class ClassController {
       await classUserService.removeMentee(
         req.params.classId,
         req.params.userId,
+        req.user,
+        req.meta,
       );
 
       res.json({
@@ -88,10 +101,14 @@ class ClassController {
   }
   static async assignMentor(req, res, next) {
     try {
-      const result = await classUserService.assignMentor({
-        ClassId: req.params.id,
-        UserId: req.body.UserId,
-      });
+      const result = await classUserService.assignMentor(
+        {
+          ClassId: req.params.id,
+          UserId: req.body.UserId,
+        },
+        req.user,
+        req.meta,
+      );
       res.json(result);
     } catch (err) {
       next(err);
