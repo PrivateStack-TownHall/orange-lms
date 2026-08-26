@@ -20,6 +20,10 @@ import ActionButton from "@/components/ui/buttons/ActionButton";
 import LoadingPage from "@/components/ui/loading/LoadingPage";
 import StatusBadge from "@/components/ui/status/StatusBadge";
 
+import TaskCriteriaSection from "./components/TaskCriteriaSection";
+import SubmissionsTab from "@/pages/meetings/Detail/components/SubmissionsTab";
+import SubmitTaskModal from "@/pages/meetings/Detail/components/SubmitTaskModal";
+
 /**
  * Dual-mode component:
  *  - Modal mode: rendered from the Tasks list with a `task` prop already in hand.
@@ -32,6 +36,7 @@ const Detail = ({ task: taskProp, role: roleProp, onDelete }) => {
 
   const [task, setTask] = useState(taskProp || null);
   const [loading, setLoading] = useState(!taskProp && !!id);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (taskProp || !id) return;
@@ -144,7 +149,44 @@ const Detail = ({ task: taskProp, role: roleProp, onDelete }) => {
             )}
           </div>
         </InfoCard>
+
+        <TaskCriteriaSection taskId={task.id} role={role} />
+
+        {can(role, "task", "submit") && (
+          <div className="rounded-sm border border-gray-200 bg-white p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-semibold">Your Submission</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  Submit your work before the deadline.
+                </p>
+              </div>
+              <button
+                onClick={() => setSubmitting(true)}
+                className="rounded-sm bg-orange-500 px-4 py-2 text-sm font-medium text-white hover:bg-orange-600"
+              >
+                Submit / Resubmit
+              </button>
+            </div>
+          </div>
+        )}
+
+        {(can(role, "taskCriteria", "create") ||
+          role === "Owner" ||
+          role === "Admin") && (
+          <div className="rounded-sm border border-gray-200 bg-white p-5">
+            <h3 className="mb-3 font-semibold">Submissions</h3>
+            <SubmissionsTab tasks={[task]} />
+          </div>
+        )}
       </div>
+
+      <SubmitTaskModal
+        open={submitting}
+        task={task}
+        onClose={() => setSubmitting(false)}
+        onSubmitted={() => setSubmitting(false)}
+      />
     </div>
   );
 };

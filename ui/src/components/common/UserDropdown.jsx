@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 import { logout } from "@/app/store/slices/authSlice";
+import AuthService from "@/services/modules/auth.service";
 
 const ROLE_STYLES = {
   Owner:
@@ -39,7 +40,8 @@ const UserDropdown = ({ user }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await AuthService.logoutRequest();
     dispatch(logout());
     navigate("/auth/login");
   };

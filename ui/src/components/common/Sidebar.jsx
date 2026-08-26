@@ -40,6 +40,16 @@ const SECTION_PROMO = {
     title: "Grow your community",
     description: "Manage mentors and mentees in just a few clicks.",
   },
+  REPORTS: {
+    image: "/grading-report-aplus.png",
+    title: "Data-driven decisions",
+    description: "Track performance trends across every class and mentor.",
+  },
+  ADMINISTRATION: {
+    image: "/user-roles-permission.png",
+    title: "Stay in control",
+    description: "Review every action and activity across the platform.",
+  },
 };
 
 const Sidebar = ({ collapsed = false, onToggle }) => {

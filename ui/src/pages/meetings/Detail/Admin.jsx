@@ -22,12 +22,15 @@ import {
   XCircle,
   HelpCircle,
   Upload,
+  ClipboardCheck,
 } from "lucide-react";
 
 import usePopupStore from "@/app/store/popupStore";
 
 import MeetingService from "@/services/modules/meeting.service";
 import AttendanceService from "@/services/modules/attendance.service";
+
+import SubmissionsTab from "./components/SubmissionsTab";
 
 import { useBreadcrumbs } from "@/hooks";
 import { formatDate } from "@/helpers";
@@ -207,6 +210,7 @@ const Detail = () => {
     { value: "notes", label: "Notes", icon: FileText },
     { value: "materials", label: "Materials", icon: Archive },
     { value: "attendance", label: "Attendance", icon: Users },
+    { value: "submissions", label: "Submissions", icon: ClipboardCheck },
   ];
 
   return (
@@ -650,6 +654,10 @@ const Detail = () => {
                 </Button>
               </div>
             </div>
+          </TabContent>
+
+          <TabContent activeTab={activeTab} value="submissions">
+            <SubmissionsTab tasks={meeting.tasks || []} />
           </TabContent>
         </div>
       </div>

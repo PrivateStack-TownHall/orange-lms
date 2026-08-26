@@ -29,6 +29,9 @@ import TaskService from "@/services/modules/task.service";
 import NoteService from "@/services/modules/note.service";
 import MaterialService from "@/services/modules/material.service";
 
+import AttendanceTab from "./components/AttendanceTab";
+import SubmissionsTab from "./components/SubmissionsTab";
+
 const tabs = ["Tasks", "Notes", "Materials", "Attendance", "Submission"];
 
 const Mentor = () => {
@@ -549,14 +552,10 @@ const TabsContent = ({
       )}
 
       {activeTab === "Attendance" && (
-        <div className="rounded-sm border border-dashed border-gray-300 p-8 text-center text-gray-500">
-          Attendance Module Coming Soon
-        </div>
+        <AttendanceTab meetingId={meeting.id} mentees={meeting.class?.mentees || []} />
       )}
       {activeTab === "Submission" && (
-        <div className="rounded-sm border border-dashed border-gray-300 p-8 text-center text-gray-500">
-          Submission Module Coming Soon
-        </div>
+        <SubmissionsTab tasks={meeting.tasks || []} />
       )}
     </div>
   );
