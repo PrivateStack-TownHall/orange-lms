@@ -22,6 +22,12 @@ const HistoryClassController = require("./HistoryClassController");
 const AssessmentResultController = require("./AssessmentResultController");
 const SubmissionCriteriaScoreController = require("./SubmissionCriteriaScoreController");
 
+// V4
+const NotificationController = require("./NotificationController");
+const AuditLogController = require("./AuditLogController");
+const UserActivityController = require("./UserActivityController");
+const ReportsController = require("./ReportsController");
+
 module.exports = {
   AuthController,
   UserController,
@@ -44,4 +50,9 @@ module.exports = {
   HistoryClassController,
   AssessmentResultController,
   SubmissionCriteriaScoreController,
+
+  NotificationController,
+  AuditLogController,
+  UserActivityController,
+  ReportsController,
 };

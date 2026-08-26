@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ClipboardCheck } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Form from "@/components/ui/forms/Form";
@@ -106,6 +107,8 @@ const Edit = () => {
   return (
     <>
       <Form
+        icon={ClipboardCheck}
+        color="blue"
         title="Edit Task"
         description="Update task information"
         schema={schema}
@@ -113,6 +116,7 @@ const Edit = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
         submitLabel="Update Task"
+        onCancel={() => navigate("/tasks")}
       />
 
       <SuccessPopup

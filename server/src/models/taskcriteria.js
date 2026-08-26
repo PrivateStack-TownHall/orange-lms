@@ -26,6 +26,8 @@ module.exports = (sequelize, DataTypes) => {
       TaskId: DataTypes.INTEGER,
       title: DataTypes.STRING,
       percentage: DataTypes.DECIMAL(5, 2),
+      maxScore: DataTypes.INTEGER,
+      order: DataTypes.INTEGER,
       description: DataTypes.TEXT,
       createdBy: DataTypes.INTEGER,
     },

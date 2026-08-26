@@ -1,18 +1,40 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ListFilter } from "lucide-react";
 
-const Select = ({ label, value, onChange, options = [], disabled = false }) => {
+import FieldShell from "./FieldShell";
+
+const Select = ({
+  label,
+  value,
+  onChange,
+  options = [],
+  placeholder = "Select",
+  icon: IconProp,
+  color = "purple",
+  helper,
+  info,
+  error,
+  disabled = false,
+}) => {
+  const Icon = IconProp || ListFilter;
+
   return (
-    <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium text-gray-600">{label}</label>
-
-      <div className="relative">
+    <FieldShell
+      label={label}
+      icon={Icon}
+      color={color}
+      helper={helper}
+      info={info}
+      error={error}
+      disabled={disabled}
+    >
+      <div className="relative flex-1">
         <select
           value={value || ""}
           disabled={disabled}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full appearance-none rounded-sm border border-gray-200 bg-white py-2.5 pl-3 pr-10 text-sm outline-none transition focus:border-orange-400 focus:ring-1 focus:ring-orange-200 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
+          className="w-full appearance-none bg-transparent py-2.5 pl-3 pr-9 text-sm outline-none disabled:cursor-not-allowed disabled:text-gray-500"
         >
-          <option value="">Select</option>
+          <option value="">{placeholder}</option>
 
           {options.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -23,10 +45,10 @@ const Select = ({ label, value, onChange, options = [], disabled = false }) => {
 
         <ChevronDown
           size={16}
-          className="absolute right-3 top-3 text-gray-400"
+          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
         />
       </div>
-    </div>
+    </FieldShell>
   );
 };
 

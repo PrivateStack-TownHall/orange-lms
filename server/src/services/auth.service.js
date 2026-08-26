@@ -1,8 +1,8 @@
 const { User, Profile } = require("../models");
-const { bcrypt, jwt } = require("../helpers");
+const { bcrypt, jwt, logAudit, logActivity } = require("../helpers");
 
 class AuthService {
-  static async register({ name, email, password, role }) {
+  static async register({ name, email, password, role }, meta = {}) {
     const existingUser = await User.findOne({
       where: { email },
     });
@@ -24,10 +24,19 @@ class AuthService {
       UserId: user.id,
     });
 
+    await logAudit({
+      user,
+      action: "CREATE",
+      resource: "User",
+      resourceId: user.id,
+      resourceDetail: user.name,
+      meta,
+    });
+
     return user;
   }
 
-  static async login({ email, password }) {
+  static async login({ email, password }, meta = {}) {
     const user = await User.findOne({
       where: { email },
     });
@@ -48,7 +57,44 @@ class AuthService {
       email: user.email,
     });
 
+    await logAudit({
+      user,
+      action: "LOGIN",
+      resource: "Auth",
+      resourceId: user.id,
+      resourceDetail: user.name,
+      meta,
+    });
+
+    await logActivity({
+      user,
+      activity: "Logged In",
+      description: "User logged in to the system",
+      resourceType: "Auth",
+      meta,
+    });
+
     return { access_token };
+  }
+
+  static async logout(currentUser, meta = {}) {
+    await logAudit({
+      user: currentUser,
+      action: "LOGOUT",
+      resource: "Auth",
+      resourceId: currentUser.id,
+      meta,
+    });
+
+    await logActivity({
+      user: currentUser,
+      activity: "Logged Out",
+      description: "User logged out from the system",
+      resourceType: "Auth",
+      meta,
+    });
+
+    return true;
   }
 
   static async me(userData) {

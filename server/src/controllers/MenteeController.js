@@ -23,7 +23,7 @@ class MenteeController {
 
   static async create(req, res, next) {
     try {
-      const mentee = await menteeService.create(req.body);
+      const mentee = await menteeService.create(req.body, req.user, req.meta);
 
       const profile = await profileService.upsert(mentee.id, {
         age: req.body.age,
@@ -46,7 +46,7 @@ class MenteeController {
 
   static async update(req, res, next) {
     try {
-      const mentee = await menteeService.update(req.params.id, req.body);
+      const mentee = await menteeService.update(req.params.id, req.body, req.user, req.meta);
 
       await profileService.upsert(req.params.id, {
         age: req.body.age,
@@ -63,7 +63,7 @@ class MenteeController {
 
   static async delete(req, res, next) {
     try {
-      await menteeService.delete(req.params.id, req.user);
+      await menteeService.delete(req.params.id, req.user, req.meta);
 
       res.status(200).json({
         message: "Mentee deleted",

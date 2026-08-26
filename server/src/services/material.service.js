@@ -1,5 +1,6 @@
 const { Material, Meeting, Class, User } = require("../models");
 const ROLES = require("../constants/roles");
+const { logAudit, notifyUsers } = require("../helpers");
 
 class MaterialService {
   static async findAllByMeeting(MeetingId) {
@@ -71,6 +72,7 @@ class MaterialService {
                 attributes: [],
                 through: {
                   attributes: [],
+                  where: { roleInClass: "Mentee" },
                 },
                 where: {
                   id: currentUser.id,
@@ -102,7 +104,7 @@ class MaterialService {
     });
   }
 
-  static async create(currentUser, meetingId, data) {
+  static async create(currentUser, meetingId, data, meta = {}) {
     if (![ROLES.ADMIN, ROLES.OWNER, ROLES.MENTOR].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
@@ -113,15 +115,40 @@ class MaterialService {
       throw new Error("Meeting not found");
     }
 
-    return Material.create({
+    const material = await Material.create({
       ...data,
       MeetingId: Number(meetingId),
       ClassId: meeting.ClassId,
       uploadedBy: currentUser.id,
     });
+
+    await logAudit({
+      user: currentUser,
+      action: "CREATE",
+      resource: "Material",
+      resourceId: material.id,
+      resourceDetail: material.name,
+      meta,
+    });
+
+    const cls = await Class.findByPk(meeting.ClassId, {
+      include: [{ model: User, as: "mentees", attributes: ["id"], through: { attributes: [], where: { roleInClass: "Mentee" } } }],
+    });
+
+    await notifyUsers({
+      userIds: (cls?.mentees || []).map((m) => m.id),
+      type: "Material",
+      title: "New Material Added",
+      message: `${currentUser.name || "Mentor"} added new material "${material.name}".`,
+      relatedType: "Material",
+      relatedId: material.id,
+      ClassId: meeting.ClassId,
+    });
+
+    return material;
   }
 
-  static async update(id, data, currentUser) {
+  static async update(id, data, currentUser, meta = {}) {
     if (![ROLES.ADMIN, ROLES.OWNER, ROLES.MENTOR].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
@@ -132,10 +159,21 @@ class MaterialService {
       throw new Error("Material not found");
     }
 
-    return material.update(data);
+    await material.update(data);
+
+    await logAudit({
+      user: currentUser,
+      action: "UPDATE",
+      resource: "Material",
+      resourceId: material.id,
+      resourceDetail: material.name,
+      meta,
+    });
+
+    return material;
   }
 
-  static async delete(id, currentUser) {
+  static async delete(id, currentUser, meta = {}) {
     if (![ROLES.ADMIN, ROLES.OWNER, ROLES.MENTOR].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
@@ -145,6 +183,15 @@ class MaterialService {
     if (!material) {
       throw new Error("Material not found");
     }
+
+    await logAudit({
+      user: currentUser,
+      action: "DELETE",
+      resource: "Material",
+      resourceId: material.id,
+      resourceDetail: material.name,
+      meta,
+    });
 
     return material.destroy();
   }

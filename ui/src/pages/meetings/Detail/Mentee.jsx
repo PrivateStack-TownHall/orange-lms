@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import MeetingService from "@/services/modules/meeting.service";
+import AttendanceService from "@/services/modules/attendance.service";
 import useBreadcrumbs from "@/hooks/useBreadcrumbs";
 
 import {
@@ -15,6 +17,8 @@ import {
 } from "lucide-react";
 
 import { formatDate } from "@/helpers";
+
+import SubmitTaskModal from "./components/SubmitTaskModal";
 
 const tabs = ["Tasks", "Notes", "Materials", "Attendance"];
 
@@ -95,7 +99,11 @@ const Mentee = () => {
         <div className="space-y-5 lg:col-span-8">
           <TabsHeader activeTab={activeTab} setActiveTab={setActiveTab} />
 
-          <TabsContent activeTab={activeTab} meeting={meeting} />
+          <TabsContent
+            activeTab={activeTab}
+            meeting={meeting}
+            onRefresh={fetchMeeting}
+          />
         </div>
       </div>
     </div>
@@ -217,7 +225,9 @@ const TabsHeader = ({ activeTab, setActiveTab }) => {
   );
 };
 
-const TabsContent = ({ activeTab, meeting }) => {
+const TabsContent = ({ activeTab, meeting, onRefresh }) => {
+  const [submittingTask, setSubmittingTask] = useState(null);
+
   return (
     <div className="rounded-sm border border-gray-200 bg-white p-5">
       {activeTab === "Tasks" && (
@@ -247,16 +257,16 @@ const TabsContent = ({ activeTab, meeting }) => {
                       Download
                     </button>
 
-                    <button
-                      onClick={() => alert("Submission Module Coming Soon")}
+                    <Link
+                      to={`/tasks/${task.id}`}
                       className="flex items-center gap-1 rounded-sm bg-sky-100 px-2 py-1 text-xs font-medium text-sky-700 hover:bg-sky-200"
                     >
                       <Eye size={16} />
                       View
-                    </button>
+                    </Link>
 
                     <button
-                      onClick={() => alert("Submission Module Coming Soon")}
+                      onClick={() => setSubmittingTask(task)}
                       className="flex items-center gap-2 rounded-sm bg-orange-500 px-3 py-2 text-sm text-white"
                     >
                       <Upload size={16} />
@@ -342,9 +352,92 @@ const TabsContent = ({ activeTab, meeting }) => {
       )}
 
       {activeTab === "Attendance" && (
-        <div className="rounded-sm border border-dashed border-gray-300 p-8 text-center text-gray-500">
-          Attendance Module Coming Soon
+        <MenteeAttendanceView meetingId={meeting.id} />
+      )}
+
+      <SubmitTaskModal
+        open={!!submittingTask}
+        task={submittingTask}
+        onClose={() => setSubmittingTask(null)}
+        onSubmitted={onRefresh}
+      />
+    </div>
+  );
+};
+
+const MenteeAttendanceView = ({ meetingId }) => {
+  const [record, setRecord] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const user = useSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    const fetchAttendance = async () => {
+      try {
+        const res = await AttendanceService.getByMeeting(meetingId);
+        const mine = (res.data || []).find((r) => r.UserId === user?.id);
+        setRecord(mine || null);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (meetingId) fetchAttendance();
+  }, [meetingId, user?.id]);
+
+  if (loading) {
+    return (
+      <p className="py-6 text-center text-sm text-gray-500">
+        Loading attendance...
+      </p>
+    );
+  }
+
+  if (!record) {
+    return (
+      <div className="flex flex-col items-center rounded-sm border border-dashed border-gray-300 p-8 text-center">
+        <img
+          src="/class-reminder-bell-calendar.png"
+          alt=""
+          className="h-16 w-16 object-contain opacity-70"
+        />
+        <p className="mt-3 text-sm text-gray-500">
+          Your attendance for this meeting hasn't been recorded yet.
+        </p>
+      </div>
+    );
+  }
+
+  const STATUS_STYLE = {
+    Present: "bg-green-100 text-green-700",
+    Late: "bg-orange-100 text-orange-700",
+    Absent: "bg-red-100 text-red-700",
+    Excused: "bg-blue-100 text-blue-700",
+  };
+
+  return (
+    <div className="rounded-sm border border-gray-200 p-5">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm text-gray-500">Your Status</p>
+          <span
+            className={`mt-1 inline-block rounded-sm px-3 py-1 text-sm font-semibold ${STATUS_STYLE[record.status] || "bg-gray-100 text-gray-600"}`}
+          >
+            {record.status}
+          </span>
         </div>
+        {record.checkInAt && (
+          <div className="text-right">
+            <p className="text-sm text-gray-500">Check-in Time</p>
+            <p className="font-medium">
+              {new Date(record.checkInAt).toLocaleTimeString()}
+            </p>
+          </div>
+        )}
+      </div>
+      {record.notes && (
+        <p className="mt-3 text-sm text-gray-600">Notes: {record.notes}</p>
       )}
     </div>
   );

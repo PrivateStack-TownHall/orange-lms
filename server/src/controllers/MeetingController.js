@@ -33,6 +33,7 @@ class MeetingController {
         req.user,
         req.params.classId,
         req.body,
+        req.meta,
       );
 
       res.status(201).json(meeting);
@@ -57,6 +58,7 @@ class MeetingController {
         req.params.id,
         req.body,
         req.user,
+        req.meta,
       );
 
       res.status(200).json(meeting);
@@ -67,7 +69,7 @@ class MeetingController {
 
   static async delete(req, res, next) {
     try {
-      await meetingService.delete(req.params.id, req.user);
+      await meetingService.delete(req.params.id, req.user, req.meta);
 
       res.status(200).json({
         message: "Meeting deleted",

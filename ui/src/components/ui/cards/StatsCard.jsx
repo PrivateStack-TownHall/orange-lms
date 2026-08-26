@@ -1,10 +1,21 @@
 import React from "react";
 
+const TONE_CLASSES = {
+  orange: "bg-orange-100 text-orange-600",
+  green: "bg-green-100 text-green-600",
+  blue: "bg-blue-100 text-blue-600",
+  purple: "bg-purple-100 text-purple-600",
+  red: "bg-red-100 text-red-600",
+  amber: "bg-amber-100 text-amber-600",
+  gray: "bg-gray-100 text-gray-600",
+};
+
 const StatsCard = ({
   title,
   value,
   description,
   icon: Icon,
+  tone = "gray",
   className = "",
 }) => {
   return (
@@ -26,8 +37,10 @@ const StatsCard = ({
         </div>
 
         {Icon && (
-          <div className="rounded-sm bg-gray-100 p-2">
-            <Icon size={18} className="text-[var(--color-text-muted)]" />
+          <div
+            className={`rounded-sm p-2 ${TONE_CLASSES[tone] || TONE_CLASSES.gray}`}
+          >
+            <Icon size={18} />
           </div>
         )}
       </div>

@@ -182,10 +182,7 @@ const Detail = () => {
                   value={`${admin.profile?.age || "-"} Years Old`}
                 />
 
-                <InfoItem
-                  label="Gender"
-                  value={admin.profile?.gender || "-"}
-                />
+                <InfoItem label="Gender" value={admin.profile?.gender || "-"} />
 
                 <InfoItem
                   label="Address"

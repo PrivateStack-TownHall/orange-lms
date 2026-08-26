@@ -52,6 +52,28 @@ const ENDPOINTS = {
   ASSESSMENT_RESULTS: "/assessment-results",
   SUBMISSION_SCORES: "/submission-scores",
   HISTORY_CLASSES: "/history-classes",
+
+  /**
+   * Task Submissions (nested under /tasks)
+   */
+  TASK_SUBMIT: (taskId) => `/tasks/${taskId}/submit`,
+  TASK_SUBMISSIONS: (taskId) => `/tasks/${taskId}/submissions`,
+  SUBMISSION_DETAIL: (submissionId) => `/tasks/submissions/${submissionId}`,
+  SUBMISSION_REVIEW: (submissionId) =>
+    `/tasks/submissions/${submissionId}/review`,
+
+  /**
+   * V4 Notifications, Logs & Reports
+   */
+  NOTIFICATIONS: "/notifications",
+  AUDIT_LOGS: "/audit-logs",
+  USER_ACTIVITIES: "/user-activities",
+  REPORTS: "/reports",
+
+  /**
+   * Auth extras
+   */
+  AUTH_LOGOUT: "/auth/logout",
 };
 
 export default ENDPOINTS;

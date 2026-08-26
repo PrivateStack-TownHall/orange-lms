@@ -241,16 +241,75 @@ const Mentor = () => {
               data={classData.mentees || []}
               columns={[
                 {
-                  key: "id",
-                  label: "ID",
-                },
-                {
                   key: "name",
-                  label: "Name",
+                  label: "Mentee",
+                  render: (row) => (
+                    <div>
+                      <p className="font-medium">{row.name}</p>
+                      <p className="text-xs text-gray-500">{row.email}</p>
+                    </div>
+                  ),
                 },
                 {
-                  key: "email",
-                  label: "Email",
+                  key: "attendance",
+                  label: "Attendance",
+                  render: (row) => `${row.stats?.attendance ?? 0}%`,
+                },
+                {
+                  key: "taskCompletion",
+                  label: "Task Completion",
+                  render: (row) => `${row.stats?.taskCompletion ?? 0}%`,
+                },
+                {
+                  key: "avgScore",
+                  label: "Avg. Score",
+                  render: (row) => row.stats?.avgScore ?? 0,
+                },
+                {
+                  key: "progress",
+                  label: "Progress",
+                  render: (row) => (
+                    <div className="flex items-center gap-2">
+                      <div className="h-1.5 w-20 overflow-hidden rounded-full bg-gray-200">
+                        <div
+                          className={`h-full rounded-full ${
+                            (row.stats?.progress ?? 0) >= 70
+                              ? "bg-green-500"
+                              : (row.stats?.progress ?? 0) >= 40
+                                ? "bg-orange-500"
+                                : "bg-red-500"
+                          }`}
+                          style={{ width: `${row.stats?.progress ?? 0}%` }}
+                        />
+                      </div>
+                      <span className="text-xs text-gray-500">
+                        {row.stats?.progress ?? 0}%
+                      </span>
+                    </div>
+                  ),
+                },
+                {
+                  key: "joinDate",
+                  label: "Join Date",
+                  render: (row) =>
+                    row.ClassUser?.joinedAt
+                      ? formatDate(row.ClassUser.joinedAt)
+                      : "-",
+                },
+                {
+                  key: "status",
+                  label: "Status",
+                  render: (row) => (
+                    <span
+                      className={`rounded-sm px-2 py-1 text-xs font-medium ${
+                        row.ClassUser?.status === "Active"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-gray-100 text-gray-600"
+                      }`}
+                    >
+                      {row.ClassUser?.status || "-"}
+                    </span>
+                  ),
                 },
                 {
                   key: "actions",

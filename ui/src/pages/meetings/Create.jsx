@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import Form from "@/components/ui/forms/Form";
@@ -105,6 +106,8 @@ const Create = () => {
   return (
     <>
       <Form
+        icon={Calendar}
+        color="orange"
         title="Create Meeting"
         description="Create a new meeting."
         schema={schema}
@@ -112,6 +115,7 @@ const Create = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
         submitLabel="Create Meeting"
+        onCancel={() => navigate("/meetings")}
       />
 
       <SuccessPopup

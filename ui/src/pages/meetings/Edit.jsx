@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Calendar } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Form from "@/components/ui/forms/Form";
@@ -122,6 +123,8 @@ const Edit = () => {
   return (
     <>
       <Form
+        icon={Calendar}
+        color="orange"
         title="Edit Meeting"
         description="Update meeting information."
         schema={schema}
@@ -129,6 +132,7 @@ const Edit = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
         submitLabel="Update Meeting"
+        onCancel={() => navigate("/meetings")}
       />
 
       <SuccessPopup

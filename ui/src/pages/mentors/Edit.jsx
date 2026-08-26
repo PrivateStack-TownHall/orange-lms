@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { UserCog } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Form from "@/components/ui/forms/Form";
@@ -95,6 +96,8 @@ const Edit = () => {
   return (
     <>
       <Form
+        icon={UserCog}
+        color="green"
         title="Edit Mentor"
         description="Update mentor information"
         schema={userSchema}
@@ -102,6 +105,7 @@ const Edit = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
         submitLabel="Update Mentor"
+        onCancel={() => navigate("/mentors")}
       />
 
       <SuccessPopup

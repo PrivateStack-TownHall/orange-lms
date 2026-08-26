@@ -30,6 +30,7 @@ class NoteController {
         req.user,
         req.params.meetingId,
         payload,
+        req.meta,
       );
       res.status(201).json(note);
     } catch (err) {
@@ -53,7 +54,7 @@ class NoteController {
         fileUrl: req.file?.path || req.body.fileUrl,
       };
 
-      const note = await noteService.update(req.params.id, payload, req.user);
+      const note = await noteService.update(req.params.id, payload, req.user, req.meta);
       res.json(note);
     } catch (err) {
       next(err);
@@ -62,7 +63,7 @@ class NoteController {
 
   static async delete(req, res, next) {
     try {
-      await noteService.delete(req.params.id, req.user);
+      await noteService.delete(req.params.id, req.user, req.meta);
       res.json({ message: "Note deleted" });
     } catch (err) {
       next(err);

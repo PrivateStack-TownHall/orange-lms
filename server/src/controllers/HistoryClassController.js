@@ -36,6 +36,7 @@ class HistoryClassController {
       const result = await historyClassService.archive(
         req.params.classId,
         req.user,
+        req.meta,
       );
 
       res.status(200).json(result);
@@ -46,7 +47,7 @@ class HistoryClassController {
 
   static async restore(req, res, next) {
     try {
-      const result = await historyClassService.restore(req.params.id, req.user);
+      const result = await historyClassService.restore(req.params.id, req.user, req.meta);
 
       res.status(200).json(result);
     } catch (error) {
@@ -56,7 +57,7 @@ class HistoryClassController {
 
   static async delete(req, res, next) {
     try {
-      await historyClassService.delete(req.params.id, req.user);
+      await historyClassService.delete(req.params.id, req.user, req.meta);
 
       res.status(200).json({
         message: "History deleted successfully",

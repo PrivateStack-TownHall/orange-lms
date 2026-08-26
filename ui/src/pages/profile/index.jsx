@@ -1,6 +1,5 @@
 import { Edit2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Edit } from "lucide-react";
 import { useState } from "react";
 
 import Form from "@/components/ui/forms/Form";
@@ -8,22 +7,21 @@ import { profileSchema } from "../../schemas";
 
 import { useSelector } from "react-redux";
 
+const roleStyles = {
+  Owner: "bg-purple-100 text-purple-700",
+  Admin: "bg-orange-100 text-orange-700",
+  Mentor: "bg-blue-100 text-blue-700",
+  Mentee: "bg-green-100 text-green-700",
+};
+
 const Profile = () => {
   const user = useSelector((state) => state.auth.user);
 
-  if (!user) return null;
-
-  const roleStyles = {
-    Owner: "bg-purple-100 text-purple-700",
-    Admin: "bg-orange-100 text-orange-700",
-    Mentor: "bg-blue-100 text-blue-700",
-    Mentee: "bg-green-100 text-green-700",
-  };
   const [values] = useState({
     name: user?.name || "",
     email: user?.email || "",
     role: user?.role || "",
-    active: user.isActive ? "active" : "not active",
+    active: user?.isActive ? "active" : "not active",
     age: user?.profile?.age || "",
     phoneNumber: user?.profile?.phoneNumber || "",
     city: user?.profile?.city || "",
@@ -31,6 +29,9 @@ const Profile = () => {
     address: user?.profile?.address || "",
     background: user?.profile?.background || "",
   });
+
+  if (!user) return null;
+
   return (
     <div className="space-y-4">
       <div className="rounded-sm border border-gray-200 bg-white p-5">
