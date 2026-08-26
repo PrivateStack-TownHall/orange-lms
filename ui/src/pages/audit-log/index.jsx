@@ -17,14 +17,26 @@ const ACTION_STYLE = {
   STATUS_CHANGE: "bg-amber-100 text-amber-700",
 };
 
-const ACTIONS = ["All", "CREATE", "UPDATE", "DELETE", "LOGIN", "LOGOUT", "ROLE_CHANGE"];
+const ACTIONS = [
+  "All",
+  "CREATE",
+  "UPDATE",
+  "DELETE",
+  "LOGIN",
+  "LOGOUT",
+  "ROLE_CHANGE",
+];
 
 const AuditLog = () => {
   const breadcrumbs = useBreadcrumbs();
 
   const [logs, setLogs] = useState([]);
   const [overview, setOverview] = useState(null);
-  const [pagination, setPagination] = useState({ page: 1, totalPages: 1, total: 0 });
+  const [pagination, setPagination] = useState({
+    page: 1,
+    totalPages: 1,
+    total: 0,
+  });
   const [action, setAction] = useState("All");
   const [loading, setLoading] = useState(true);
 
@@ -36,7 +48,9 @@ const AuditLog = () => {
         AuditLogService.getOverview(),
       ]);
       setLogs(logsRes.data?.data || []);
-      setPagination(logsRes.data?.pagination || { page: 1, totalPages: 1, total: 0 });
+      setPagination(
+        logsRes.data?.pagination || { page: 1, totalPages: 1, total: 0 },
+      );
       setOverview(overviewRes.data);
     } catch (err) {
       console.error(err);
@@ -72,7 +86,10 @@ const AuditLog = () => {
             <p className="mt-1 text-xl font-bold">{overview.total}</p>
           </div>
           {Object.entries(overview.byAction || {}).map(([action, count]) => (
-            <div key={action} className="rounded-sm border border-gray-200 bg-white p-4">
+            <div
+              key={action}
+              className="rounded-sm border border-gray-200 bg-white p-4"
+            >
               <span className="text-xs text-gray-500">{action}</span>
               <p className="mt-1 text-xl font-bold">{count}</p>
             </div>
@@ -135,7 +152,9 @@ const AuditLog = () => {
                     </span>
                   </td>
                   <td className="px-4 py-3">{log.resource}</td>
-                  <td className="px-4 py-3 text-gray-500">{log.resourceDetail || "-"}</td>
+                  <td className="px-4 py-3 text-gray-500">
+                    {log.resourceDetail || "-"}
+                  </td>
                   <td className="px-4 py-3 text-xs text-gray-400">
                     {log.ipAddress || "-"}
                   </td>
@@ -149,7 +168,8 @@ const AuditLog = () => {
       {pagination.totalPages > 1 && (
         <div className="flex items-center justify-between text-sm text-gray-500">
           <span>
-            Showing page {pagination.page} of {pagination.totalPages} ({pagination.total} records)
+            Showing page {pagination.page} of {pagination.totalPages} (
+            {pagination.total} records)
           </span>
           <div className="flex gap-2">
             {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)

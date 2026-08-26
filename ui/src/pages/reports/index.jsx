@@ -50,7 +50,19 @@ const Reports = () => {
   if (loading) return <LoadingPage title="Loading reports..." />;
   if (!data) return null;
 
-  const { stats, classPerformance, attendanceOverview, taskStatistics, assessmentOverview, scoreDistribution, mentorPerformance, menteeProgressOverview, menteesNeedingAttention, userGrowth, needsAttentionAlerts } = data;
+  const {
+    stats,
+    classPerformance,
+    attendanceOverview,
+    taskStatistics,
+    assessmentOverview,
+    scoreDistribution,
+    mentorPerformance,
+    menteeProgressOverview,
+    menteesNeedingAttention,
+    userGrowth,
+    needsAttentionAlerts,
+  } = data;
 
   return (
     <div className="space-y-4">
@@ -63,12 +75,38 @@ const Reports = () => {
       {/* Top stats */}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-7">
         <StatCard icon={Users} label="Total Users" value={stats.totalUsers} />
-        <StatCard icon={BookOpen} label="Active Classes" value={stats.activeClasses} />
-        <StatCard icon={Calendar} label="Total Meetings" value={stats.totalMeetings} />
-        <StatCard icon={CheckSquare} label="Task Completion" value={stats.taskCompletionRate} suffix="%" />
-        <StatCard icon={Users} label="Avg. Attendance" value={stats.avgAttendance} suffix="%" />
-        <StatCard icon={Award} label="Avg. Score" value={stats.avgAssessmentScore} />
-        <StatCard icon={TrendingUp} label="Active Mentors" value={stats.activeMentors} />
+        <StatCard
+          icon={BookOpen}
+          label="Active Classes"
+          value={stats.activeClasses}
+        />
+        <StatCard
+          icon={Calendar}
+          label="Total Meetings"
+          value={stats.totalMeetings}
+        />
+        <StatCard
+          icon={CheckSquare}
+          label="Task Completion"
+          value={stats.taskCompletionRate}
+          suffix="%"
+        />
+        <StatCard
+          icon={Users}
+          label="Avg. Attendance"
+          value={stats.avgAttendance}
+          suffix="%"
+        />
+        <StatCard
+          icon={Award}
+          label="Avg. Score"
+          value={stats.avgAssessmentScore}
+        />
+        <StatCard
+          icon={TrendingUp}
+          label="Active Mentors"
+          value={stats.activeMentors}
+        />
       </div>
 
       {/* Class Performance & Attendance */}
@@ -141,7 +179,11 @@ const Reports = () => {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="rounded-sm border border-gray-200 bg-white p-5">
           <div className="mb-3 flex items-center gap-2">
-            <img src="/grading-report-aplus.png" alt="" className="h-8 w-8 object-contain" />
+            <img
+              src="/grading-report-aplus.png"
+              alt=""
+              className="h-8 w-8 object-contain"
+            />
             <h3 className="font-semibold">Task Statistics</h3>
           </div>
           <div className="space-y-1 text-sm">
@@ -163,32 +205,46 @@ const Reports = () => {
             </div>
             <div className="flex justify-between">
               <span>Overdue</span>
-              <span className="font-medium text-red-600">{taskStatistics.overdue}</span>
+              <span className="font-medium text-red-600">
+                {taskStatistics.overdue}
+              </span>
             </div>
           </div>
         </div>
 
         <div className="rounded-sm border border-gray-200 bg-white p-5">
           <div className="mb-3 flex items-center gap-2">
-            <img src="/goal-target-progress.png" alt="" className="h-8 w-8 object-contain" />
+            <img
+              src="/goal-target-progress.png"
+              alt=""
+              className="h-8 w-8 object-contain"
+            />
             <h3 className="font-semibold">Assessment Overview</h3>
           </div>
           <div className="space-y-1 text-sm">
             <div className="flex justify-between">
               <span>Average Score</span>
-              <span className="font-medium">{assessmentOverview.averageScore}</span>
+              <span className="font-medium">
+                {assessmentOverview.averageScore}
+              </span>
             </div>
             <div className="flex justify-between">
               <span>Highest Score</span>
-              <span className="font-medium">{assessmentOverview.highestScore}</span>
+              <span className="font-medium">
+                {assessmentOverview.highestScore}
+              </span>
             </div>
             <div className="flex justify-between">
               <span>Lowest Score</span>
-              <span className="font-medium">{assessmentOverview.lowestScore}</span>
+              <span className="font-medium">
+                {assessmentOverview.lowestScore}
+              </span>
             </div>
             <div className="flex justify-between">
               <span>Pass Rate (≥70)</span>
-              <span className="font-medium text-green-600">{assessmentOverview.passRate}%</span>
+              <span className="font-medium text-green-600">
+                {assessmentOverview.passRate}%
+              </span>
             </div>
           </div>
         </div>
@@ -200,7 +256,9 @@ const Reports = () => {
               <div key={s.range}>
                 <div className="flex justify-between text-xs text-gray-500">
                   <span>{s.range}</span>
-                  <span>{s.count} ({s.percentage}%)</span>
+                  <span>
+                    {s.count} ({s.percentage}%)
+                  </span>
                 </div>
                 <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-gray-100">
                   <div
@@ -261,32 +319,44 @@ const Reports = () => {
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div className="rounded-sm bg-green-50 p-3">
               <p className="text-xs text-gray-500">Excellent (≥85)</p>
-              <p className="text-xl font-bold text-green-600">{menteeProgressOverview.excellent}</p>
+              <p className="text-xl font-bold text-green-600">
+                {menteeProgressOverview.excellent}
+              </p>
             </div>
             <div className="rounded-sm bg-blue-50 p-3">
               <p className="text-xs text-gray-500">On Track (70-84)</p>
-              <p className="text-xl font-bold text-blue-600">{menteeProgressOverview.onTrack}</p>
+              <p className="text-xl font-bold text-blue-600">
+                {menteeProgressOverview.onTrack}
+              </p>
             </div>
             <div className="rounded-sm bg-amber-50 p-3">
               <p className="text-xs text-gray-500">Needs Help (50-69)</p>
-              <p className="text-xl font-bold text-amber-600">{menteeProgressOverview.needsHelp}</p>
+              <p className="text-xl font-bold text-amber-600">
+                {menteeProgressOverview.needsHelp}
+              </p>
             </div>
             <div className="rounded-sm bg-red-50 p-3">
               <p className="text-xs text-gray-500">At Risk (&lt;50)</p>
-              <p className="text-xl font-bold text-red-600">{menteeProgressOverview.atRisk}</p>
+              <p className="text-xl font-bold text-red-600">
+                {menteeProgressOverview.atRisk}
+              </p>
             </div>
           </div>
 
           {menteesNeedingAttention.length > 0 && (
             <div className="mt-4">
-              <p className="mb-2 text-sm font-medium">Mentees Needing Attention</p>
+              <p className="mb-2 text-sm font-medium">
+                Mentees Needing Attention
+              </p>
               <div className="space-y-1">
                 {menteesNeedingAttention.slice(0, 5).map((m) => (
                   <div
                     key={m.id}
                     className="flex items-center justify-between rounded-sm bg-gray-50 px-3 py-2 text-sm"
                   >
-                    <span>{m.name} · {m.class}</span>
+                    <span>
+                      {m.name} · {m.class}
+                    </span>
                     <span
                       className={`rounded-sm px-2 py-0.5 text-xs font-medium ${
                         m.status === "At Risk"
@@ -342,13 +412,17 @@ const Reports = () => {
                 alt=""
                 className="h-14 w-14 object-contain opacity-70"
               />
-              <p className="mt-2 text-sm text-gray-500">Nothing needs attention right now.</p>
+              <p className="mt-2 text-sm text-gray-500">
+                Nothing needs attention right now.
+              </p>
             </div>
           ) : (
             <div className="space-y-2">
               {needsAttentionAlerts.map((a, i) => (
                 <div key={i} className="rounded-sm bg-amber-50 p-3">
-                  <p className="text-sm font-medium text-amber-800">{a.message}</p>
+                  <p className="text-sm font-medium text-amber-800">
+                    {a.message}
+                  </p>
                   <p className="text-xs text-amber-600">{a.detail}</p>
                 </div>
               ))}

@@ -54,9 +54,7 @@ const AttendanceTab = ({ meetingId, mentees = [] }) => {
     );
   }
 
-  const recordByUserId = Object.fromEntries(
-    records.map((r) => [r.UserId, r]),
-  );
+  const recordByUserId = Object.fromEntries(records.map((r) => [r.UserId, r]));
 
   const summary = STATUS_OPTIONS.reduce((acc, status) => {
     acc[status] = records.filter((r) => r.status === status).length;
@@ -69,7 +67,11 @@ const AttendanceTab = ({ meetingId, mentees = [] }) => {
 
     try {
       setSaving(true);
-      await AttendanceService.mark({ MeetingId: meetingId, UserId: userId, status });
+      await AttendanceService.mark({
+        MeetingId: meetingId,
+        UserId: userId,
+        status,
+      });
       await fetchAttendance();
       setDraft((prev) => ({ ...prev, [userId]: undefined }));
     } catch (err) {
@@ -91,7 +93,10 @@ const AttendanceTab = ({ meetingId, mentees = [] }) => {
               className="rounded-sm border border-gray-200 bg-white p-4"
             >
               <div className="flex items-center gap-2">
-                <Icon size={16} className={STATUS_STYLE[status].split(" ")[1]} />
+                <Icon
+                  size={16}
+                  className={STATUS_STYLE[status].split(" ")[1]}
+                />
                 <span className="text-xs text-gray-500">{status}</span>
               </div>
               <p className="mt-1 text-xl font-bold">{summary[status] || 0}</p>
@@ -132,7 +137,10 @@ const AttendanceTab = ({ meetingId, mentees = [] }) => {
                       <select
                         value={draft[mentee.id] || ""}
                         onChange={(e) =>
-                          setDraft((prev) => ({ ...prev, [mentee.id]: e.target.value }))
+                          setDraft((prev) => ({
+                            ...prev,
+                            [mentee.id]: e.target.value,
+                          }))
                         }
                         className="rounded-sm border border-gray-200 px-2 py-1 text-xs"
                       >

@@ -92,12 +92,16 @@ const Detail = () => {
       action: async () => {
         try {
           await MenteeService.delete(id);
-          openSuccess({ title: "Success", message: "Mentee deleted successfully." });
+          openSuccess({
+            title: "Success",
+            message: "Mentee deleted successfully.",
+          });
         } catch (error) {
           console.error(error);
           openError({
             title: "Delete Failed",
-            message: error?.response?.data?.message || "Failed to delete mentee.",
+            message:
+              error?.response?.data?.message || "Failed to delete mentee.",
           });
         }
       },
@@ -117,16 +121,24 @@ const Detail = () => {
 
     const avgProgress = classes.length
       ? Math.round(
-          classes.reduce((sum, c) => sum + Number(c.ClassUser?.progressPercentage || 0), 0) /
-            classes.length,
+          classes.reduce(
+            (sum, c) => sum + Number(c.ClassUser?.progressPercentage || 0),
+            0,
+          ) / classes.length,
         )
       : 0;
 
     return {
       activeClasses: active,
       finishedClasses: finished,
-      totalMeetingsAttended: classes.reduce((sum, c) => sum + (c.meetings?.length || 0), 0),
-      totalTasksAvailable: classes.reduce((sum, c) => sum + (c.tasks?.length || 0), 0),
+      totalMeetingsAttended: classes.reduce(
+        (sum, c) => sum + (c.meetings?.length || 0),
+        0,
+      ),
+      totalTasksAvailable: classes.reduce(
+        (sum, c) => sum + (c.tasks?.length || 0),
+        0,
+      ),
       overallProgress: avgProgress,
     };
   }, [mentee]);
@@ -171,7 +183,9 @@ const Detail = () => {
 
               <span
                 className={`mt-1 rounded-sm px-2 py-1 text-xs font-medium ${
-                  mentee.isActive ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700"
+                  mentee.isActive
+                    ? "bg-green-100 text-green-700"
+                    : "bg-gray-100 text-gray-700"
                 }`}
               >
                 {mentee.isActive ? "Active" : "Inactive"}
@@ -195,7 +209,11 @@ const Detail = () => {
                 </p>
                 <p className="flex items-center gap-2 text-[var(--color-text-muted)]">
                   <MapPin size={14} />
-                  {[mentee.profile?.address, mentee.profile?.city, mentee.profile?.country]
+                  {[
+                    mentee.profile?.address,
+                    mentee.profile?.city,
+                    mentee.profile?.country,
+                  ]
                     .filter(Boolean)
                     .join(", ") || "-"}
                 </p>
@@ -227,14 +245,42 @@ const Detail = () => {
           <StatsGrid
             columns={4}
             items={[
-              { title: "Total Classes", value: mentee.enrolledClasses?.length || 0, description: "Active", icon: BookOpen, tone: "purple" },
-              { title: "Total Meetings", value: totalMeetingsAttended, description: "Attended", icon: Calendar, tone: "green" },
-              { title: "Tasks Available", value: totalTasksAvailable, description: "Across classes", icon: CheckSquare, tone: "orange" },
-              { title: "Overall Progress", value: `${overallProgress}%`, description: "Average", icon: Clock, tone: "blue" },
+              {
+                title: "Total Classes",
+                value: mentee.enrolledClasses?.length || 0,
+                description: "Active",
+                icon: BookOpen,
+                tone: "purple",
+              },
+              {
+                title: "Total Meetings",
+                value: totalMeetingsAttended,
+                description: "Attended",
+                icon: Calendar,
+                tone: "green",
+              },
+              {
+                title: "Tasks Available",
+                value: totalTasksAvailable,
+                description: "Across classes",
+                icon: CheckSquare,
+                tone: "orange",
+              },
+              {
+                title: "Overall Progress",
+                value: `${overallProgress}%`,
+                description: "Average",
+                icon: Clock,
+                tone: "blue",
+              },
             ]}
           />
 
-          <TabHeader tabs={TABS} activeTab={activeTab} setActiveTab={setActiveTab} />
+          <TabHeader
+            tabs={TABS}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          />
 
           <div className="space-y-3">
             {displayed.length === 0 && (
@@ -244,7 +290,10 @@ const Detail = () => {
             )}
 
             {displayed.map((cls) => (
-              <div key={cls.id} className="rounded-sm border border-gray-200 bg-[var(--color-surface)] p-5">
+              <div
+                key={cls.id}
+                className="rounded-sm border border-gray-200 bg-[var(--color-surface)] p-5"
+              >
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-orange-100 text-sm font-bold text-orange-600">
@@ -252,7 +301,9 @@ const Detail = () => {
                     </div>
                     <div>
                       <p className="font-semibold">{cls.name}</p>
-                      <p className="text-xs text-[var(--color-text-muted)]">{cls.code}</p>
+                      <p className="text-xs text-[var(--color-text-muted)]">
+                        {cls.code}
+                      </p>
                     </div>
                   </div>
 
@@ -268,21 +319,29 @@ const Detail = () => {
                 </div>
 
                 <div className="mt-4">
-                  <ProgressBar value={Number(cls.ClassUser?.progressPercentage || 0)} />
+                  <ProgressBar
+                    value={Number(cls.ClassUser?.progressPercentage || 0)}
+                  />
                 </div>
 
                 <div className="mt-4 grid grid-cols-3 gap-3 text-xs">
                   <div className="rounded-sm bg-gray-50 p-2.5 text-center">
                     <p className="text-gray-500">Mentor</p>
-                    <p className="mt-1 font-semibold">{cls.mentor?.name || "-"}</p>
+                    <p className="mt-1 font-semibold">
+                      {cls.mentor?.name || "-"}
+                    </p>
                   </div>
                   <div className="rounded-sm bg-gray-50 p-2.5 text-center">
                     <p className="text-gray-500">Meetings</p>
-                    <p className="mt-1 font-semibold">{cls.meetings?.length || 0}</p>
+                    <p className="mt-1 font-semibold">
+                      {cls.meetings?.length || 0}
+                    </p>
                   </div>
                   <div className="rounded-sm bg-gray-50 p-2.5 text-center">
                     <p className="text-gray-500">Tasks</p>
-                    <p className="mt-1 font-semibold">{cls.tasks?.length || 0}</p>
+                    <p className="mt-1 font-semibold">
+                      {cls.tasks?.length || 0}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -293,21 +352,26 @@ const Detail = () => {
             <h3 className="mb-3 text-base font-semibold">Recent Activity</h3>
 
             {activity.length === 0 ? (
-              <p className="text-sm text-[var(--color-text-muted)]">No recent activity.</p>
+              <p className="text-sm text-[var(--color-text-muted)]">
+                No recent activity.
+              </p>
             ) : (
               <div className="space-y-3">
                 {activity.slice(0, 5).map((item) => (
                   <div key={item.id} className="flex items-start gap-3 text-sm">
                     <div
                       className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
-                        item.status === "Present" ? "bg-green-100 text-green-600" : "bg-amber-100 text-amber-600"
+                        item.status === "Present"
+                          ? "bg-green-100 text-green-600"
+                          : "bg-amber-100 text-amber-600"
                       }`}
                     >
                       <CheckCircle2 size={14} />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate">
-                        Marked <span className="font-medium">{item.status}</span> for{" "}
+                        Marked{" "}
+                        <span className="font-medium">{item.status}</span> for{" "}
                         {item.Meeting?.name || "a meeting"}
                       </p>
                       <p className="text-xs text-[var(--color-text-muted)]">

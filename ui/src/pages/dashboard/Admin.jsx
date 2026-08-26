@@ -43,11 +43,13 @@ import ProgressBar from "@/components/ui/progress/ProgressBar";
 
 const DONUT_COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#a855f7", "#94a3b8"];
 
-const isPastMeeting = (m) => m.meetingDate && new Date(m.meetingDate) < new Date();
+const isPastMeeting = (m) =>
+  m.meetingDate && new Date(m.meetingDate) < new Date();
 
 const relativeDay = (date) => {
   const diff = Math.round(
-    (new Date(date).setHours(0, 0, 0, 0) - new Date().setHours(0, 0, 0, 0)) / 86400000,
+    (new Date(date).setHours(0, 0, 0, 0) - new Date().setHours(0, 0, 0, 0)) /
+      86400000,
   );
   if (diff === 0) return "Today";
   if (diff === 1) return "Tomorrow";
@@ -69,16 +71,23 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const [classesRes, meetingsRes, tasksRes, notesRes, materialsRes, , menteesRes] =
-          await Promise.all([
-            ClassService.getAll(),
-            MeetingService.getAll(),
-            TaskService.getAll(),
-            NoteService.getAll(),
-            MaterialService.getAll(),
-            MentorService.getAll(),
-            MenteeService.getAll(),
-          ]);
+        const [
+          classesRes,
+          meetingsRes,
+          tasksRes,
+          notesRes,
+          materialsRes,
+          ,
+          menteesRes,
+        ] = await Promise.all([
+          ClassService.getAll(),
+          MeetingService.getAll(),
+          TaskService.getAll(),
+          NoteService.getAll(),
+          MaterialService.getAll(),
+          MentorService.getAll(),
+          MenteeService.getAll(),
+        ]);
 
         setClasses(classesRes.data || []);
         setMeetings(meetingsRes.data || []);
@@ -98,17 +107,50 @@ const AdminDashboard = () => {
 
   const stats = useMemo(
     () => [
-      { title: "Total Classes", value: classes.length, description: "All classes", icon: Users, tone: "blue" },
-      { title: "Active Mentees", value: mentees.filter((m) => m.isActive).length, description: "Currently active", icon: UserCheck, tone: "green" },
-      { title: "Pending Tasks", value: tasks.filter((t) => t.status === "Draft").length, description: "Not published yet", icon: ClipboardCheck, tone: "amber" },
-      { title: "Materials", value: materials.length, description: "Across all classes", icon: FileText, tone: "purple" },
-      { title: "Upcoming Meetings", value: meetings.filter((m) => !isPastMeeting(m)).length, description: "Scheduled", icon: CalendarDays, tone: "orange" },
+      {
+        title: "Total Classes",
+        value: classes.length,
+        description: "All classes",
+        icon: Users,
+        tone: "blue",
+      },
+      {
+        title: "Active Mentees",
+        value: mentees.filter((m) => m.isActive).length,
+        description: "Currently active",
+        icon: UserCheck,
+        tone: "green",
+      },
+      {
+        title: "Pending Tasks",
+        value: tasks.filter((t) => t.status === "Draft").length,
+        description: "Not published yet",
+        icon: ClipboardCheck,
+        tone: "amber",
+      },
+      {
+        title: "Materials",
+        value: materials.length,
+        description: "Across all classes",
+        icon: FileText,
+        tone: "purple",
+      },
+      {
+        title: "Upcoming Meetings",
+        value: meetings.filter((m) => !isPastMeeting(m)).length,
+        description: "Scheduled",
+        icon: CalendarDays,
+        tone: "orange",
+      },
     ],
     [classes, mentees, tasks, materials, meetings],
   );
 
   const sortedMeetings = useMemo(
-    () => [...meetings].sort((a, b) => new Date(a.meetingDate) - new Date(b.meetingDate)),
+    () =>
+      [...meetings].sort(
+        (a, b) => new Date(a.meetingDate) - new Date(b.meetingDate),
+      ),
     [meetings],
   );
 
@@ -118,7 +160,9 @@ const AdminDashboard = () => {
 
     return sortedMeetings.map((m, idx) => {
       const idsSoFar = sortedMeetings.slice(0, idx + 1).map((mm) => mm.id);
-      const tasksSoFar = tasks.filter((t) => idsSoFar.includes(t.MeetingId)).length;
+      const tasksSoFar = tasks.filter((t) =>
+        idsSoFar.includes(t.MeetingId),
+      ).length;
 
       return {
         name: `M${idx + 1}`,
@@ -144,9 +188,27 @@ const AdminDashboard = () => {
 
   const recentActivities = useMemo(() => {
     const items = [
-      ...materials.map((m) => ({ icon: Upload, tone: "bg-green-100 text-green-600", text: `${m.uploader?.name || "Someone"} uploaded a new material`, sub: m.name, date: m.createdAt })),
-      ...tasks.map((t) => ({ icon: ClipboardCheck, tone: "bg-blue-100 text-blue-600", text: `${t.creator?.name || "Someone"} created a new task`, sub: t.name, date: t.createdAt })),
-      ...notes.map((n) => ({ icon: FileText, tone: "bg-orange-100 text-orange-600", text: `${n.creator?.name || "Someone"} added meeting notes`, sub: n.name, date: n.createdAt })),
+      ...materials.map((m) => ({
+        icon: Upload,
+        tone: "bg-green-100 text-green-600",
+        text: `${m.uploader?.name || "Someone"} uploaded a new material`,
+        sub: m.name,
+        date: m.createdAt,
+      })),
+      ...tasks.map((t) => ({
+        icon: ClipboardCheck,
+        tone: "bg-blue-100 text-blue-600",
+        text: `${t.creator?.name || "Someone"} created a new task`,
+        sub: t.name,
+        date: t.createdAt,
+      })),
+      ...notes.map((n) => ({
+        icon: FileText,
+        tone: "bg-orange-100 text-orange-600",
+        text: `${n.creator?.name || "Someone"} added meeting notes`,
+        sub: n.name,
+        date: n.createdAt,
+      })),
     ];
 
     return items
@@ -194,7 +256,9 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
         <div className="rounded-sm border border-gray-200 bg-[var(--color-surface)] p-5 xl:col-span-2">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-base font-semibold">Learning Progress Overview</h2>
+            <h2 className="text-base font-semibold">
+              Learning Progress Overview
+            </h2>
             <span className="rounded-sm border border-gray-200 px-3 py-1.5 text-xs font-medium text-[var(--color-text-muted)]">
               Cumulative
             </span>
@@ -204,7 +268,13 @@ const AdminDashboard = () => {
             <ResponsiveContainer width="100%" height={260}>
               <AreaChart data={chartData}>
                 <defs>
-                  <linearGradient id="colorMeetings" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient
+                    id="colorMeetings"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
                     <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
                     <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                   </linearGradient>
@@ -218,12 +288,26 @@ const AdminDashboard = () => {
                 <YAxis tick={{ fontSize: 12 }} unit="%" />
                 <Tooltip />
                 <Legend />
-                <Area type="monotone" dataKey="Meetings" stroke="#3b82f6" fill="url(#colorMeetings)" strokeWidth={2} />
-                <Area type="monotone" dataKey="Tasks" stroke="#22c55e" fill="url(#colorTasks)" strokeWidth={2} />
+                <Area
+                  type="monotone"
+                  dataKey="Meetings"
+                  stroke="#3b82f6"
+                  fill="url(#colorMeetings)"
+                  strokeWidth={2}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="Tasks"
+                  stroke="#22c55e"
+                  fill="url(#colorTasks)"
+                  strokeWidth={2}
+                />
               </AreaChart>
             </ResponsiveContainer>
           ) : (
-            <p className="py-16 text-center text-sm text-[var(--color-text-muted)]">No data yet.</p>
+            <p className="py-16 text-center text-sm text-[var(--color-text-muted)]">
+              No data yet.
+            </p>
           )}
         </div>
 
@@ -235,9 +319,19 @@ const AdminDashboard = () => {
               <div className="relative mx-auto h-40 w-40">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
-                    <Pie data={classDistribution} dataKey="value" nameKey="name" innerRadius={45} outerRadius={70} paddingAngle={2}>
+                    <Pie
+                      data={classDistribution}
+                      dataKey="value"
+                      nameKey="name"
+                      innerRadius={45}
+                      outerRadius={70}
+                      paddingAngle={2}
+                    >
                       {classDistribution.map((entry, index) => (
-                        <Cell key={entry.name} fill={DONUT_COLORS[index % DONUT_COLORS.length]} />
+                        <Cell
+                          key={entry.name}
+                          fill={DONUT_COLORS[index % DONUT_COLORS.length]}
+                        />
                       ))}
                     </Pie>
                     <Tooltip />
@@ -245,26 +339,40 @@ const AdminDashboard = () => {
                 </ResponsiveContainer>
                 <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
                   <span className="text-xl font-bold">{classes.length}</span>
-                  <span className="text-[10px] text-[var(--color-text-muted)]">Total Classes</span>
+                  <span className="text-[10px] text-[var(--color-text-muted)]">
+                    Total Classes
+                  </span>
                 </div>
               </div>
 
               <div className="mt-4 space-y-2 text-sm">
                 {classDistribution.map((entry, index) => (
-                  <div key={entry.name} className="flex items-center justify-between">
+                  <div
+                    key={entry.name}
+                    className="flex items-center justify-between"
+                  >
                     <span className="flex items-center gap-2">
-                      <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: DONUT_COLORS[index % DONUT_COLORS.length] }} />
+                      <span
+                        className="h-2.5 w-2.5 rounded-full"
+                        style={{
+                          backgroundColor:
+                            DONUT_COLORS[index % DONUT_COLORS.length],
+                        }}
+                      />
                       {entry.name}
                     </span>
                     <span className="font-medium">
-                      {entry.value} ({Math.round((entry.value / classes.length) * 100)}%)
+                      {entry.value} (
+                      {Math.round((entry.value / classes.length) * 100)}%)
                     </span>
                   </div>
                 ))}
               </div>
             </>
           ) : (
-            <p className="py-10 text-center text-sm text-[var(--color-text-muted)]">No classes yet.</p>
+            <p className="py-10 text-center text-sm text-[var(--color-text-muted)]">
+              No classes yet.
+            </p>
           )}
         </div>
       </div>
@@ -273,23 +381,32 @@ const AdminDashboard = () => {
         <div className="rounded-sm border border-gray-200 bg-[var(--color-surface)] p-5">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-base font-semibold">Recent Activities</h2>
-            <Link to="/materials" className="flex items-center gap-1 text-xs font-medium text-[var(--color-primary)]">
+            <Link
+              to="/materials"
+              className="flex items-center gap-1 text-xs font-medium text-[var(--color-primary)]"
+            >
               View All <ArrowRight size={12} />
             </Link>
           </div>
 
           <div className="space-y-3">
             {recentActivities.length === 0 && (
-              <p className="text-xs text-[var(--color-text-muted)]">No recent activity.</p>
+              <p className="text-xs text-[var(--color-text-muted)]">
+                No recent activity.
+              </p>
             )}
             {recentActivities.map((item, idx) => (
               <div key={idx} className="flex items-start gap-3 text-sm">
-                <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${item.tone}`}>
+                <div
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${item.tone}`}
+                >
                   <item.icon size={14} />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate">{item.text}</p>
-                  <p className="truncate text-xs text-[var(--color-text-muted)]">{item.sub}</p>
+                  <p className="truncate text-xs text-[var(--color-text-muted)]">
+                    {item.sub}
+                  </p>
                 </div>
               </div>
             ))}
@@ -304,9 +421,19 @@ const AdminDashboard = () => {
               <div className="relative h-32 w-32 shrink-0">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
-                    <Pie data={taskStatusData} dataKey="value" nameKey="name" innerRadius={36} outerRadius={58} paddingAngle={2}>
+                    <Pie
+                      data={taskStatusData}
+                      dataKey="value"
+                      nameKey="name"
+                      innerRadius={36}
+                      outerRadius={58}
+                      paddingAngle={2}
+                    >
                       {taskStatusData.map((entry, index) => (
-                        <Cell key={entry.name} fill={DONUT_COLORS[index % DONUT_COLORS.length]} />
+                        <Cell
+                          key={entry.name}
+                          fill={DONUT_COLORS[index % DONUT_COLORS.length]}
+                        />
                       ))}
                     </Pie>
                     <Tooltip />
@@ -314,15 +441,26 @@ const AdminDashboard = () => {
                 </ResponsiveContainer>
                 <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
                   <span className="text-lg font-bold">{tasks.length}</span>
-                  <span className="text-[9px] text-[var(--color-text-muted)]">Total Tasks</span>
+                  <span className="text-[9px] text-[var(--color-text-muted)]">
+                    Total Tasks
+                  </span>
                 </div>
               </div>
 
               <div className="flex-1 space-y-2 text-sm">
                 {taskStatusData.map((entry, index) => (
-                  <div key={entry.name} className="flex items-center justify-between">
+                  <div
+                    key={entry.name}
+                    className="flex items-center justify-between"
+                  >
                     <span className="flex items-center gap-2">
-                      <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: DONUT_COLORS[index % DONUT_COLORS.length] }} />
+                      <span
+                        className="h-2.5 w-2.5 rounded-full"
+                        style={{
+                          backgroundColor:
+                            DONUT_COLORS[index % DONUT_COLORS.length],
+                        }}
+                      />
                       {entry.name}
                     </span>
                     <span className="font-medium">{entry.value}</span>
@@ -331,21 +469,28 @@ const AdminDashboard = () => {
               </div>
             </div>
           ) : (
-            <p className="py-10 text-center text-sm text-[var(--color-text-muted)]">No tasks yet.</p>
+            <p className="py-10 text-center text-sm text-[var(--color-text-muted)]">
+              No tasks yet.
+            </p>
           )}
         </div>
 
         <div className="rounded-sm border border-gray-200 bg-[var(--color-surface)] p-5">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-base font-semibold">Upcoming Meetings</h2>
-            <Link to="/meetings" className="flex items-center gap-1 text-xs font-medium text-[var(--color-primary)]">
+            <Link
+              to="/meetings"
+              className="flex items-center gap-1 text-xs font-medium text-[var(--color-primary)]"
+            >
               View All <ArrowRight size={12} />
             </Link>
           </div>
 
           <div className="space-y-3">
             {upcomingMeetings.length === 0 && (
-              <p className="text-xs text-[var(--color-text-muted)]">No upcoming meetings.</p>
+              <p className="text-xs text-[var(--color-text-muted)]">
+                No upcoming meetings.
+              </p>
             )}
             {upcomingMeetings.map((m) => (
               <Link
@@ -354,8 +499,14 @@ const AdminDashboard = () => {
                 className="flex items-start gap-3 rounded-sm p-1.5 text-sm transition-colors hover:bg-gray-50"
               >
                 <div className="flex h-10 w-10 shrink-0 flex-col items-center justify-center rounded-sm bg-orange-50 text-[10px] font-semibold uppercase text-orange-600">
-                  <span>{new Date(m.meetingDate).toLocaleDateString("en", { month: "short" })}</span>
-                  <span className="text-sm">{new Date(m.meetingDate).getDate()}</span>
+                  <span>
+                    {new Date(m.meetingDate).toLocaleDateString("en", {
+                      month: "short",
+                    })}
+                  </span>
+                  <span className="text-sm">
+                    {new Date(m.meetingDate).getDate()}
+                  </span>
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-medium">{m.name}</p>
@@ -377,14 +528,19 @@ const AdminDashboard = () => {
       <div className="rounded-sm border border-gray-200 bg-[var(--color-surface)] p-5">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-base font-semibold">Top Performing Classes</h2>
-          <Link to="/classes" className="flex items-center gap-1 text-xs font-medium text-[var(--color-primary)]">
+          <Link
+            to="/classes"
+            className="flex items-center gap-1 text-xs font-medium text-[var(--color-primary)]"
+          >
             View All <ArrowRight size={12} />
           </Link>
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
           {topClasses.length === 0 && (
-            <p className="text-xs text-[var(--color-text-muted)]">No classes yet.</p>
+            <p className="text-xs text-[var(--color-text-muted)]">
+              No classes yet.
+            </p>
           )}
 
           {topClasses.map((cls) => (

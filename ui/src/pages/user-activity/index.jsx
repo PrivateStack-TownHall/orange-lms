@@ -27,7 +27,11 @@ const UserActivityLog = () => {
 
   const [activities, setActivities] = useState([]);
   const [overview, setOverview] = useState(null);
-  const [pagination, setPagination] = useState({ page: 1, totalPages: 1, total: 0 });
+  const [pagination, setPagination] = useState({
+    page: 1,
+    totalPages: 1,
+    total: 0,
+  });
   const [loading, setLoading] = useState(true);
 
   const fetchData = async (page = 1) => {
@@ -38,7 +42,9 @@ const UserActivityLog = () => {
         UserActivityService.getOverview(),
       ]);
       setActivities(listRes.data?.data || []);
-      setPagination(listRes.data?.pagination || { page: 1, totalPages: 1, total: 0 });
+      setPagination(
+        listRes.data?.pagination || { page: 1, totalPages: 1, total: 0 },
+      );
       setOverview(overviewRes.data);
     } catch (err) {
       console.error(err);
@@ -73,7 +79,10 @@ const UserActivityLog = () => {
             <p className="mt-1 text-xl font-bold">{overview.total}</p>
           </div>
           {overview.topUsers?.slice(0, 3).map((u) => (
-            <div key={u.name} className="rounded-sm border border-gray-200 bg-white p-4">
+            <div
+              key={u.name}
+              className="rounded-sm border border-gray-200 bg-white p-4"
+            >
               <span className="text-xs text-gray-500">{u.name}</span>
               <p className="mt-1 text-xl font-bold">{u.count}</p>
             </div>
@@ -118,7 +127,9 @@ const UserActivityLog = () => {
                       {a.activity}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-gray-500">{a.description || "-"}</td>
+                  <td className="px-4 py-3 text-gray-500">
+                    {a.description || "-"}
+                  </td>
                   <td className="px-4 py-3 text-xs text-gray-400">
                     {a.class?.name || "-"}
                   </td>
@@ -132,7 +143,8 @@ const UserActivityLog = () => {
       {pagination.totalPages > 1 && (
         <div className="flex items-center justify-between text-sm text-gray-500">
           <span>
-            Showing page {pagination.page} of {pagination.totalPages} ({pagination.total} activities)
+            Showing page {pagination.page} of {pagination.totalPages} (
+            {pagination.total} activities)
           </span>
           <div className="flex gap-2">
             {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)

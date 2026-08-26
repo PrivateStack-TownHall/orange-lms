@@ -41,7 +41,10 @@ const TaskCriteriaSection = ({ taskId, role }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskId]);
 
-  const totalWeight = criteria.reduce((sum, c) => sum + Number(c.percentage), 0);
+  const totalWeight = criteria.reduce(
+    (sum, c) => sum + Number(c.percentage),
+    0,
+  );
 
   const openCreate = () => {
     setEditing(null);
@@ -169,9 +172,7 @@ const TaskCriteriaSection = ({ taskId, role }) => {
                 <span className="text-sm font-semibold text-orange-600">
                   {c.percentage}%
                 </span>
-                <span className="text-xs text-gray-400">
-                  max {c.maxScore}
-                </span>
+                <span className="text-xs text-gray-400">max {c.maxScore}</span>
                 {canManage && (
                   <div className="flex gap-1">
                     <button
@@ -208,7 +209,9 @@ const TaskCriteriaSection = ({ taskId, role }) => {
             <input
               type="text"
               value={form.title}
-              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, title: e.target.value }))
+              }
               placeholder="e.g. UI Implementation"
               className="w-full rounded-sm border border-gray-200 p-2.5 text-sm"
             />

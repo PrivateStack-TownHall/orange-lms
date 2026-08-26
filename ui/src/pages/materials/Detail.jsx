@@ -2,7 +2,15 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { Folder, BookOpen, Calendar, Users, FileText, Paperclip, HardDrive } from "lucide-react";
+import {
+  Folder,
+  BookOpen,
+  Calendar,
+  Users,
+  FileText,
+  Paperclip,
+  HardDrive,
+} from "lucide-react";
 
 import { can, formatDate } from "@/helpers";
 
@@ -58,7 +66,9 @@ const Detail = ({ material: materialProp, role: roleProp, onDelete }) => {
 
             <div className="mt-2 flex items-center gap-2 text-xs">
               <StatusBadge status={material.status || "Published"} />
-              <span className="text-[var(--color-text-muted)]">MAT-{String(material.id).padStart(4, "0")}</span>
+              <span className="text-[var(--color-text-muted)]">
+                MAT-{String(material.id).padStart(4, "0")}
+              </span>
             </div>
 
             <div className="mt-5 w-full space-y-4 text-left text-sm">
@@ -74,7 +84,10 @@ const Detail = ({ material: materialProp, role: roleProp, onDelete }) => {
             <div className="mt-5 flex w-full gap-2">
               {can(role, "material", "update") && (
                 <Link to={`/materials/edit/${material.id}`} className="flex-1">
-                  <ActionButton action="edit" className="w-full justify-center py-2" />
+                  <ActionButton
+                    action="edit"
+                    className="w-full justify-center py-2"
+                  />
                 </Link>
               )}
 
@@ -93,22 +106,34 @@ const Detail = ({ material: materialProp, role: roleProp, onDelete }) => {
       {/* RIGHT */}
       <div className="space-y-4 lg:col-span-3">
         <InfoCard icon={FileText} title="Description">
-          <p className="text-sm leading-6 text-gray-600">{material.description || "-"}</p>
+          <p className="text-sm leading-6 text-gray-600">
+            {material.description || "-"}
+          </p>
         </InfoCard>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <MetaCard icon={BookOpen} label="Class">
             <p className="font-semibold">{material.Class?.code || "-"}</p>
-            <p className="text-sm text-gray-500">{material.Class?.name || "-"}</p>
+            <p className="text-sm text-gray-500">
+              {material.Class?.name || "-"}
+            </p>
           </MetaCard>
 
           <MetaCard icon={Users} label="Meeting">
-            <p className="font-semibold">Meeting #{material.Meeting?.meetingNumber || "-"}</p>
-            <p className="text-sm text-gray-500">{material.Meeting?.name || "-"}</p>
+            <p className="font-semibold">
+              Meeting #{material.Meeting?.meetingNumber || "-"}
+            </p>
+            <p className="text-sm text-gray-500">
+              {material.Meeting?.name || "-"}
+            </p>
           </MetaCard>
 
           <MetaCard icon={Calendar} label="Meeting Date">
-            <p>{material.Meeting?.meetingDate ? formatDate(material.Meeting.meetingDate) : "-"}</p>
+            <p>
+              {material.Meeting?.meetingDate
+                ? formatDate(material.Meeting.meetingDate)
+                : "-"}
+            </p>
           </MetaCard>
 
           <MetaCard icon={HardDrive} label="Material Uploaded">
@@ -118,7 +143,9 @@ const Detail = ({ material: materialProp, role: roleProp, onDelete }) => {
 
         <InfoCard icon={Paperclip} title="Attachment">
           <div className="flex items-center justify-between">
-            <p className="text-sm text-gray-500">Download or open material file</p>
+            <p className="text-sm text-gray-500">
+              Download or open material file
+            </p>
             {material.fileUrl ? (
               <div className="flex gap-2">
                 <a
@@ -145,7 +172,10 @@ const Detail = ({ material: materialProp, role: roleProp, onDelete }) => {
 
 const SidebarField = ({ icon: Icon, label, children }) => (
   <div className="flex items-start gap-2">
-    <Icon size={15} className="mt-0.5 shrink-0 text-[var(--color-text-muted)]" />
+    <Icon
+      size={15}
+      className="mt-0.5 shrink-0 text-[var(--color-text-muted)]"
+    />
     <div>
       <p className="text-xs text-gray-500">{label}</p>
       <div className="font-medium">{children}</div>

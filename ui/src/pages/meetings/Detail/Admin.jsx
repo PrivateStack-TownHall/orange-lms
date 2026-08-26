@@ -122,7 +122,9 @@ const Detail = () => {
 
   const attendanceSummary = useMemo(() => {
     const total = attendanceRows.length;
-    const present = attendanceRows.filter((r) => r.attendance?.status === "Present").length;
+    const present = attendanceRows.filter(
+      (r) => r.attendance?.status === "Present",
+    ).length;
     const notMarked = attendanceRows.filter((r) => !r.attendance).length;
     const absent = total - present - notMarked;
     return { total, present, absent, notMarked };
@@ -136,13 +138,17 @@ const Detail = () => {
       action: async () => {
         try {
           await MeetingService.delete(meeting.id);
-          openSuccess({ title: "Deleted", message: "Meeting deleted successfully." });
+          openSuccess({
+            title: "Deleted",
+            message: "Meeting deleted successfully.",
+          });
           navigate("/meetings");
         } catch (error) {
           console.error(error);
           openError({
             title: "Delete Failed",
-            message: error?.response?.data?.message || "Failed to delete meeting.",
+            message:
+              error?.response?.data?.message || "Failed to delete meeting.",
           });
         }
       },
@@ -178,7 +184,10 @@ const Detail = () => {
 
       await fetchAttendances();
       setActiveTab("attendance");
-      openSuccess({ title: "Saved", message: "Attendance updated successfully." });
+      openSuccess({
+        title: "Saved",
+        message: "Attendance updated successfully.",
+      });
     } catch (error) {
       console.error(error);
       openError({
@@ -261,7 +270,9 @@ const Detail = () => {
               <div className="mt-5 w-full space-y-4 text-left text-sm">
                 <SidebarField icon={BookOpen} label="Class">
                   <p className="font-medium">{meeting.class?.code}</p>
-                  <p className="text-xs text-[var(--color-text-muted)]">{meeting.class?.name}</p>
+                  <p className="text-xs text-[var(--color-text-muted)]">
+                    {meeting.class?.name}
+                  </p>
                 </SidebarField>
 
                 <SidebarField icon={Calendar} label="Date">
@@ -291,20 +302,41 @@ const Detail = () => {
 
         {/* RIGHT */}
         <div className="space-y-4 lg:col-span-3">
-          <TabHeader tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+          <TabHeader
+            tabs={tabs}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          />
 
           <TabContent activeTab={activeTab} value="overview">
             <div className="space-y-4">
               <div className="rounded-sm border border-gray-200 bg-[var(--color-surface)] p-5">
-                <h3 className="mb-3 text-base font-semibold">About This Meeting</h3>
+                <h3 className="mb-3 text-base font-semibold">
+                  About This Meeting
+                </h3>
                 <p className="text-sm text-[var(--color-text-muted)]">
                   {meeting.description || "No description provided."}
                 </p>
 
                 <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  <MiniStat icon={CheckSquare} tone="bg-orange-100 text-orange-600" label="Tasks" value={meeting.tasks?.length || 0} />
-                  <MiniStat icon={FileText} tone="bg-green-100 text-green-600" label="Notes" value={meeting.notes?.length || 0} />
-                  <MiniStat icon={Archive} tone="bg-blue-100 text-blue-600" label="Materials" value={meeting.materials?.length || 0} />
+                  <MiniStat
+                    icon={CheckSquare}
+                    tone="bg-orange-100 text-orange-600"
+                    label="Tasks"
+                    value={meeting.tasks?.length || 0}
+                  />
+                  <MiniStat
+                    icon={FileText}
+                    tone="bg-green-100 text-green-600"
+                    label="Notes"
+                    value={meeting.notes?.length || 0}
+                  />
+                  <MiniStat
+                    icon={Archive}
+                    tone="bg-blue-100 text-blue-600"
+                    label="Materials"
+                    value={meeting.materials?.length || 0}
+                  />
                 </div>
               </div>
 
@@ -333,7 +365,8 @@ const Detail = () => {
                           <div>
                             <p className="text-sm font-semibold">{task.name}</p>
                             <p className="text-xs text-[var(--color-text-muted)]">
-                              Max Score: {task.maxScore || "-"} · Due: {task.dueDate ? formatDate(task.dueDate) : "-"}
+                              Max Score: {task.maxScore || "-"} · Due:{" "}
+                              {task.dueDate ? formatDate(task.dueDate) : "-"}
                             </p>
                           </div>
                         </div>
@@ -347,7 +380,9 @@ const Detail = () => {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-[var(--color-text-muted)]">No tasks yet.</p>
+                  <p className="text-sm text-[var(--color-text-muted)]">
+                    No tasks yet.
+                  </p>
                 )}
               </div>
 
@@ -373,7 +408,9 @@ const Detail = () => {
                           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm bg-blue-100 text-blue-600">
                             <FileText size={16} />
                           </div>
-                          <p className="text-sm font-semibold">{material.name}</p>
+                          <p className="text-sm font-semibold">
+                            {material.name}
+                          </p>
                         </div>
                         {material.fileUrl && (
                           <a
@@ -389,7 +426,9 @@ const Detail = () => {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-[var(--color-text-muted)]">No materials yet.</p>
+                  <p className="text-sm text-[var(--color-text-muted)]">
+                    No materials yet.
+                  </p>
                 )}
               </div>
             </div>
@@ -409,12 +448,38 @@ const Detail = () => {
               <StatsGrid
                 columns={4}
                 items={[
-                  { title: "Total Tasks", value: meeting.tasks?.length || 0, icon: CheckSquare, tone: "blue" },
-                  { title: "Published", value: meeting.tasks?.filter((t) => t.status === "Published").length || 0, icon: FileText, tone: "orange" },
-                  { title: "Draft", value: meeting.tasks?.filter((t) => t.status === "Draft").length || 0, icon: Archive, tone: "gray" },
+                  {
+                    title: "Total Tasks",
+                    value: meeting.tasks?.length || 0,
+                    icon: CheckSquare,
+                    tone: "blue",
+                  },
+                  {
+                    title: "Published",
+                    value:
+                      meeting.tasks?.filter((t) => t.status === "Published")
+                        .length || 0,
+                    icon: FileText,
+                    tone: "orange",
+                  },
+                  {
+                    title: "Draft",
+                    value:
+                      meeting.tasks?.filter((t) => t.status === "Draft")
+                        .length || 0,
+                    icon: Archive,
+                    tone: "gray",
+                  },
                   {
                     title: "Due Soon",
-                    value: meeting.tasks?.filter((t) => t.dueDate && new Date(t.dueDate) > new Date() && new Date(t.dueDate) < new Date(Date.now() + 7 * 86400000)).length || 0,
+                    value:
+                      meeting.tasks?.filter(
+                        (t) =>
+                          t.dueDate &&
+                          new Date(t.dueDate) > new Date() &&
+                          new Date(t.dueDate) <
+                            new Date(Date.now() + 7 * 86400000),
+                      ).length || 0,
                     icon: Clock,
                     tone: "purple",
                   },
@@ -426,8 +491,16 @@ const Detail = () => {
                   columns={[
                     { key: "name", label: "Task" },
                     { key: "maxScore", label: "Max Score" },
-                    { key: "dueDate", label: "Due Date", render: (row) => formatDate(row.dueDate) },
-                    { key: "status", label: "Status", render: (row) => <StatusBadge status={row.status} /> },
+                    {
+                      key: "dueDate",
+                      label: "Due Date",
+                      render: (row) => formatDate(row.dueDate),
+                    },
+                    {
+                      key: "status",
+                      label: "Status",
+                      render: (row) => <StatusBadge status={row.status} />,
+                    },
                     {
                       key: "actions",
                       label: "Actions",
@@ -461,7 +534,10 @@ const Detail = () => {
               <div className="space-y-3">
                 {meeting.notes?.length ? (
                   meeting.notes.map((note) => (
-                    <div key={note.id} className="flex items-start justify-between gap-3 rounded-sm border border-gray-200 bg-[var(--color-surface)] p-4">
+                    <div
+                      key={note.id}
+                      className="flex items-start justify-between gap-3 rounded-sm border border-gray-200 bg-[var(--color-surface)] p-4"
+                    >
                       <div className="flex items-start gap-3">
                         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm bg-amber-100 text-amber-600">
                           <FileText size={16} />
@@ -486,7 +562,9 @@ const Detail = () => {
                     </div>
                   ))
                 ) : (
-                  <p className="text-sm text-[var(--color-text-muted)]">No notes yet.</p>
+                  <p className="text-sm text-[var(--color-text-muted)]">
+                    No notes yet.
+                  </p>
                 )}
               </div>
             </div>
@@ -544,10 +622,30 @@ const Detail = () => {
               <StatsGrid
                 columns={4}
                 items={[
-                  { title: "Total Mentees", value: attendanceSummary.total, icon: Users, tone: "blue" },
-                  { title: "Present", value: attendanceSummary.present, icon: CheckCircle2, tone: "green" },
-                  { title: "Absent", value: attendanceSummary.absent, icon: XCircle, tone: "red" },
-                  { title: "Not Marked", value: attendanceSummary.notMarked, icon: HelpCircle, tone: "amber" },
+                  {
+                    title: "Total Mentees",
+                    value: attendanceSummary.total,
+                    icon: Users,
+                    tone: "blue",
+                  },
+                  {
+                    title: "Present",
+                    value: attendanceSummary.present,
+                    icon: CheckCircle2,
+                    tone: "green",
+                  },
+                  {
+                    title: "Absent",
+                    value: attendanceSummary.absent,
+                    icon: XCircle,
+                    tone: "red",
+                  },
+                  {
+                    title: "Not Marked",
+                    value: attendanceSummary.notMarked,
+                    icon: HelpCircle,
+                    tone: "amber",
+                  },
                 ]}
               />
 
@@ -576,7 +674,8 @@ const Detail = () => {
                           row.attendance ? (
                             <span
                               className={`rounded-sm px-2 py-1 text-xs font-medium ${
-                                ATTENDANCE_TONE[row.attendance.status] || "bg-gray-100 text-gray-700"
+                                ATTENDANCE_TONE[row.attendance.status] ||
+                                "bg-gray-100 text-gray-700"
                               }`}
                             >
                               {row.attendance.status}
@@ -592,7 +691,9 @@ const Detail = () => {
                         label: "Checked In",
                         render: (row) =>
                           row.attendance?.checkInAt
-                            ? new Date(row.attendance.checkInAt).toLocaleString("id-ID")
+                            ? new Date(row.attendance.checkInAt).toLocaleString(
+                                "id-ID",
+                              )
                             : "-",
                       },
                       {
@@ -624,32 +725,43 @@ const Detail = () => {
                     </div>
 
                     <div className="flex gap-1">
-                      {["Present", "Late", "Absent", "Excused"].map((status) => (
-                        <button
-                          key={status}
-                          type="button"
-                          onClick={() =>
-                            setMarkStatuses((prev) => ({ ...prev, [row.id]: status }))
-                          }
-                          className={`rounded-sm px-2.5 py-1 text-xs font-medium transition-colors ${
-                            markStatuses[row.id] === status
-                              ? ATTENDANCE_TONE[status]
-                              : "bg-gray-50 text-gray-500 hover:bg-gray-100"
-                          }`}
-                        >
-                          {status}
-                        </button>
-                      ))}
+                      {["Present", "Late", "Absent", "Excused"].map(
+                        (status) => (
+                          <button
+                            key={status}
+                            type="button"
+                            onClick={() =>
+                              setMarkStatuses((prev) => ({
+                                ...prev,
+                                [row.id]: status,
+                              }))
+                            }
+                            className={`rounded-sm px-2.5 py-1 text-xs font-medium transition-colors ${
+                              markStatuses[row.id] === status
+                                ? ATTENDANCE_TONE[status]
+                                : "bg-gray-50 text-gray-500 hover:bg-gray-100"
+                            }`}
+                          >
+                            {status}
+                          </button>
+                        ),
+                      )}
                     </div>
                   </div>
                 ))}
               </div>
 
               <div className="flex justify-end gap-2 border-t border-gray-100 pt-4">
-                <Button variant="outline" onClick={() => setActiveTab("attendance")}>
+                <Button
+                  variant="outline"
+                  onClick={() => setActiveTab("attendance")}
+                >
                   Cancel
                 </Button>
-                <Button onClick={handleSaveAttendance} disabled={savingAttendance}>
+                <Button
+                  onClick={handleSaveAttendance}
+                  disabled={savingAttendance}
+                >
                   {savingAttendance ? "Saving..." : "Save Attendance"}
                 </Button>
               </div>
@@ -676,7 +788,10 @@ const Detail = () => {
 
 const SidebarField = ({ icon: Icon, label, children }) => (
   <div className="flex items-start gap-2">
-    <Icon size={15} className="mt-0.5 shrink-0 text-[var(--color-text-muted)]" />
+    <Icon
+      size={15}
+      className="mt-0.5 shrink-0 text-[var(--color-text-muted)]"
+    />
     <div>
       <p className="text-xs text-gray-500">{label}</p>
       <div>{children}</div>
@@ -686,7 +801,9 @@ const SidebarField = ({ icon: Icon, label, children }) => (
 
 const MiniStat = ({ icon: Icon, tone, label, value }) => (
   <div className="flex items-center gap-3 rounded-sm bg-gray-50 p-3">
-    <div className={`flex h-9 w-9 items-center justify-center rounded-sm ${tone}`}>
+    <div
+      className={`flex h-9 w-9 items-center justify-center rounded-sm ${tone}`}
+    >
       <Icon size={16} />
     </div>
     <div>

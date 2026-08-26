@@ -76,7 +76,9 @@ const Detail = ({ task: taskProp, role: roleProp, onDelete }) => {
 
             <div className="mt-2 flex items-center gap-2 text-xs">
               <StatusBadge status={task.status} />
-              <span className="text-[var(--color-text-muted)]">TASK-{String(task.id).padStart(4, "0")}</span>
+              <span className="text-[var(--color-text-muted)]">
+                TASK-{String(task.id).padStart(4, "0")}
+              </span>
             </div>
 
             <div className="mt-5 w-full space-y-4 text-left text-sm">
@@ -104,7 +106,10 @@ const Detail = ({ task: taskProp, role: roleProp, onDelete }) => {
             <div className="mt-5 flex w-full gap-2">
               {can(role, "task", "update") && (
                 <Link to={`/tasks/edit/${task.id}`} className="flex-1">
-                  <ActionButton action="edit" className="w-full justify-center py-2" />
+                  <ActionButton
+                    action="edit"
+                    className="w-full justify-center py-2"
+                  />
                 </Link>
               )}
 
@@ -123,7 +128,9 @@ const Detail = ({ task: taskProp, role: roleProp, onDelete }) => {
       {/* Content */}
       <div className="space-y-4 lg:col-span-3">
         <InfoCard icon={FileText} title="Description">
-          <p className="text-sm leading-6 text-gray-600">{task.description || "-"}</p>
+          <p className="text-sm leading-6 text-gray-600">
+            {task.description || "-"}
+          </p>
         </InfoCard>
 
         <div className="rounded-sm border border-amber-100 bg-amber-50 p-5">
@@ -132,14 +139,17 @@ const Detail = ({ task: taskProp, role: roleProp, onDelete }) => {
             <span className="font-semibold text-amber-800">Assessment</span>
           </div>
           <p className="text-sm leading-6 text-amber-700">
-            This task will be assessed by the mentor based on the criteria set for this
-            class. Make sure all instructions are followed to get the maximum score.
+            This task will be assessed by the mentor based on the criteria set
+            for this class. Make sure all instructions are followed to get the
+            maximum score.
           </p>
         </div>
 
         <InfoCard icon={Paperclip} title="Attachment">
           <div className="flex items-center justify-between">
-            <p className="text-sm text-gray-500">Download task attachment if available</p>
+            <p className="text-sm text-gray-500">
+              Download task attachment if available
+            </p>
             {task.fileUrl ? (
               <ActionButton action="download" href={task.fileUrl}>
                 Download File
@@ -193,7 +203,10 @@ const Detail = ({ task: taskProp, role: roleProp, onDelete }) => {
 
 const SidebarField = ({ icon: Icon, label, children }) => (
   <div className="flex items-start gap-2">
-    <Icon size={15} className="mt-0.5 shrink-0 text-[var(--color-text-muted)]" />
+    <Icon
+      size={15}
+      className="mt-0.5 shrink-0 text-[var(--color-text-muted)]"
+    />
     <div>
       <p className="text-xs text-gray-500">{label}</p>
       <div className="font-medium">{children}</div>

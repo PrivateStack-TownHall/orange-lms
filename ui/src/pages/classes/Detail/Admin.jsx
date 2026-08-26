@@ -53,7 +53,8 @@ import Button from "@/components/ui/buttons/Button";
 
 const DONUT_COLORS = ["#22c55e", "#3b82f6", "#f59e0b", "#a855f7", "#94a3b8"];
 
-const isPastMeeting = (m) => m.meetingDate && new Date(m.meetingDate) < new Date();
+const isPastMeeting = (m) =>
+  m.meetingDate && new Date(m.meetingDate) < new Date();
 
 const Detail = () => {
   const { id } = useParams();
@@ -96,7 +97,9 @@ const Detail = () => {
     try {
       const res = await MenteeService.getAll();
       const enrolledIds = classData?.mentees?.map((m) => m.id) || [];
-      setAvailableMentees((res.data || []).filter((m) => !enrolledIds.includes(m.id)));
+      setAvailableMentees(
+        (res.data || []).filter((m) => !enrolledIds.includes(m.id)),
+      );
       setSelectedMentees([]);
       setOpenEnrollPopup(true);
     } catch (error) {
@@ -107,14 +110,18 @@ const Detail = () => {
 
   const toggleMentee = (menteeId) => {
     setSelectedMentees((prev) =>
-      prev.includes(menteeId) ? prev.filter((m) => m !== menteeId) : [...prev, menteeId],
+      prev.includes(menteeId)
+        ? prev.filter((m) => m !== menteeId)
+        : [...prev, menteeId],
     );
   };
 
   const handleAssignMentees = async () => {
     if (!selectedMentees.length) return;
     try {
-      await ClassService.enrollMentees(classData.id, { UserIds: selectedMentees });
+      await ClassService.enrollMentees(classData.id, {
+        UserIds: selectedMentees,
+      });
       await fetchClass();
       setOpenEnrollPopup(false);
       openSuccess({ title: "Success", message: "Mentees added to class." });
@@ -135,12 +142,16 @@ const Detail = () => {
         try {
           await ClassService.removeMentee(classData.id, mentee.id);
           await fetchClass();
-          openSuccess({ title: "Removed", message: "Mentee removed from class." });
+          openSuccess({
+            title: "Removed",
+            message: "Mentee removed from class.",
+          });
         } catch (error) {
           console.error(error);
           openError({
             title: "Failed",
-            message: error?.response?.data?.message || "Failed to remove mentee.",
+            message:
+              error?.response?.data?.message || "Failed to remove mentee.",
           });
         }
       },
@@ -155,13 +166,17 @@ const Detail = () => {
       action: async () => {
         try {
           await ClassService.delete(classData.id);
-          openSuccess({ title: "Deleted", message: "Class deleted successfully." });
+          openSuccess({
+            title: "Deleted",
+            message: "Class deleted successfully.",
+          });
           navigate("/classes");
         } catch (error) {
           console.error(error);
           openError({
             title: "Delete Failed",
-            message: error?.response?.data?.message || "Failed to delete class.",
+            message:
+              error?.response?.data?.message || "Failed to delete class.",
           });
         }
       },
@@ -191,7 +206,9 @@ const Detail = () => {
     return sortedMeetings.map((m, idx) => {
       const heldSoFar = idx + 1;
       const idsSoFar = sortedMeetings.slice(0, idx + 1).map((mm) => mm.id);
-      const tasksSoFar = tasks.filter((t) => idsSoFar.includes(t.MeetingId)).length;
+      const tasksSoFar = tasks.filter((t) =>
+        idsSoFar.includes(t.MeetingId),
+      ).length;
 
       return {
         name: `M${m.meetingNumber ?? idx + 1}`,
@@ -307,10 +324,34 @@ const Detail = () => {
       <StatsGrid
         columns={4}
         items={[
-          { title: "Meetings", value: meetings.length, description: "Total pertemuan", icon: Calendar, tone: "purple" },
-          { title: "Mentees", value: mentees.length, description: "Terdaftar", icon: Users, tone: "green" },
-          { title: "Tasks", value: tasks.length, description: "Dibuat", icon: CheckSquare, tone: "orange" },
-          { title: "Materials", value: materials.length, description: "Tersedia", icon: FileText, tone: "blue" },
+          {
+            title: "Meetings",
+            value: meetings.length,
+            description: "Total pertemuan",
+            icon: Calendar,
+            tone: "purple",
+          },
+          {
+            title: "Mentees",
+            value: mentees.length,
+            description: "Terdaftar",
+            icon: Users,
+            tone: "green",
+          },
+          {
+            title: "Tasks",
+            value: tasks.length,
+            description: "Dibuat",
+            icon: CheckSquare,
+            tone: "orange",
+          },
+          {
+            title: "Materials",
+            value: materials.length,
+            description: "Tersedia",
+            icon: FileText,
+            tone: "blue",
+          },
         ]}
       />
 
@@ -328,7 +369,11 @@ const Detail = () => {
         </Button>
       </div>
 
-      <TabHeader tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+      <TabHeader
+        tabs={tabs}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+      />
 
       <TabContent activeTab={activeTab} value="overview">
         <div className="space-y-4">
@@ -336,14 +381,22 @@ const Detail = () => {
           <div className="grid grid-cols-2 gap-4 rounded-sm border border-gray-200 bg-[var(--color-surface)] p-4 text-sm md:grid-cols-4">
             <div>
               <p className="text-xs text-[var(--color-text-muted)]">Mentor</p>
-              <p className="mt-1 font-medium">{classData.mentor?.name || "-"}</p>
+              <p className="mt-1 font-medium">
+                {classData.mentor?.name || "-"}
+              </p>
             </div>
             <div>
-              <p className="text-xs text-[var(--color-text-muted)]">Created By</p>
-              <p className="mt-1 font-medium">{classData.creator?.name || "-"}</p>
+              <p className="text-xs text-[var(--color-text-muted)]">
+                Created By
+              </p>
+              <p className="mt-1 font-medium">
+                {classData.creator?.name || "-"}
+              </p>
             </div>
             <div>
-              <p className="text-xs text-[var(--color-text-muted)]">Start Date</p>
+              <p className="text-xs text-[var(--color-text-muted)]">
+                Start Date
+              </p>
               <p className="mt-1">{formatDate(classData.startDate)}</p>
             </div>
             <div>
@@ -357,24 +410,34 @@ const Detail = () => {
 
             <div className="space-y-3">
               {activity.length === 0 && (
-                <p className="text-xs text-[var(--color-text-muted)]">No recent activity.</p>
+                <p className="text-xs text-[var(--color-text-muted)]">
+                  No recent activity.
+                </p>
               )}
 
               {activity.map((item, idx) => (
                 <div key={idx} className="flex items-start gap-3 text-sm">
-                  <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${item.tone}`}>
+                  <div
+                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${item.tone}`}
+                  >
                     <item.icon size={14} />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate">{item.text}</p>
-                    <p className="text-xs text-[var(--color-text-muted)]">{formatDate(item.date)}</p>
+                    <p className="text-xs text-[var(--color-text-muted)]">
+                      {formatDate(item.date)}
+                    </p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          <DonutCard title="Materials Overview" total={materials.length} data={materialTypeData} />
+          <DonutCard
+            title="Materials Overview"
+            total={materials.length}
+            data={materialTypeData}
+          />
         </div>
       </TabContent>
 
@@ -393,7 +456,9 @@ const Detail = () => {
                 key: "status",
                 label: "Status",
                 render: (row) => (
-                  <StatusBadge status={isPastMeeting(row) ? "Completed" : "Active"}>
+                  <StatusBadge
+                    status={isPastMeeting(row) ? "Completed" : "Active"}
+                  >
                     {isPastMeeting(row) ? "Completed" : "Upcoming"}
                   </StatusBadge>
                 ),
@@ -576,8 +641,18 @@ const Detail = () => {
                   <YAxis tick={{ fontSize: 12 }} unit="%" />
                   <Tooltip />
                   <Legend />
-                  <Line type="monotone" dataKey="Meetings" stroke="#a855f7" strokeWidth={2} />
-                  <Line type="monotone" dataKey="Tasks" stroke="#22c55e" strokeWidth={2} />
+                  <Line
+                    type="monotone"
+                    dataKey="Meetings"
+                    stroke="#a855f7"
+                    strokeWidth={2}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="Tasks"
+                    stroke="#22c55e"
+                    strokeWidth={2}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             ) : (
@@ -588,8 +663,16 @@ const Detail = () => {
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <DonutCard title="Task Overview" total={tasks.length} data={taskStatusData} />
-            <DonutCard title="Materials Overview" total={materials.length} data={materialTypeData} />
+            <DonutCard
+              title="Task Overview"
+              total={tasks.length}
+              data={taskStatusData}
+            />
+            <DonutCard
+              title="Materials Overview"
+              total={materials.length}
+              data={materialTypeData}
+            />
           </div>
         </div>
       </TabContent>
@@ -631,7 +714,10 @@ const Detail = () => {
             </span>
 
             <div className="flex gap-2">
-              <Button variant="outline" onClick={() => setOpenEnrollPopup(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setOpenEnrollPopup(false)}
+              >
                 Cancel
               </Button>
               <Button onClick={handleAssignMentees}>Add Mentees</Button>
@@ -665,7 +751,10 @@ const DonutCard = ({ title, total, data }) => (
                 paddingAngle={2}
               >
                 {data.map((entry, index) => (
-                  <Cell key={entry.name} fill={DONUT_COLORS[index % DONUT_COLORS.length]} />
+                  <Cell
+                    key={entry.name}
+                    fill={DONUT_COLORS[index % DONUT_COLORS.length]}
+                  />
                 ))}
               </Pie>
               <Tooltip />
@@ -674,7 +763,9 @@ const DonutCard = ({ title, total, data }) => (
 
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-xl font-bold">{total}</span>
-            <span className="text-[10px] text-[var(--color-text-muted)]">Total</span>
+            <span className="text-[10px] text-[var(--color-text-muted)]">
+              Total
+            </span>
           </div>
         </div>
 
@@ -684,7 +775,9 @@ const DonutCard = ({ title, total, data }) => (
               <span className="flex items-center gap-2">
                 <span
                   className="h-2.5 w-2.5 rounded-full"
-                  style={{ backgroundColor: DONUT_COLORS[index % DONUT_COLORS.length] }}
+                  style={{
+                    backgroundColor: DONUT_COLORS[index % DONUT_COLORS.length],
+                  }}
                 />
                 {entry.name}
               </span>

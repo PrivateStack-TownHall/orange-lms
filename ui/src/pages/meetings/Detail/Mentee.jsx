@@ -99,7 +99,11 @@ const Mentee = () => {
         <div className="space-y-5 lg:col-span-8">
           <TabsHeader activeTab={activeTab} setActiveTab={setActiveTab} />
 
-          <TabsContent activeTab={activeTab} meeting={meeting} onRefresh={fetchMeeting} />
+          <TabsContent
+            activeTab={activeTab}
+            meeting={meeting}
+            onRefresh={fetchMeeting}
+          />
         </div>
       </div>
     </div>

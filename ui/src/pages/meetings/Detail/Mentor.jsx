@@ -552,7 +552,10 @@ const TabsContent = ({
       )}
 
       {activeTab === "Attendance" && (
-        <AttendanceTab meetingId={meeting.id} mentees={meeting.class?.mentees || []} />
+        <AttendanceTab
+          meetingId={meeting.id}
+          mentees={meeting.class?.mentees || []}
+        />
       )}
       {activeTab === "Submission" && (
         <SubmissionsTab tasks={meeting.tasks || []} />

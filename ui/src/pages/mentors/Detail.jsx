@@ -74,32 +74,47 @@ const Detail = () => {
       action: async () => {
         try {
           await MentorService.delete(id);
-          openSuccess({ title: "Success", message: "Mentor deleted successfully." });
+          openSuccess({
+            title: "Success",
+            message: "Mentor deleted successfully.",
+          });
         } catch (error) {
           console.error(error);
           openError({
             title: "Delete Failed",
-            message: error?.response?.data?.message || "Failed to delete mentor.",
+            message:
+              error?.response?.data?.message || "Failed to delete mentor.",
           });
         }
       },
     });
   };
 
-  const { activeClasses, finishedClasses, totalMeetings, totalMentees, totalTasks } =
-    useMemo(() => {
-      const classes = mentor?.mentoredClasses || [];
-      const active = classes.filter((c) => !isFinished(c));
-      const finished = classes.filter(isFinished);
+  const {
+    activeClasses,
+    finishedClasses,
+    totalMeetings,
+    totalMentees,
+    totalTasks,
+  } = useMemo(() => {
+    const classes = mentor?.mentoredClasses || [];
+    const active = classes.filter((c) => !isFinished(c));
+    const finished = classes.filter(isFinished);
 
-      return {
-        activeClasses: active,
-        finishedClasses: finished,
-        totalMeetings: classes.reduce((sum, c) => sum + (c.meetings?.length || 0), 0),
-        totalMentees: classes.reduce((sum, c) => sum + (c.mentees?.length || 0), 0),
-        totalTasks: classes.reduce((sum, c) => sum + (c.tasks?.length || 0), 0),
-      };
-    }, [mentor]);
+    return {
+      activeClasses: active,
+      finishedClasses: finished,
+      totalMeetings: classes.reduce(
+        (sum, c) => sum + (c.meetings?.length || 0),
+        0,
+      ),
+      totalMentees: classes.reduce(
+        (sum, c) => sum + (c.mentees?.length || 0),
+        0,
+      ),
+      totalTasks: classes.reduce((sum, c) => sum + (c.tasks?.length || 0), 0),
+    };
+  }, [mentor]);
 
   if (loading) {
     return <LoadingPage title="Loading Mentor..." />;
@@ -141,7 +156,9 @@ const Detail = () => {
 
               <span
                 className={`mt-1 rounded-sm px-2 py-1 text-xs font-medium ${
-                  mentor.isActive ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700"
+                  mentor.isActive
+                    ? "bg-green-100 text-green-700"
+                    : "bg-gray-100 text-gray-700"
                 }`}
               >
                 {mentor.isActive ? "Active" : "Inactive"}
@@ -165,7 +182,11 @@ const Detail = () => {
                 </p>
                 <p className="flex items-center gap-2 text-[var(--color-text-muted)]">
                   <MapPin size={14} />
-                  {[mentor.profile?.address, mentor.profile?.city, mentor.profile?.country]
+                  {[
+                    mentor.profile?.address,
+                    mentor.profile?.city,
+                    mentor.profile?.country,
+                  ]
                     .filter(Boolean)
                     .join(", ") || "-"}
                 </p>
@@ -197,14 +218,42 @@ const Detail = () => {
           <StatsGrid
             columns={4}
             items={[
-              { title: "Total Classes", value: mentor.mentoredClasses?.length || 0, description: "Active", icon: BookOpen, tone: "purple" },
-              { title: "Total Meetings", value: totalMeetings, description: "Upcoming & completed", icon: Calendar, tone: "green" },
-              { title: "Total Mentees", value: totalMentees, description: "Across all classes", icon: Users, tone: "orange" },
-              { title: "Tasks Created", value: totalTasks, description: "Total tasks", icon: CheckSquare, tone: "blue" },
+              {
+                title: "Total Classes",
+                value: mentor.mentoredClasses?.length || 0,
+                description: "Active",
+                icon: BookOpen,
+                tone: "purple",
+              },
+              {
+                title: "Total Meetings",
+                value: totalMeetings,
+                description: "Upcoming & completed",
+                icon: Calendar,
+                tone: "green",
+              },
+              {
+                title: "Total Mentees",
+                value: totalMentees,
+                description: "Across all classes",
+                icon: Users,
+                tone: "orange",
+              },
+              {
+                title: "Tasks Created",
+                value: totalTasks,
+                description: "Total tasks",
+                icon: CheckSquare,
+                tone: "blue",
+              },
             ]}
           />
 
-          <TabHeader tabs={TABS} activeTab={activeTab} setActiveTab={setActiveTab} />
+          <TabHeader
+            tabs={TABS}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          />
 
           <div className="space-y-3">
             {displayed.length === 0 && (
@@ -262,8 +311,19 @@ const MentorClassCard = ({ cls }) => {
             <p className="text-xs text-gray-500">Period</p>
             <p className="mt-1 flex items-center gap-1.5 font-medium">
               <Calendar size={14} />
-              {cls.startDate ? new Date(cls.startDate).toLocaleDateString("en", { month: "short", year: "numeric" }) : "-"} -{" "}
-              {cls.endDate ? new Date(cls.endDate).toLocaleDateString("en", { month: "short", year: "numeric" }) : "-"}
+              {cls.startDate
+                ? new Date(cls.startDate).toLocaleDateString("en", {
+                    month: "short",
+                    year: "numeric",
+                  })
+                : "-"}{" "}
+              -{" "}
+              {cls.endDate
+                ? new Date(cls.endDate).toLocaleDateString("en", {
+                    month: "short",
+                    year: "numeric",
+                  })
+                : "-"}
             </p>
           </div>
           <div>

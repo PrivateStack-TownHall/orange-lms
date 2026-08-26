@@ -32,7 +32,10 @@ const GradeSubmissionModal = ({ open, submission, onClose, onSaved }) => {
 
         const initialScores = {};
         (existingResult?.scores || []).forEach((s) => {
-          initialScores[s.TaskCriteriaId] = { score: s.score, note: s.note || "" };
+          initialScores[s.TaskCriteriaId] = {
+            score: s.score,
+            note: s.note || "",
+          };
         });
         setScores(initialScores);
         setFeedback(existingResult?.mentorFeedback || "");
@@ -77,7 +80,10 @@ const GradeSubmissionModal = ({ open, submission, onClose, onSaved }) => {
       };
 
       if (assessmentResult?.id) {
-        const res = await AssessmentResultService.update(assessmentResult.id, payload);
+        const res = await AssessmentResultService.update(
+          assessmentResult.id,
+          payload,
+        );
         assessmentResult = res.data;
       } else {
         const res = await AssessmentResultService.create(payload);
@@ -120,7 +126,12 @@ const GradeSubmissionModal = ({ open, submission, onClose, onSaved }) => {
   if (!submission) return null;
 
   return (
-    <PopUp open={open} onClose={onClose} title="Grade Submission" width="max-w-3xl">
+    <PopUp
+      open={open}
+      onClose={onClose}
+      title="Grade Submission"
+      width="max-w-3xl"
+    >
       <div className="space-y-4">
         <div className="flex items-center justify-between rounded-sm border border-gray-200 bg-gray-50 p-3">
           <div>
@@ -133,10 +144,13 @@ const GradeSubmissionModal = ({ open, submission, onClose, onSaved }) => {
         </div>
 
         {loading ? (
-          <p className="py-6 text-center text-sm text-gray-500">Loading criteria...</p>
+          <p className="py-6 text-center text-sm text-gray-500">
+            Loading criteria...
+          </p>
         ) : criteria.length === 0 ? (
           <div className="rounded-sm border border-dashed border-gray-300 p-6 text-center text-sm text-gray-500">
-            No task criteria defined yet. Add criteria on the Task Detail page first.
+            No task criteria defined yet. Add criteria on the Task Detail page
+            first.
           </div>
         ) : (
           <div className="space-y-3">
@@ -149,7 +163,9 @@ const GradeSubmissionModal = ({ open, submission, onClose, onSaved }) => {
                       <p className="text-xs text-gray-500">{c.description}</p>
                     )}
                   </div>
-                  <span className="text-xs text-gray-500">Weight {c.percentage}%</span>
+                  <span className="text-xs text-gray-500">
+                    Weight {c.percentage}%
+                  </span>
                 </div>
 
                 <div className="mt-2 grid grid-cols-[100px_1fr] items-center gap-3">
@@ -167,7 +183,9 @@ const GradeSubmissionModal = ({ open, submission, onClose, onSaved }) => {
                   <input
                     type="text"
                     value={scores[c.id]?.note ?? ""}
-                    onChange={(e) => setCriteriaScore(c.id, "note", e.target.value)}
+                    onChange={(e) =>
+                      setCriteriaScore(c.id, "note", e.target.value)
+                    }
                     placeholder="Note (optional)"
                     className="rounded-sm border border-gray-200 px-2 py-1.5 text-sm"
                   />
@@ -178,7 +196,9 @@ const GradeSubmissionModal = ({ open, submission, onClose, onSaved }) => {
             <div className="flex items-center justify-between rounded-sm bg-orange-50 p-3">
               <div className="flex items-center gap-2">
                 <Award size={16} className="text-orange-600" />
-                <span className="font-semibold text-orange-800">Total Score</span>
+                <span className="font-semibold text-orange-800">
+                  Total Score
+                </span>
               </div>
               <span className="text-lg font-bold text-orange-700">
                 {totalWeighted.toFixed(1)} / 100
