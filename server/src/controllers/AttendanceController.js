@@ -6,6 +6,7 @@ class AttendanceController {
       const attendance = await attendanceService.markAttendance(
         req.user,
         req.body,
+        req.meta,
       );
 
       res.status(201).json(attendance);
@@ -42,6 +43,7 @@ class AttendanceController {
         req.params.id,
         req.body,
         req.user,
+        req.meta,
       );
 
       res.status(200).json(attendance);
@@ -52,7 +54,7 @@ class AttendanceController {
 
   static async delete(req, res, next) {
     try {
-      await attendanceService.delete(req.params.id, req.user);
+      await attendanceService.delete(req.params.id, req.user, req.meta);
 
       res.status(200).json({
         message: "Attendance deleted",

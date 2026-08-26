@@ -23,7 +23,7 @@ class UserController {
 
   static async create(req, res, next) {
     try {
-      const user = await userService.create(req.body);
+      const user = await userService.create(req.body, req.user, req.meta);
 
       await profileService.upsert(user.id, {
         age: req.body.age,
@@ -47,6 +47,7 @@ class UserController {
         req.params.id,
         req.body,
         req.user,
+        req.meta,
       );
       await profileService.upsert(req.params.id, {
         age: req.body.age,
@@ -68,7 +69,7 @@ class UserController {
 
   static async delete(req, res, next) {
     try {
-      await userService.delete(req.params.id, req.user);
+      await userService.delete(req.params.id, req.user, req.meta);
 
       res.status(200).json({
         message: "User deleted successfully",

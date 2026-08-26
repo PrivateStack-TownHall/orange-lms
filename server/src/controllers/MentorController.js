@@ -23,7 +23,7 @@ class MentorController {
 
   static async create(req, res, next) {
     try {
-      const mentor = await mentorService.create(req.body);
+      const mentor = await mentorService.create(req.body, req.user, req.meta);
 
       const profile = await profileService.upsert(mentor.id, {
         age: req.body.age,
@@ -46,7 +46,7 @@ class MentorController {
 
   static async update(req, res, next) {
     try {
-      const mentor = await mentorService.update(req.params.id, req.body);
+      const mentor = await mentorService.update(req.params.id, req.body, req.user, req.meta);
 
       await profileService.upsert(req.params.id, {
         age: req.body.age,
@@ -63,7 +63,7 @@ class MentorController {
 
   static async delete(req, res, next) {
     try {
-      await mentorService.delete(req.params.id, req.user);
+      await mentorService.delete(req.params.id, req.user, req.meta);
 
       res.status(200).json({
         message: "Mentor deleted",

@@ -32,6 +32,7 @@ class TaskController {
         req.user,
         req.params.meetingId,
         payload,
+        req.meta,
       );
 
       res.status(201).json(task);
@@ -57,7 +58,7 @@ class TaskController {
         fileUrl: req.file?.path || req.body.fileUrl,
       };
 
-      const task = await taskService.update(req.params.id, payload, req.user);
+      const task = await taskService.update(req.params.id, payload, req.user, req.meta);
 
       res.json(task);
     } catch (err) {
@@ -67,7 +68,7 @@ class TaskController {
 
   static async delete(req, res, next) {
     try {
-      await taskService.delete(req.params.id, req.user);
+      await taskService.delete(req.params.id, req.user, req.meta);
 
       res.json({
         message: "Task deleted",
@@ -79,14 +80,18 @@ class TaskController {
 
   static async submitTask(req, res, next) {
     try {
-      const submission = await taskSubmissionService.create(req.user, {
-        TaskId: req.params.id,
-        UserId: req.user.id,
-        submissionUrl: req.body.submissionUrl,
-        submissionFileUrl: req.body.submissionFileUrl,
-        submittedNote: req.body.submittedNote,
-        submittedAt: new Date(),
-      });
+      const submission = await taskSubmissionService.create(
+        req.user,
+        {
+          TaskId: req.params.id,
+          UserId: req.user.id,
+          submissionUrl: req.body.submissionUrl,
+          submissionFileUrl: req.body.submissionFileUrl,
+          submittedNote: req.body.submittedNote,
+          submittedAt: new Date(),
+        },
+        req.meta,
+      );
 
       res.status(201).json(submission);
     } catch (err) {
@@ -113,6 +118,7 @@ class TaskController {
       const submission = await taskSubmissionService.findById(
         req.params.submissionId,
         req.user,
+        req.meta,
       );
 
       res.json(submission);
@@ -131,6 +137,7 @@ class TaskController {
           submittedNote: req.body.submittedNote,
         },
         req.user,
+        req.meta,
       );
 
       res.json(submission);
@@ -150,6 +157,7 @@ class TaskController {
           reviewedAt: new Date(),
         },
         req.user,
+        req.meta,
       );
 
       res.json(submission);
