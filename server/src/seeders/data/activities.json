@@ -1,0 +1,290 @@
+{
+  "historyClasses": [
+    {
+      "id": 1,
+      "ClassId": 1,
+      "UserId": 7,
+      "roleInClass": "Mentee",
+      "status": "Completed",
+      "finalScore": 89.5,
+      "attendancePercentage": 100.0,
+      "completedAt": "2025-04-01T00:00:00.000Z",
+      "remarks": "Menyelesaikan seluruh tugas dengan konsisten dan performa sangat baik.",
+      "certificateUrl": "https://example.com/certificates/jsb-gilang.pdf",
+      "createdAt": "2025-04-01T00:00:00.000Z",
+      "updatedAt": "2025-04-01T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "ClassId": 1,
+      "UserId": 10,
+      "roleInClass": "Mentee",
+      "status": "Completed",
+      "finalScore": 72.0,
+      "attendancePercentage": 87.5,
+      "completedAt": "2025-04-01T00:00:00.000Z",
+      "remarks": "Sempat beberapa kali submit tugas terlambat, namun berhasil menyelesaikan kelas.",
+      "certificateUrl": "https://example.com/certificates/jsb-joko.pdf",
+      "createdAt": "2025-04-01T00:00:00.000Z",
+      "updatedAt": "2025-04-01T00:00:00.000Z"
+    }
+  ],
+  "notifications": [
+    {
+      "id": 1,
+      "UserId": 7,
+      "type": "Task",
+      "title": "Task Due Soon",
+      "message": "The task 'Membuat Repository dan Pull Request Pertama' is due soon.",
+      "isRead": false,
+      "relatedType": "Task",
+      "relatedId": 1,
+      "ClassId": 1,
+      "createdAt": "2025-02-05T09:00:00.000Z",
+      "updatedAt": "2025-02-05T09:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "UserId": 8,
+      "type": "Meeting",
+      "title": "Upcoming Meeting",
+      "message": "Your next JavaScript Basic meeting starts on February 5, 2025 at 19:00.",
+      "isRead": true,
+      "relatedType": "Meeting",
+      "relatedId": 2,
+      "ClassId": 1,
+      "createdAt": "2025-02-05T08:00:00.000Z",
+      "updatedAt": "2025-02-05T10:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "UserId": 10,
+      "type": "Submission",
+      "title": "Submission Reviewed",
+      "message": "Your submission for 'Membuat Repository dan Pull Request Pertama' has been reviewed.",
+      "isRead": false,
+      "relatedType": "TaskSubmission",
+      "relatedId": 4,
+      "ClassId": 1,
+      "createdAt": "2025-02-08T09:30:00.000Z",
+      "updatedAt": "2025-02-08T09:30:00.000Z"
+    },
+    {
+      "id": 4,
+      "UserId": 11,
+      "type": "Class",
+      "title": "Class Progress Updated",
+      "message": "Your Front End class progress has been updated to 75%.",
+      "isRead": false,
+      "relatedType": "Class",
+      "relatedId": 2,
+      "ClassId": 2,
+      "createdAt": "2025-02-10T09:00:00.000Z",
+      "updatedAt": "2025-02-10T09:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "UserId": 12,
+      "type": "Assessment",
+      "title": "Assessment Published",
+      "message": "Your assessment result for the latest Back End task is now available.",
+      "isRead": true,
+      "relatedType": "AssessmentResult",
+      "relatedId": 15,
+      "ClassId": 3,
+      "createdAt": "2025-02-15T10:00:00.000Z",
+      "updatedAt": "2025-02-15T10:30:00.000Z"
+    },
+    {
+      "id": 6,
+      "UserId": 15,
+      "type": "Material",
+      "title": "New Material Available",
+      "message": "New Front End learning material has been added to your class.",
+      "isRead": false,
+      "relatedType": "Material",
+      "relatedId": 9,
+      "ClassId": 2,
+      "createdAt": "2025-02-12T08:30:00.000Z",
+      "updatedAt": "2025-02-12T08:30:00.000Z"
+    }
+  ],
+  "userActivities": [
+    {
+      "id": 1,
+      "UserId": 7,
+      "activity": "Viewed Meeting",
+      "description": "Viewed the Git dan GitHub meeting details.",
+      "ClassId": 1,
+      "resourceType": "Meeting",
+      "resourceId": 1,
+      "device": "Web",
+      "createdAt": "2025-02-03T18:40:00.000Z",
+      "updatedAt": "2025-02-03T18:40:00.000Z"
+    },
+    {
+      "id": 2,
+      "UserId": 8,
+      "activity": "Submitted Task",
+      "description": "Submitted the first JavaScript Basic task.",
+      "ClassId": 1,
+      "resourceType": "TaskSubmission",
+      "resourceId": 2,
+      "device": "Web",
+      "createdAt": "2025-02-07T19:00:00.000Z",
+      "updatedAt": "2025-02-07T19:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "UserId": 10,
+      "activity": "Viewed Material",
+      "description": "Opened the Front End material for the current meeting.",
+      "ClassId": 2,
+      "resourceType": "Material",
+      "resourceId": 4,
+      "device": "Web",
+      "createdAt": "2025-02-06T18:30:00.000Z",
+      "updatedAt": "2025-02-06T18:30:00.000Z"
+    },
+    {
+      "id": 4,
+      "UserId": 11,
+      "activity": "Viewed Task",
+      "description": "Opened the current Front End assignment details.",
+      "ClassId": 2,
+      "resourceType": "Task",
+      "resourceId": 4,
+      "device": "Mobile",
+      "createdAt": "2025-02-08T13:20:00.000Z",
+      "updatedAt": "2025-02-08T13:20:00.000Z"
+    },
+    {
+      "id": 5,
+      "UserId": 12,
+      "activity": "Viewed Assessment",
+      "description": "Viewed the latest assessment result for the Back End class.",
+      "ClassId": 3,
+      "resourceType": "AssessmentResult",
+      "resourceId": 15,
+      "device": "Web",
+      "createdAt": "2025-02-15T10:15:00.000Z",
+      "updatedAt": "2025-02-15T10:15:00.000Z"
+    },
+    {
+      "id": 6,
+      "UserId": 15,
+      "activity": "Viewed Class",
+      "description": "Viewed the Front End class dashboard.",
+      "ClassId": 2,
+      "resourceType": "Class",
+      "resourceId": 2,
+      "device": "Web",
+      "createdAt": "2025-02-12T08:20:00.000Z",
+      "updatedAt": "2025-02-12T08:20:00.000Z"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": 1,
+      "UserId": 1,
+      "role": "Owner",
+      "action": "CREATE",
+      "resource": "Class",
+      "resourceId": 1,
+      "resourceDetail": "Created JavaScript Basic class.",
+      "ipAddress": "127.0.0.1",
+      "device": "Web",
+      "metadata": {
+        "source": "seed",
+        "module": "classes"
+      },
+      "createdAt": "2025-01-10T09:00:00.000Z",
+      "updatedAt": "2025-01-10T09:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "UserId": 1,
+      "role": "Owner",
+      "action": "CREATE",
+      "resource": "Class",
+      "resourceId": 2,
+      "resourceDetail": "Created Front End class.",
+      "ipAddress": "127.0.0.1",
+      "device": "Web",
+      "metadata": {
+        "source": "seed",
+        "module": "classes"
+      },
+      "createdAt": "2025-01-10T09:05:00.000Z",
+      "updatedAt": "2025-01-10T09:05:00.000Z"
+    },
+    {
+      "id": 3,
+      "UserId": 2,
+      "role": "Admin",
+      "action": "ASSIGN",
+      "resource": "ClassUser",
+      "resourceId": 4,
+      "resourceDetail": "Assigned User 7 to JavaScript Basic.",
+      "ipAddress": "127.0.0.1",
+      "device": "Web",
+      "metadata": {
+        "source": "seed",
+        "module": "class-users"
+      },
+      "createdAt": "2025-01-25T09:00:00.000Z",
+      "updatedAt": "2025-01-25T09:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "UserId": 4,
+      "role": "Mentor",
+      "action": "REVIEW",
+      "resource": "TaskSubmission",
+      "resourceId": 1,
+      "resourceDetail": "Reviewed the first JavaScript Basic submission.",
+      "ipAddress": "127.0.0.1",
+      "device": "Web",
+      "metadata": {
+        "source": "seed",
+        "module": "assessment"
+      },
+      "createdAt": "2025-02-07T10:00:00.000Z",
+      "updatedAt": "2025-02-07T10:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "UserId": 5,
+      "role": "Mentor",
+      "action": "CREATE",
+      "resource": "Material",
+      "resourceId": 4,
+      "resourceDetail": "Uploaded Front End learning material.",
+      "ipAddress": "127.0.0.1",
+      "device": "Web",
+      "metadata": {
+        "source": "seed",
+        "module": "materials"
+      },
+      "createdAt": "2025-02-06T18:00:00.000Z",
+      "updatedAt": "2025-02-06T18:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "UserId": 6,
+      "role": "Mentor",
+      "action": "UPDATE",
+      "resource": "AssessmentResult",
+      "resourceId": 15,
+      "resourceDetail": "Updated the latest Back End assessment result.",
+      "ipAddress": "127.0.0.1",
+      "device": "Web",
+      "metadata": {
+        "source": "seed",
+        "module": "assessment"
+      },
+      "createdAt": "2025-02-15T10:30:00.000Z",
+      "updatedAt": "2025-02-15T10:30:00.000Z"
+    }
+  ]
+}

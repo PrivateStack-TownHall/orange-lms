@@ -1,0 +1,169 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Vincent Guizot",
+      "email": "vincent@mail.com",
+      "password": "123",
+      "role": "Owner",
+      "avatarUrl": "https://randomuser.me/api/portraits/men/32.jpg",
+      "isActive": true,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "name": "Dino Hart",
+      "email": "dino@mail.com",
+      "password": "123",
+      "role": "Admin",
+      "avatarUrl": "https://randomuser.me/api/portraits/men/41.jpg",
+      "isActive": true,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "name": "Dina Laurent",
+      "email": "dina@mail.com",
+      "password": "123",
+      "role": "Admin",
+      "avatarUrl": "https://randomuser.me/api/portraits/women/44.jpg",
+      "isActive": true,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "name": "Michael Chen",
+      "email": "michael@mail.com",
+      "password": "123",
+      "role": "Mentor",
+      "avatarUrl": "https://randomuser.me/api/portraits/men/52.jpg",
+      "isActive": true,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "name": "Jonathan Reed",
+      "email": "jonathan@mail.com",
+      "password": "123",
+      "role": "Mentor",
+      "avatarUrl": "https://randomuser.me/api/portraits/men/68.jpg",
+      "isActive": true,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "name": "Sarah Wong",
+      "email": "sarah@mail.com",
+      "password": "123",
+      "role": "Mentor",
+      "avatarUrl": "https://randomuser.me/api/portraits/women/65.jpg",
+      "isActive": true,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "name": "Ethan Brooks",
+      "email": "ethan@mail.com",
+      "password": "123",
+      "role": "Mentee",
+      "avatarUrl": "https://randomuser.me/api/portraits/men/22.jpg",
+      "isActive": true,
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
+    },
+    {
+      "id": 8,
+      "name": "Aiko Tanaka",
+      "email": "aiko@mail.com",
+      "password": "123",
+      "role": "Mentee",
+      "avatarUrl": "https://randomuser.me/api/portraits/women/21.jpg",
+      "isActive": true,
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
+    },
+    {
+      "id": 9,
+      "name": "Lucas Martin",
+      "email": "lucas@mail.com",
+      "password": "123",
+      "role": "Mentee",
+      "avatarUrl": "https://randomuser.me/api/portraits/men/33.jpg",
+      "isActive": true,
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
+    },
+    {
+      "id": 10,
+      "name": "Mei Lin",
+      "email": "mei@mail.com",
+      "password": "123",
+      "role": "Mentee",
+      "avatarUrl": "https://randomuser.me/api/portraits/women/29.jpg",
+      "isActive": true,
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
+    },
+    {
+      "id": 11,
+      "name": "Daniel Wong",
+      "email": "daniel@mail.com",
+      "password": "123",
+      "role": "Mentee",
+      "avatarUrl": "https://randomuser.me/api/portraits/men/45.jpg",
+      "isActive": true,
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
+    },
+    {
+      "id": 12,
+      "name": "Yuki Nakamura",
+      "email": "yuki@mail.com",
+      "password": "123",
+      "role": "Mentee",
+      "avatarUrl": "https://randomuser.me/api/portraits/women/49.jpg",
+      "isActive": true,
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
+    },
+    {
+      "id": 13,
+      "name": "Olivia Bennett",
+      "email": "olivia@mail.com",
+      "password": "123",
+      "role": "Mentee",
+      "avatarUrl": "https://randomuser.me/api/portraits/women/56.jpg",
+      "isActive": true,
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
+    },
+    {
+      "id": 14,
+      "name": "Jason Lee",
+      "email": "jason@mail.com",
+      "password": "123",
+      "role": "Mentee",
+      "avatarUrl": "https://randomuser.me/api/portraits/men/64.jpg",
+      "isActive": true,
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
+    },
+    {
+      "id": 15,
+      "name": "Sophie Laurent",
+      "email": "sophie@mail.com",
+      "password": "123",
+      "role": "Mentee",
+      "avatarUrl": "https://randomuser.me/api/portraits/women/68.jpg",
+      "isActive": true,
+      "createdAt": "2025-01-02T00:00:00.000Z",
+      "updatedAt": "2025-01-02T00:00:00.000Z"
+    }
+  ]
+}
