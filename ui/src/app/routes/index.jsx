@@ -23,6 +23,7 @@ import menteeRoutes from "./modules/mentee.routes";
 import attendanceRoutes from "./modules/attendance.routes";
 import historyClassRoutes from "./modules/historyClass.routes";
 import certificateRoutes from "./modules/certificate.routes";
+import calendarRoutes from "./modules/calendar.routes";
 
 import taskCriteriaRoutes from "./modules/taskCriteria.routes";
 import assessmentRoutes from "./modules/assessment.routes.jsx";
@@ -69,6 +70,7 @@ const router = createBrowserRouter([
       attendanceRoutes,
       historyClassRoutes,
       certificateRoutes,
+      calendarRoutes,
       taskCriteriaRoutes,
       assessmentRoutes,
       // Profile
