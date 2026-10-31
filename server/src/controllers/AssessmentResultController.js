@@ -17,7 +17,7 @@ class AssessmentResultController {
 
   static async getAll(req, res, next) {
     try {
-      const results = await assessmentResultService.findAll();
+      const results = await assessmentResultService.findAll(req.user);
 
       res.status(200).json(results);
     } catch (error) {
@@ -27,7 +27,7 @@ class AssessmentResultController {
 
   static async getById(req, res, next) {
     try {
-      const result = await assessmentResultService.findById(req.params.id);
+      const result = await assessmentResultService.findById(req.params.id, req.user);
 
       res.status(200).json(result);
     } catch (error) {
@@ -39,6 +39,7 @@ class AssessmentResultController {
     try {
       const result = await assessmentResultService.findBySubmission(
         req.params.submissionId,
+        req.user,
       );
 
       res.status(200).json(result);

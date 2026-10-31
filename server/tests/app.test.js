@@ -35,6 +35,17 @@ describe("API response contract", () => {
     });
   });
 
+  it("protects the assessment results endpoint", async () => {
+    const response = await request(app).get("/api/assessment-results");
+
+    expect(response.status).toBe(401);
+    expect(response.body).toEqual({
+      success: false,
+      message: "Unauthorized",
+      data: null,
+    });
+  });
+
   it("returns the standard error contract for an unknown route", async () => {
     const response = await request(app).get("/missing-route");
 

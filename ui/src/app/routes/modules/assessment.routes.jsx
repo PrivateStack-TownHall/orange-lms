@@ -1,19 +1,9 @@
-import React from "react";
+import { lazyRoute } from "../lazyRoute";
 
 const assessmentRoutes = {
   path: "assessments",
 
-  children: [
-    {
-      index: true,
-      element: <div>Assessment List</div>,
-    },
-
-    {
-      path: ":id",
-      element: <div>Assessment Detail</div>,
-    },
-  ],
+  lazy: lazyRoute(() => import("@/pages/Assessment")),
 };
 
 export default assessmentRoutes;
