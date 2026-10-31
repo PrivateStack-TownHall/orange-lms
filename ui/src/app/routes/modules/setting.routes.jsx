@@ -1,10 +1,8 @@
-import React from "react";
-
-import Settings from "@/pages/settings";
+import { lazyRoute } from "../lazyRoute";
 
 const settingRoutes = {
   path: "settings",
-  element: <Settings />,
+  lazy: lazyRoute(() => import("@/pages/settings")),
 };
 
 export default settingRoutes;

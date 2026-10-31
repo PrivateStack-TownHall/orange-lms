@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
@@ -57,19 +57,28 @@ const Sidebar = ({ collapsed = false, onToggle }) => {
 
   const role = useSelector((state) => state.auth.user?.role);
 
-  const sections = MENU_BY_ROLE[role] || [];
+  const sections = useMemo(() => MENU_BY_ROLE[role] || [], [role]);
 
-  const isActive = (path) =>
-    location.pathname === path || location.pathname.startsWith(`${path}/`);
+  const isActive = useCallback(
+    (path) =>
+      location.pathname === path || location.pathname.startsWith(`${path}/`),
+    [location.pathname],
+  );
 
   // Promo content follows whichever section owns the current route,
   // falling back to the first section available.
-  const activeSection =
-    sections.find((section) =>
-      section.items.some((item) => isActive(item.path)),
-    ) || sections[0];
+  const activeSection = useMemo(
+    () =>
+      sections.find((section) =>
+        section.items.some((item) => isActive(item.path)),
+      ) || sections[0],
+    [isActive, sections],
+  );
 
-  const promo = SECTION_PROMO[activeSection?.title] || SECTION_PROMO.LEARNING;
+  const promo = useMemo(
+    () => SECTION_PROMO[activeSection?.title] || SECTION_PROMO.LEARNING,
+    [activeSection],
+  );
 
   const navClass = (active) =>
     `group flex items-center rounded-sm py-3 transition-all duration-200 ${
@@ -175,4 +184,4 @@ const Sidebar = ({ collapsed = false, onToggle }) => {
   );
 };
 
-export default Sidebar;
+export default memo(Sidebar);

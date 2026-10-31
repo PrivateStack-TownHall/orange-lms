@@ -7,6 +7,12 @@ const { TaskCriteriaController } = require("../controllers");
 const { authorization } = require("../middlewares");
 
 router.get(
+  "/",
+  authorization("taskCriteria", "read"),
+  TaskCriteriaController.getAll,
+);
+
+router.get(
   "/tasks/:taskId",
   authorization("taskCriteria", "read"),
   TaskCriteriaController.getByTask,

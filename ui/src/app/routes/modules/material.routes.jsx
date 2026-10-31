@@ -1,9 +1,4 @@
-import React from "react";
-
-import MaterialsList from "@/pages/materials";
-import MaterialsCreate from "@/pages/materials/Create";
-import MaterialsEdit from "@/pages/materials/Edit";
-import MaterialsDetail from "@/pages/materials/Detail";
+import { lazyRoute } from "../lazyRoute";
 
 const materialRoutes = {
   path: "materials",
@@ -11,19 +6,19 @@ const materialRoutes = {
   children: [
     {
       index: true,
-      element: <MaterialsList />,
+      lazy: lazyRoute(() => import("@/pages/materials")),
     },
     {
       path: "create",
-      element: <MaterialsCreate />,
+      lazy: lazyRoute(() => import("@/pages/materials/Create")),
     },
     {
       path: ":id",
-      element: <MaterialsDetail />,
+      lazy: lazyRoute(() => import("@/pages/materials/Detail")),
     },
     {
       path: "edit/:id",
-      element: <MaterialsEdit />,
+      lazy: lazyRoute(() => import("@/pages/materials/Edit")),
     },
   ],
 };

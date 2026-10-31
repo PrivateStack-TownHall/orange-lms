@@ -1,7 +1,4 @@
-import React from "react";
-
-import Profile from "@/pages/profile";
-import ProfileEdit from "@/pages/profile/Edit";
+import { lazyRoute } from "../lazyRoute";
 
 const profileRoutes = {
   path: "profile",
@@ -9,12 +6,12 @@ const profileRoutes = {
   children: [
     {
       index: true,
-      element: <Profile />,
+      lazy: lazyRoute(() => import("@/pages/profile")),
     },
 
     {
       path: "edit",
-      element: <ProfileEdit />,
+      lazy: lazyRoute(() => import("@/pages/profile/Edit")),
     },
   ],
 };
