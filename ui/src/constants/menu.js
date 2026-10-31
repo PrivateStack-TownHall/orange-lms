@@ -8,6 +8,7 @@ import {
   User,
   Users,
   BarChart3,
+  History,
   Shield,
   Activity,
   Award,

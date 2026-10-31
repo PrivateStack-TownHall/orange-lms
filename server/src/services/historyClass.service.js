@@ -162,7 +162,11 @@ class HistoryClassService {
       status: "Active",
     });
 
-    await history.destroy();
+    const deletedCount = await HistoryClass.destroy({
+      where: {
+        ClassId: history.ClassId,
+      },
+    });
 
     await logAudit({
       user: currentUser,
@@ -175,6 +179,7 @@ class HistoryClassService {
 
     return {
       message: "Class restored successfully",
+      restoredHistoryCount: deletedCount,
     };
   }
 
