@@ -1,79 +1,69 @@
-# Orange LMS – Backend
+# Orange LMS Backend
 
-Backend system for Orange LMS built with Node.js, Express, PostgreSQL, and Sequelize.
+Express 5 API for Orange LMS. The backend uses PostgreSQL with Sequelize,
+JWT-based authentication, resource/action RBAC, and Cloudinary for persistent
+file uploads.
 
-## Features
+## Architecture
 
-- Role-based access control (Owner, Admin, Mentor, Mentee)
-- Class & learning management
-- Task submission & grading
-- Secure authentication using JWT
-
-## Tech Stack
-
-- Node.js
-- Express.js
-- PostgreSQL
-- Sequelize ORM
-
-## Project Structure
-
-See `/src` for application logic and `/docs` for system documentation.
-
-## Getting Started
-
-1.  Copy `.env.example` to `.env`
-2.  Install dependencies
-3.  Run migrations
-4.  Start server
-
+```txt
+Routes -> Controllers -> Services -> Sequelize Models -> PostgreSQL
 ```
 
-orange-lms-backend/
-    │
-    ├── package.json
-    ├── .sequelizerc # config path untuk sequelize
-    ├── .env # env vars (DB, PORT, JWT_SECRET)
-    ├── .gitignore
-    │
-    ├── src/
-    │ ├── config/ # konfigurasi DB & Sequelize
-    │ │ └── config.js # db config (development, production, test)
-    │ │
-    │ ├── models/ # Sequelize models
-    │ │ ├── index.js # otomatis oleh sequelize init
-    │ │ ├── user.js
-    │ │ ├── class.js
-    │ │ ├── classUser.js
-    │ │ ├── meeting.js
-    │ │ ├── task.js
-    │ │ ├── taskSubmission.js
-    │ │ ├── note.js
-    │ │ └── material.js
-    │ │
-    │ ├── migrations/ # Sequelize migration files
-    │ │ └── ...
-    │ │
-    │ ├── seeders/ # Sequelize seed files
-    │ │ └── ...
-    │ │
-    │ ├── controllers/ # logic request/response
-    │ │ └── ...
-    │ │
-    │ ├── routes/ # express routes
-    │ │ └── ...
-    │ │
-    │ ├── middlewares/ # auth, RBAC, error handling
-    │ │ └── ...
-    │ │
-    │ ├── services/ # business logic
-    │ │ └── ...
-    │ │
-    │ ├── helpers/ # helper
-    │ │ └── ...
-    │ │
-    │ └── app.js # express app
-    │
-    └── server.js # start server
+Cross-cutting concerns live in `middlewares/` (authentication, authorization,
+request metadata, upload, and error handling) and `helpers/`.
 
+## Functional modules
+
+| Group | Modules |
+| --- | --- |
+| Core | Auth, users, profiles, mentors, mentees, classes, class users, meetings. |
+| Learning | Tasks, task submissions, notes, materials, and uploads. |
+| Assessment | Attendance, task criteria, assessment results, submission criteria scores, history classes. |
+| Operations | Notifications, audit logs, user activities, and reports. |
+
+## Requirements
+
+- Node.js 20+.
+- PostgreSQL for development and test.
+- A Cloudinary account for file uploads.
+
+## Setup
+
+```bash
+npm install
 ```
+
+Copy `.env.example` to `.env`, then supply local PostgreSQL values, JWT values,
+and Cloudinary credentials. Never commit `.env` or real credentials.
+
+For production, set `NODE_ENV=production`, `DATABASE_URL`, and `DB_SSL=true`.
+The production Sequelize configuration expects a PostgreSQL connection string,
+which is suitable for Supabase.
+
+## Commands
+
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the API in development mode with Nodemon. |
+| `npm start` | Start the API in production mode. |
+| `npm run db:migrate:dev` | Run migrations against the development database. |
+| `npm run db:seed:dev` | Seed the development database. |
+| `npm run db:migrate:test` | Run migrations against the test database. |
+| `npm run db:migrate:prod` | Run migrations against the production database. |
+| `npm run db:setup` | Create, migrate, and seed the active database environment. |
+
+## Uploads
+
+Multer streams a single `file` field through Cloudinary. Task, note, and
+material create/update routes also accept a direct URL through `fileUrl`.
+Cloudinary URLs, rather than local files, are stored in PostgreSQL.
+
+Allowed upload extensions are JPG, JPEG, PNG, PDF, DOC, DOCX, PPT, PPTX, and
+Markdown. The maximum file size is 5 MB.
+
+## API base URL
+
+All routes are mounted under `/api`. `/api/auth` is public; all other route
+groups require a valid JWT. See [docs/APICONTRACT.md](docs/APICONTRACT.md) for
+the route groups and [docs/RBAC.md](docs/RBAC.md) for access rules.

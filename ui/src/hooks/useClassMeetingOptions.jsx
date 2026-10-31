@@ -1,60 +1,78 @@
-// src/hooks/useClassMeetingOptions.js
 import { useEffect, useState } from "react";
-import ClassService from "@/services/class.service";
+import ClassService from "@/services/modules/class.service";
 
-const useClassMeetingOptions = (values, setValues, baseSchema) => {
+const useClassMeetingOptions = (
+  values,
+  setValues,
+  baseSchema,
+  isEdit = false,
+) => {
   const [schema, setSchema] = useState(baseSchema);
 
-  // 1️⃣ Load classes (ONCE)
   useEffect(() => {
     const fetchClasses = async () => {
-      const classes = await ClassService.getAll();
+      try {
+        const res = await ClassService.getAll();
 
-      setSchema((prev) =>
-        prev.map((f) =>
-          f.name === "classId"
-            ? {
-                ...f,
-                options: classes.map((c) => ({
-                  label: `${c.code} - ${c.name}`,
-                  value: c.id,
-                })),
-              }
-            : f,
-        ),
-      );
+        const classes = res.data || [];
+
+        setSchema((prev) =>
+          prev.map((field) =>
+            field.name === "ClassId"
+              ? {
+                  ...field,
+                  options: classes.map((c) => ({
+                    label: `${c.code} - ${c.name}`,
+                    value: c.id,
+                  })),
+                }
+              : field,
+          ),
+        );
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     fetchClasses();
   }, []);
 
-  // 2️⃣ Load meetings when classId changes
   useEffect(() => {
-    if (!values.classId) return;
+    if (!values.ClassId) return;
 
     const fetchMeetings = async () => {
-      const cls = await ClassService.getById(values.classId);
+      try {
+        const res = await ClassService.getById(values.ClassId);
 
-      setSchema((prev) =>
-        prev.map((f) =>
-          f.name === "meetingId"
-            ? {
-                ...f,
-                options: cls[0].meeting.map((m) => ({
-                  label: `Meeting ${m.meetingNumber} - ${m.name}`,
-                  value: m.id,
-                })),
-              }
-            : f,
-        ),
-      );
+        const meetings = res.data?.meetings || [];
 
-      // reset meetingId when class changes
-      setValues((prev) => ({ ...prev, meetingId: "" }));
+        setSchema((prev) =>
+          prev.map((field) =>
+            field.name === "MeetingId"
+              ? {
+                  ...field,
+                  options: meetings.map((m) => ({
+                    label: `Meeting ${m.meetingNumber} - ${m.name}`,
+                    value: m.id,
+                  })),
+                }
+              : field,
+          ),
+        );
+
+        if (!isEdit) {
+          setValues((prev) => ({
+            ...prev,
+            MeetingId: "",
+          }));
+        }
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     fetchMeetings();
-  }, [values.classId, setValues]);
+  }, [values.ClassId]);
 
   return schema;
 };

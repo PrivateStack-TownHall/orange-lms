@@ -4,21 +4,20 @@ class ProfileController {
   static async getByUser(req, res, next) {
     try {
       const profile = await profileService.findByUserId(req.params.id);
-      res.json(profile);
-    } catch (err) {
-      next(err);
+
+      res.status(200).json(profile);
+    } catch (error) {
+      next(error);
     }
   }
 
-  static async createOrUpdate(req, res, next) {
+  static async update(req, res, next) {
     try {
-      const profile = await profileService.createOrUpdate(
-        req.params.id,
-        req.body,
-      );
-      res.json(profile);
-    } catch (err) {
-      next(err);
+      const profile = await profileService.upsert(req.params.id, req.body);
+
+      res.status(200).json(profile);
+    } catch (error) {
+      next(error);
     }
   }
 }

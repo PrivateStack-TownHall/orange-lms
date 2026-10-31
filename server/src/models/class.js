@@ -1,52 +1,69 @@
 "use strict";
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Class extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
-
       Class.belongsTo(models.User, {
-        foreignKey: "mentorId",
+        foreignKey: "MentorId",
         as: "mentor",
       });
 
+      Class.belongsTo(models.User, {
+        foreignKey: "createdBy",
+        as: "creator",
+      });
+
       Class.belongsToMany(models.User, {
-        through: models.ClassUser,
-        foreignKey: "classId",
-        otherKey: "userId",
+        through: {
+          model: models.ClassUser,
+          where: {
+            roleInClass: "Mentee",
+          },
+        },
+        foreignKey: "ClassId",
+        otherKey: "UserId",
+        as: "mentees",
       });
-      Class.hasMany(models.ClassUser, { foreignKey: "classId" });
+
+      Class.hasMany(models.ClassUser, {
+        foreignKey: "ClassId",
+      });
+
       Class.hasMany(models.Meeting, {
-        foreignKey: "classId",
-        as: "meeting",
+        foreignKey: "ClassId",
+        as: "meetings",
         onDelete: "CASCADE",
       });
+
       Class.hasMany(models.Note, {
-        foreignKey: "classId",
+        foreignKey: "ClassId",
+        as: "notes",
         onDelete: "CASCADE",
       });
+
       Class.hasMany(models.Task, {
-        foreignKey: "classId",
+        foreignKey: "ClassId",
+        as: "tasks",
         onDelete: "CASCADE",
       });
+
       Class.hasMany(models.Material, {
-        foreignKey: "classId",
+        foreignKey: "ClassId",
+        as: "materials",
         onDelete: "CASCADE",
       });
     }
   }
+
   Class.init(
     {
       code: DataTypes.STRING,
       name: DataTypes.STRING,
       description: DataTypes.TEXT,
       category: DataTypes.STRING,
-      mentorId: DataTypes.INTEGER,
+      MentorId: DataTypes.INTEGER,
+      createdBy: DataTypes.INTEGER,
       level: DataTypes.STRING,
       startDate: DataTypes.DATE,
       endDate: DataTypes.DATE,
@@ -58,5 +75,6 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Class",
     },
   );
+
   return Class;
 };

@@ -1,0 +1,56 @@
+:root {
+  /* Brand */
+  --color-primary: #ff6b00;
+  --color-primary-hover: #ea580c;
+  --color-primary-soft: #fff3e8;
+
+  /* Background */
+  --color-background: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f1f5f9;
+
+  /* Text */
+  --color-text: #1e293b;
+  --color-text-muted: #64748b;
+
+  /* Border */
+  --color-border: #e2e8f0;
+
+  /* Status */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+
+  /* Radius */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+
+  /* Shadow */
+  --shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-card: 0 8px 24px rgba(15, 23, 42, 0.04);
+
+  /* Layout */
+  --sidebar-width: 300px;
+  --header-height: 78px;
+}
+
+html.dark {
+  --color-primary: #ff8c42;
+  --color-primary-hover: #fb923c;
+  --color-primary-soft: #2a1708;
+
+  /* VS Code Dark */
+  --color-background: #1e1e1e;
+  --color-surface: #252526;
+  --color-surface-muted: #2d2d30;
+
+  --color-text: #d4d4d4;
+  --color-text-muted: #9da1a6;
+
+  --color-border: #3c3c3c;
+
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35);
+}

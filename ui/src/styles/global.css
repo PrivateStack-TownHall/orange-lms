@@ -1,4 +1,36 @@
+@import "tailwindcss";
+
+@import "./variables.css";
+@import "./utilities.css";
+@import "./components.css";
+@import "./animations.css";
+
+* {
+  box-sizing: border-box;
+}
+
 html,
+body,
+#root {
+  min-height: 100vh;
+}
+
+html {
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
 body {
-    height: 100%;
+  margin: 0;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  transition: all 0.25s ease;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }

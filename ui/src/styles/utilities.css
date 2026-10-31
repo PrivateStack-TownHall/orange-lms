@@ -1,0 +1,42 @@
+.bg-app {
+  background-color: var(--color-background);
+}
+
+.bg-surface {
+  background-color: var(--color-surface);
+}
+
+.bg-surface-muted {
+  background-color: var(--color-surface-muted);
+}
+
+.text-app {
+  color: var(--color-text);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.border-app {
+  border-color: var(--color-border);
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page-padding {
+  padding-inline: 2rem;
+}
+
+.page-section {
+  padding: 2rem;
+}
+
+.content-width {
+  max-width: 1600px;
+  margin-inline: auto;
+}

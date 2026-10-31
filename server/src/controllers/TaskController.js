@@ -4,6 +4,7 @@ class TaskController {
   static async getByMeeting(req, res, next) {
     try {
       const tasks = await taskService.findAllByMeeting(+req.params.meetingId);
+
       res.json(tasks);
     } catch (err) {
       next(err);
@@ -12,7 +13,8 @@ class TaskController {
 
   static async getAll(req, res, next) {
     try {
-      const tasks = await taskService.getAll();
+      const tasks = await taskService.getAll(req.user);
+
       res.json(tasks);
     } catch (err) {
       next(err);
@@ -21,10 +23,18 @@ class TaskController {
 
   static async create(req, res, next) {
     try {
-      const task = await taskService.create(req.user, {
+      const payload = {
         ...req.body,
-        meetingId: req.params.meetingId,
-      });
+        fileUrl: req.file?.path || req.body.fileUrl,
+      };
+
+      const task = await taskService.create(
+        req.user,
+        req.params.meetingId,
+        payload,
+        req.meta,
+      );
+
       res.status(201).json(task);
     } catch (err) {
       next(err);
@@ -34,6 +44,7 @@ class TaskController {
   static async getById(req, res, next) {
     try {
       const task = await taskService.findById(req.params.id);
+
       res.json(task);
     } catch (err) {
       next(err);
@@ -42,7 +53,13 @@ class TaskController {
 
   static async update(req, res, next) {
     try {
-      const task = await taskService.update(req.params.id, req.body, req.user);
+      const payload = {
+        ...req.body,
+        fileUrl: req.file?.path || req.body.fileUrl,
+      };
+
+      const task = await taskService.update(req.params.id, payload, req.user, req.meta);
+
       res.json(task);
     } catch (err) {
       next(err);
@@ -51,8 +68,11 @@ class TaskController {
 
   static async delete(req, res, next) {
     try {
-      await taskService.delete(req.params.id, req.user);
-      res.json({ message: "Task deleted" });
+      await taskService.delete(req.params.id, req.user, req.meta);
+
+      res.json({
+        message: "Task deleted",
+      });
     } catch (err) {
       next(err);
     }
@@ -60,11 +80,19 @@ class TaskController {
 
   static async submitTask(req, res, next) {
     try {
-      const submission = await taskSubmissionService.create({
-        taskId: req.params.id,
-        userId: req.user.id,
-        submissionUrl: req.body.submissionUrl,
-      });
+      const submission = await taskSubmissionService.create(
+        req.user,
+        {
+          TaskId: req.params.id,
+          UserId: req.user.id,
+          submissionUrl: req.body.submissionUrl,
+          submissionFileUrl: req.body.submissionFileUrl,
+          submittedNote: req.body.submittedNote,
+          submittedAt: new Date(),
+        },
+        req.meta,
+      );
+
       res.status(201).json(submission);
     } catch (err) {
       next(err);
@@ -75,8 +103,64 @@ class TaskController {
     try {
       const submissions = await taskSubmissionService.findAllByTask(
         req.params.id,
+        req.user,
       );
+
       res.json(submissions);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  // tambahan untuk new features tasksubmission
+  static async getSubmissionDetail(req, res, next) {
+    try {
+      const submission = await taskSubmissionService.findById(
+        req.params.submissionId,
+        req.user,
+        req.meta,
+      );
+
+      res.json(submission);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async updateSubmission(req, res, next) {
+    try {
+      const submission = await taskSubmissionService.update(
+        req.params.submissionId,
+        {
+          submissionUrl: req.body.submissionUrl,
+          submissionFileUrl: req.body.submissionFileUrl,
+          submittedNote: req.body.submittedNote,
+        },
+        req.user,
+        req.meta,
+      );
+
+      res.json(submission);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async reviewSubmission(req, res, next) {
+    try {
+      const submission = await taskSubmissionService.update(
+        req.params.submissionId,
+        {
+          score: req.body.score,
+          feedback: req.body.feedback,
+          status: "Reviewed",
+          reviewedAt: new Date(),
+        },
+        req.user,
+        req.meta,
+      );
+
+      res.json(submission);
     } catch (err) {
       next(err);
     }

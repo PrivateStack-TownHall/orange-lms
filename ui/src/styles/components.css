@@ -1,0 +1,125 @@
+@layer components {
+  /* ===== Cards ===== */
+
+  .oc-card {
+    @apply bg-white rounded-3xl border p-8;
+    border-color: var(--color-border);
+    box-shadow: var(--shadow-card);
+  }
+
+  .oc-card-sm {
+    @apply bg-white rounded-2xl border p-5;
+    border-color: var(--color-border);
+  }
+
+  /* ===== Buttons ===== */
+
+  .oc-btn-primary {
+    @apply inline-flex items-center gap-2 px-5 py-3 rounded-xl text-white font-medium transition-all;
+    background: var(--color-primary);
+  }
+
+  .oc-btn-primary:hover {
+    background: var(--color-primary-hover);
+  }
+
+  .oc-btn-secondary {
+    @apply inline-flex items-center gap-2 px-5 py-3 rounded-xl border font-medium transition-all;
+    border-color: var(--color-border);
+    background: white;
+  }
+
+  .oc-btn-secondary:hover {
+    background: #f8fafc;
+  }
+
+  /* ===== Inputs ===== */
+
+  .oc-input {
+    @apply w-full px-4 py-3 rounded-xl border outline-none transition-all;
+    border-color: var(--color-border);
+    background: white;
+  }
+
+  .oc-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.08);
+  }
+
+  .oc-select {
+    @apply w-full px-4 py-3 rounded-xl border;
+    border-color: var(--color-border);
+    background: white;
+  }
+
+  /* ===== Sidebar ===== */
+
+  .oc-sidebar-link {
+    @apply flex items-center gap-4 px-6 py-4 rounded-2xl font-medium transition-all;
+    color: var(--color-text);
+  }
+
+  .oc-sidebar-link:hover {
+    background: #fff7ed;
+    color: var(--color-primary);
+  }
+
+  .oc-sidebar-link-active {
+    @apply text-white;
+    background: var(--color-primary);
+  }
+
+  /* ===== Tables ===== */
+
+  .oc-table {
+    @apply w-full border rounded-2xl overflow-hidden bg-white;
+    border-color: var(--color-border);
+  }
+
+  .oc-table th {
+    @apply text-left px-6 py-4 font-semibold;
+  }
+
+  .oc-table td {
+    @apply px-6 py-4;
+  }
+
+  /* ===== Badge ===== */
+
+  .oc-badge-success {
+    @apply px-3 py-1 rounded-full text-sm;
+    background: #dcfce7;
+    color: #15803d;
+  }
+
+  .oc-badge-warning {
+    @apply px-3 py-1 rounded-full text-sm;
+    background: #fef3c7;
+    color: #b45309;
+  }
+
+  .oc-badge-danger {
+    @apply px-3 py-1 rounded-full text-sm;
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+
+  /* ===== Layout ===== */
+
+  .oc-sidebar {
+    width: var(--sidebar-width);
+    background: white;
+    border-right: 1px solid var(--color-border);
+  }
+
+  .oc-header {
+    height: var(--header-height);
+    background: white;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .oc-main {
+    background: var(--color-background);
+    min-height: 100vh;
+  }
+}

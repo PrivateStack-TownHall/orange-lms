@@ -1,18 +1,38 @@
 const { Profile } = require("../models");
+const { logActivity } = require("../helpers");
 
 class ProfileService {
-  static async findByUserId(userId) {
-    return Profile.findOne({ where: { userId } });
+  static async findByUserId(UserId) {
+    return Profile.findOne({
+      where: { UserId },
+    });
   }
 
-  static async create({ userId, ...data }) {
-    return Profile.create({ userId, ...data });
-  }
+  static async upsert(UserId, data) {
+    const profile = await Profile.findOne({
+      where: { UserId },
+    });
 
-  static async createOrUpdate(userId, data) {
-    const profile = await Profile.findOne({ where: { userId } });
-    if (profile) return profile.update(data);
-    return Profile.create({ userId, ...data });
+    let result;
+
+    if (profile) {
+      result = await profile.update(data);
+    } else {
+      result = await Profile.create({
+        UserId,
+        ...data,
+      });
+    }
+
+    await logActivity({
+      user: { id: UserId },
+      activity: "Updated Profile",
+      description: "Updated profile information",
+      resourceType: "Profile",
+      resourceId: UserId,
+    });
+
+    return result;
   }
 }
 

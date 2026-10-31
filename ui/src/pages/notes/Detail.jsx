@@ -1,108 +1,187 @@
-import Swal from "sweetalert2";
-import { Download, Calendar, Award, User, BookOpen } from "lucide-react";
-import { formatDate } from "@/helpers";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-const Detail = (note) => {
-  if (!note) {
-    Swal.fire({
-      icon: "error",
-      title: "No data",
-      text: "Task data not found",
-    });
-    return;
+import {
+  StickyNote,
+  BookOpen,
+  Calendar,
+  Users,
+  FileText,
+  Paperclip,
+} from "lucide-react";
+
+import { can, formatDate } from "@/helpers";
+
+import NoteService from "@/services/modules/note.service";
+
+import ActionButton from "@/components/ui/buttons/ActionButton";
+import LoadingPage from "@/components/ui/loading/LoadingPage";
+import StatusBadge from "@/components/ui/status/StatusBadge";
+
+const Detail = ({ note: noteProp, role: roleProp, onDelete }) => {
+  const { id } = useParams();
+  const user = useSelector((state) => state.auth.user);
+  const role = roleProp || user?.role;
+
+  const [note, setNote] = useState(noteProp || null);
+  const [loading, setLoading] = useState(!noteProp && !!id);
+
+  useEffect(() => {
+    if (noteProp || !id) return;
+
+    const fetchNote = async () => {
+      try {
+        const res = await NoteService.getById(id);
+        setNote(res.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNote();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  if (loading) {
+    return <LoadingPage title="Loading Note..." />;
   }
 
-  Swal.fire({
-    title: note.name ?? "Task Detail",
-    html: `
-      <div style="text-align:left; font-size:14px">
+  if (!note) return null;
 
-        <div style="
-          background:#f9fafb;
-          border-radius:12px;
-          padding:16px;
-          margin-bottom:12px
-        ">
-          <p style="font-weight:600; margin-bottom:4px">Description</p>
-          <p style="color:#555">${note.description ?? "-"}</p>
-        </div>
+  return (
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
+      {/* LEFT */}
+      <div className="lg:col-span-1">
+        <div className="rounded-sm border border-gray-200 bg-white p-5">
+          <div className="flex flex-col items-center text-center">
+            <div className="flex h-24 w-24 items-center justify-center rounded-sm bg-orange-100">
+              <StickyNote size={40} className="text-orange-600" />
+            </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px">
+            <h2 className="mt-4 text-lg font-bold">{note.name}</h2>
 
-          <div style="background:#fff; border:1px solid #eee; border-radius:10px; padding:12px">
-            <p style="font-size:12px; color:#888">Due Date</p>
-            <p style="font-weight:600">
-              ${note.dueDate ? formatDate(note.dueDate) : "-"}
-            </p>
+            <div className="mt-2 flex items-center gap-2 text-xs">
+              <StatusBadge status={note.status || "Published"} />
+              <span className="text-[var(--color-text-muted)]">
+                NOTE-{String(note.id).padStart(4, "0")}
+              </span>
+            </div>
+
+            <div className="mt-5 w-full space-y-4 text-left text-sm">
+              <SidebarField icon={Users} label="Created By">
+                {note.creator?.name || "-"}
+              </SidebarField>
+            </div>
+
+            <div className="mt-5 flex w-full gap-2">
+              {can(role, "note", "update") && (
+                <Link to={`/notes/edit/${note.id}`} className="flex-1">
+                  <ActionButton
+                    action="edit"
+                    className="w-full justify-center py-2"
+                  />
+                </Link>
+              )}
+
+              {can(role, "note", "delete") && (
+                <ActionButton
+                  action="delete"
+                  className="flex-1 justify-center py-2"
+                  onClick={() => onDelete?.(note.id)}
+                />
+              )}
+            </div>
           </div>
-
-          <div style="background:#fff; border:1px solid #eee; border-radius:10px; padding:12px">
-            <p style="font-size:12px; color:#888">Max Score</p>
-            <p style="font-weight:600">
-              ${note.maxScore ?? "-"}
-            </p>
-          </div>
-
-          <div style="background:#fff; border:1px solid #eee; border-radius:10px; padding:12px">
-            <p style="font-size:12px; color:#888">Class</p>
-            <p style="font-weight:600">
-              ${note.Class?.name ?? "-"}
-            </p>
-          </div>
-
-          <div style="background:#fff; border:1px solid #eee; border-radius:10px; padding:12px">
-            <p style="font-size:12px; color:#888">Meeting</p>
-            <p style="font-weight:600">
-              ${note.Meeting?.name ?? "-"}
-            </p>
-          </div>
-
         </div>
-
-        <div style="
-          margin-top:16px;
-          background:#fff7ed;
-          border:1px dashed #fdba74;
-          border-radius:12px;
-          padding:14px
-        ">
-          <p style="font-size:12px; color:#9a3412">Created By</p>
-          <p style="font-weight:600; color:#7c2d12">
-            ${note.NoteCreatedBy?.name ?? "-"}
-          </p>
-        </div>
-
-        <div style="margin-top:18px; text-align:center">
-          ${
-            note.fileUrl
-              ? `
-                <a href="${note.fileUrl}"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   style="
-                     display:inline-flex;
-                     align-items:center;
-                     gap:8px;
-                     padding:10px 16px;
-                     border-radius:999px;
-                     background:#f97316;
-                     color:white;
-                     text-decoration:none;
-                     font-weight:600
-                   ">
-                   ⬇️ Download File
-                </a>
-              `
-              : `<p style="color:#999">No file attached</p>`
-          }
-        </div>
-
       </div>
-    `,
-    width: 720,
-    confirmButtonText: "Close",
-    confirmButtonColor: "#1647f9",
-  });
+
+      {/* RIGHT */}
+      <div className="space-y-4 lg:col-span-3">
+        <InfoCard icon={FileText} title="Description">
+          <p className="text-sm leading-6 text-gray-600">
+            {note.description || "-"}
+          </p>
+        </InfoCard>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <MetaCard icon={BookOpen} label="Class">
+            <p className="font-semibold">{note.Class?.code || "-"}</p>
+            <p className="text-sm text-gray-500">{note.Class?.name || "-"}</p>
+          </MetaCard>
+
+          <MetaCard icon={Users} label="Meeting">
+            <p className="font-semibold">
+              Meeting #{note.Meeting?.meetingNumber || "-"}
+            </p>
+            <p className="text-sm text-gray-500">{note.Meeting?.name || "-"}</p>
+          </MetaCard>
+
+          <MetaCard icon={Calendar} label="Meeting Date">
+            <p>
+              {note.Meeting?.meetingDate
+                ? formatDate(note.Meeting.meetingDate)
+                : "-"}
+            </p>
+          </MetaCard>
+
+          <MetaCard icon={FileText} label="Note Created">
+            <p>{note.createdAt ? formatDate(note.createdAt) : "-"}</p>
+          </MetaCard>
+        </div>
+
+        <InfoCard icon={Paperclip} title="Attachment">
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-gray-500">
+              Download note attachment if available
+            </p>
+            {note.fileUrl ? (
+              <ActionButton action="download" href={note.fileUrl}>
+                Download File
+              </ActionButton>
+            ) : (
+              <span className="text-sm text-gray-500">No attachment</span>
+            )}
+          </div>
+        </InfoCard>
+      </div>
+    </div>
+  );
 };
+
+const SidebarField = ({ icon: Icon, label, children }) => (
+  <div className="flex items-start gap-2">
+    <Icon
+      size={15}
+      className="mt-0.5 shrink-0 text-[var(--color-text-muted)]"
+    />
+    <div>
+      <p className="text-xs text-gray-500">{label}</p>
+      <div className="font-medium">{children}</div>
+    </div>
+  </div>
+);
+
+const InfoCard = ({ icon: Icon, title, children }) => (
+  <div className="rounded-sm border border-gray-200 bg-white p-5">
+    <div className="mb-3 flex items-center gap-2">
+      <Icon size={18} className="text-orange-500" />
+      <h3 className="font-semibold">{title}</h3>
+    </div>
+    {children}
+  </div>
+);
+
+const MetaCard = ({ icon: Icon, label, children }) => (
+  <div className="rounded-sm border border-gray-200 bg-white p-4">
+    <div className="mb-2 flex items-center gap-2">
+      <Icon size={18} className="text-orange-500" />
+      <span className="font-medium">{label}</span>
+    </div>
+    {children}
+  </div>
+);
 
 export default Detail;

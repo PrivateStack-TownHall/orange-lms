@@ -3,10 +3,24 @@ const router = express.Router();
 
 const { MenteeController, ProfileController } = require("../controllers");
 
-router.get("/", MenteeController.getAll);
-router.get("/:id", MenteeController.getById);
+const { authorization } = require("../middlewares");
+
+router.get("/", authorization("mentee", "read"), MenteeController.getAll);
+
+router.post("/", authorization("mentee", "create"), MenteeController.create);
+
+router.get("/:id", authorization("mentee", "read"), MenteeController.getById);
+
+router.put("/:id", authorization("mentee", "update"), MenteeController.update);
+
+router.delete(
+  "/:id",
+  authorization("mentee", "delete"),
+  MenteeController.delete,
+);
 
 router.get("/:id/profile", ProfileController.getByUser);
-router.post("/:id/profile", ProfileController.createOrUpdate);
+
+router.put("/:id/profile", ProfileController.update);
 
 module.exports = router;

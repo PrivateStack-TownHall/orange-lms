@@ -1,27 +1,19 @@
-# Role Based Access Control
+# Role-Based Access Control
 
-## Owner
+Authorization is evaluated per resource and action after JWT authentication.
 
-- Full access to all resources
-- Can CRUD: users, classes, meetings, tasks, notes, materials
+| Role | Main access |
+| --- | --- |
+| Owner | Full system administration, sensitive deletion, operational data, and reports. |
+| Admin | User and class administration, meetings, monitoring, and assessment administration. |
+| Mentor | Assigned learning delivery: meetings, tasks, notes, materials, attendance, criteria, and grading. |
+| Mentee | Read access to enrolled learning resources, task submission, and personal learning outcomes. |
 
-## Admin
+## Guard sequence
 
-- CRUD users (except Owner)
-- CRUD classes & meetings
-- Monitor mentee progress
-- Cannot delete/update Owner
+```txt
+Authorization header -> authentication -> req.user -> authorization(resource, action) -> controller
+```
 
-## Mentor
-
-- Create/Read meetings
-- Upload notes & materials
-- Create tasks & grade submissions
-- Read mentees
-- Cannot CRUD classes
-
-## Mentee
-
-- Read-only: classes, meetings, notes, materials, tasks
-- Submit tasks
-- Cannot CRUD anything
+The canonical permission matrix is `src/config/permission.js`. Route-level
+permissions should be changed there and not duplicated in frontend code.
