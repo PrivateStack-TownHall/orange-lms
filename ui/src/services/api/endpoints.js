@@ -52,6 +52,7 @@ const ENDPOINTS = {
   ASSESSMENT_RESULTS: "/assessment-results",
   SUBMISSION_SCORES: "/submission-scores",
   HISTORY_CLASSES: "/history-classes",
+  CALENDAR_EVENTS: "/calendar/events",
 
   /**
    * Task Submissions (nested under /tasks)

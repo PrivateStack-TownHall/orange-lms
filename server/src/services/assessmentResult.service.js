@@ -62,6 +62,8 @@ class AssessmentResultService {
       throw new Error("Permission denied");
     }
 
+    await this.assertCanManageSubmission(data.TaskSubmissionId, currentUser);
+
     const existing = await AssessmentResult.findOne({
       where: {
         TaskSubmissionId: data.TaskSubmissionId,
@@ -143,11 +145,7 @@ class AssessmentResultService {
       throw new Error("Permission denied");
     }
 
-    const result = await AssessmentResult.findByPk(id);
-
-    if (!result) {
-      throw new Error("Assessment result not found");
-    }
+    const result = await this.findById(id, currentUser);
 
     const { isDraft, ...payload } = data;
 
@@ -161,6 +159,25 @@ class AssessmentResultService {
     );
 
     return this.findById(id, currentUser);
+  }
+
+  static async assertCanManageSubmission(TaskSubmissionId, currentUser) {
+    const submission = await TaskSubmission.findByPk(TaskSubmissionId, {
+      include: [{ model: Task, include: [Class] }],
+    });
+
+    if (!submission) {
+      throw new Error("Submission not found");
+    }
+
+    if (
+      currentUser.role === ROLES.MENTOR &&
+      submission.Task?.Class?.MentorId !== currentUser.id
+    ) {
+      throw new Error("Permission denied");
+    }
+
+    return submission;
   }
 
   static async delete(id, currentUser, meta = {}) {

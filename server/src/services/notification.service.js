@@ -89,6 +89,21 @@ class NotificationService {
     return true;
   }
 
+  static async deleteMany(ids, currentUser) {
+    const notificationIds = [...new Set((ids || []).map(Number).filter(Boolean))];
+    if (!notificationIds.length) return 0;
+
+    return Notification.destroy({
+      where: { id: notificationIds, UserId: currentUser.id },
+    });
+  }
+
+  static async deleteAllRead(currentUser) {
+    return Notification.destroy({
+      where: { UserId: currentUser.id, isRead: true },
+    });
+  }
+
   static async deleteOldRead(days = 90) {
     const threshold = new Date();
     threshold.setDate(threshold.getDate() - days);

@@ -113,4 +113,8 @@ module.exports = {
   reports: {
     read: [ROLES.OWNER],
   },
+
+  calendar: {
+    read: [ROLES.OWNER, ROLES.ADMIN, ROLES.MENTOR, ROLES.MENTEE],
+  },
 };

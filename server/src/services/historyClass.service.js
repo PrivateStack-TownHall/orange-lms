@@ -1,9 +1,53 @@
 const { HistoryClass, Class, User, ClassUser } = require("../models");
 const { logAudit, notifyUsers } = require("../helpers");
+const {
+  HistoryClass,
+  Class,
+  User,
+  ClassUser,
+  Meeting,
+  Attendance,
+  AssessmentResult,
+  TaskSubmission,
+  Task,
+} = require("../models");
+const { logAudit } = require("../helpers");
 const cloudinary = require("../config/cloudinary");
 const { createCertificateBuffer, makeCertificateId } = require("./certificate.service");
 
 class HistoryClassService {
+  static async getParticipantProgress(ClassId, UserId) {
+    const [results, attendances, meetingCount] = await Promise.all([
+      AssessmentResult.findAll({
+        include: [
+          {
+            model: TaskSubmission,
+            required: true,
+            where: { UserId },
+            include: [{ model: Task, required: true, where: { ClassId } }],
+          },
+        ],
+      }),
+      Attendance.findAll({
+        where: { UserId },
+        include: [{ model: Meeting, required: true, where: { ClassId } }],
+      }),
+      Meeting.count({ where: { ClassId } }),
+    ]);
+
+    const finalScore = results.length
+      ? Math.round((results.reduce((total, result) => total + Number(result.finalScore || 0), 0) / results.length) * 100) / 100
+      : 0;
+    const attended = attendances.filter((attendance) =>
+      ["Present", "Late"].includes(attendance.status),
+    ).length;
+    const attendancePercentage = meetingCount
+      ? Math.round((attended / meetingCount) * 10000) / 100
+      : 0;
+
+    return { finalScore, attendancePercentage };
+  }
+
   static async findAll() {
     return HistoryClass.findAll({
       order: [["createdAt", "DESC"]],
@@ -101,6 +145,8 @@ class HistoryClassService {
           return existing;
         }
 
+        const progress = await this.getParticipantProgress(cls.id, participant.UserId);
+
         return HistoryClass.create({
           ClassId: cls.id,
 
@@ -112,9 +158,7 @@ class HistoryClassService {
 
           status: "Completed",
 
-          finalScore: 0,
-
-          attendancePercentage: 0,
+          ...progress,
 
           completedAt: new Date(),
 
@@ -267,6 +311,8 @@ class HistoryClassService {
         generated: false,
       };
     }
+
+    cloudinary.assertConfigured();
 
     const { buffer } = await createCertificateBuffer(history);
     const upload = await new Promise((resolve, reject) => {
