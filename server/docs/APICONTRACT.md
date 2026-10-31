@@ -1,22 +1,42 @@
 # API Contract
 
+> V4 reference. The response contract applies to every V1–V4 API route.
+
 Base URL: `/api`
 
 `/api/auth` is public. All other route groups require a bearer token.
 
-| Route group | Primary purpose |
-| --- | --- |
-| `/auth` | Registration, login, and current user. |
-| `/users`, `/mentors`, `/mentees` | User and role-specific management. |
-| `/classes` | Class CRUD, mentor assignment, enrollment, and class users. |
-| `/classes/:classId/meetings`, `/meetings` | Nested and flat meeting access. |
-| `/meetings/:meetingId/tasks`, `/tasks` | Task CRUD, submission, review, and submission details. |
-| `/meetings/:meetingId/notes`, `/notes` | Notes CRUD. |
-| `/meetings/:meetingId/materials`, `/materials` | Materials CRUD. |
-| `/attendances` | Attendance records and meeting summaries. |
-| `/task-criteria`, `/assessment-results`, `/submission-scores` | Assessment and rubric workflow. |
-| `/history-classes` | Archiving and restoring completed classes. |
-| `/notifications`, `/audit-logs`, `/user-activities`, `/reports` | Operational monitoring and communication. |
+## Response contract
+
+Every endpoint returns the same top-level structure.
+
+```json
+{
+  "success": true,
+  "message": "Request successful",
+  "data": {}
+}
+```
+
+Failed requests return `success: false` and `data: null`. Validation failures
+also include an `errors` array. The frontend Axios client unwraps successful
+`data` automatically, preserving the existing service and page APIs. This
+contract was standardized in V4 and applies to V1–V4 routes.
+
+| Route group | Version | Primary purpose |
+| --- | --- | --- |
+| `/auth` | V1 | Registration, login, and current user. |
+| `/users`, `/mentors`, `/mentees` | V1 | User and role-specific management. |
+| `/classes` | V2 | Class CRUD, mentor assignment, enrollment, and class users. |
+| `/classes/:classId/meetings`, `/meetings` | V2 | Nested and flat meeting access. |
+| `/meetings/:meetingId/tasks`, `/tasks` | V2 | Task CRUD, submission, review, and submission details. |
+| `/meetings/:meetingId/notes`, `/notes` | V2 | Notes CRUD. |
+| `/meetings/:meetingId/materials`, `/materials` | V2 | Materials CRUD. |
+| `/attendances` | V3 | Attendance records and meeting summaries. |
+| `/task-criteria`, `/assessment-results`, `/submission-scores` | V3 | Assessment and rubric workflow. |
+| `/history-classes` | V3 | Archiving and restoring completed classes. |
+| `/history-classes/:id/certificate` | V4 | Generate and store a completion certificate. |
+| `/notifications`, `/audit-logs`, `/user-activities`, `/reports` | V4 | Operational monitoring and communication. |
 
 ## Upload requests
 

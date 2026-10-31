@@ -5,7 +5,11 @@ const bodyParser = require("body-parser");
 
 const routes = require("./routes");
 
-const { ErrorHandling, requestMeta } = require("./middlewares");
+const {
+  ErrorHandling,
+  requestMeta,
+  responseContract,
+} = require("./middlewares");
 
 const app = express();
 
@@ -15,7 +19,10 @@ const app = express();
  * =========================
  */
 app.use(cors());
-app.use(morgan("dev"));
+
+if (process.env.NODE_ENV !== "test") {
+  app.use(morgan("dev"));
+}
 
 app.use(bodyParser.json());
 app.use(
@@ -26,6 +33,7 @@ app.use(
 
 app.set("trust proxy", true);
 app.use(requestMeta);
+app.use(responseContract);
 
 /**
  * =========================

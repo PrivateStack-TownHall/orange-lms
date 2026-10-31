@@ -1,9 +1,4 @@
-import React from "react";
-
-import ClassesList from "@/pages/classes";
-import ClassesCreate from "@/pages/classes/Create";
-import ClassesEdit from "@/pages/classes/Edit";
-import ClassesDetail from "@/pages/classes/Detail";
+import { lazyRoute } from "../lazyRoute";
 
 const classRoutes = {
   path: "classes",
@@ -11,19 +6,19 @@ const classRoutes = {
   children: [
     {
       index: true,
-      element: <ClassesList />,
+      lazy: lazyRoute(() => import("@/pages/classes")),
     },
     {
       path: "create",
-      element: <ClassesCreate />,
+      lazy: lazyRoute(() => import("@/pages/classes/Create")),
     },
     {
       path: ":id",
-      element: <ClassesDetail />,
+      lazy: lazyRoute(() => import("@/pages/classes/Detail")),
     },
     {
       path: "edit/:id",
-      element: <ClassesEdit />,
+      lazy: lazyRoute(() => import("@/pages/classes/Edit")),
     },
   ],
 };

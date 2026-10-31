@@ -1,69 +1,89 @@
-# Orange LMS Backend
+# Orange LMS Server
 
-Express 5 API for Orange LMS. The backend uses PostgreSQL with Sequelize,
-JWT-based authentication, resource/action RBAC, and Cloudinary for persistent
-file uploads.
+Orange LMS Server is an Express API for role-based learning management. It uses
+Sequelize with PostgreSQL, JWT authentication, permission-based authorization,
+and Cloudinary-backed uploads.
+
+## Product-version scope
+
+| Version | Server delivery |
+| --- | --- |
+| V1 | Authentication, role-aware authorization, user/profile management, and application foundation. |
+| V2 | Classes, class membership, meetings, tasks, notes, and materials. |
+| V3 | Task submissions, attendance, rubrics, assessment results, criterion scores, and class history. |
+| V4 | Cloudinary upload processing, certificate generation, calendar event aggregation, notifications, audit and activity records, reports, response-contract normalization, and Jest/Supertest coverage. |
+
+Calendar is delivered through the `v4-calendar-*` branch line. Dashboard
+Analytics begins the V5 roadmap.
 
 ## Architecture
 
 ```txt
-Routes -> Controllers -> Services -> Sequelize Models -> PostgreSQL
+Routes -> Controllers -> Services -> Models -> PostgreSQL
 ```
 
-Cross-cutting concerns live in `middlewares/` (authentication, authorization,
-request metadata, upload, and error handling) and `helpers/`.
-
-## Functional modules
-
-| Group | Modules |
+| Layer | Responsibility |
 | --- | --- |
-| Core | Auth, users, profiles, mentors, mentees, classes, class users, meetings. |
-| Learning | Tasks, task submissions, notes, materials, and uploads. |
-| Assessment | Attendance, task criteria, assessment results, submission criteria scores, history classes. |
-| Operations | Notifications, audit logs, user activities, and reports. |
+| `routes/` | API endpoints, authentication, and authorization middleware. |
+| `controllers/` | HTTP request and response orchestration. |
+| `services/` | Role-aware business rules and data operations. |
+| `models/` and `migrations/` | Sequelize mappings and versioned PostgreSQL schema. |
+| `middlewares/` | Request metadata, error handling, and Cloudinary upload processing. |
 
-## Requirements
+## Modules
 
-- Node.js 20+.
-- PostgreSQL for development and test.
-- A Cloudinary account for file uploads.
+| Area | Version | Modules |
+| --- | --- | --- |
+| Foundation | V1 | Auth, users, profiles, mentors, mentees, role permissions, and shared middleware. |
+| Learning | V2 | Classes, class users, meetings, tasks, notes, and materials. |
+| Assessment | V3 | Task submissions, attendance, criteria, assessment results, submission scores, and class history. |
+| Delivery and operations | V4 | Cloudinary upload middleware, certificate generation, calendar event aggregation, notifications, audit logs, user activities, reports, and API tests. |
 
-## Setup
+## Local setup
 
 ```bash
 npm install
+npm run db:setup
+npm run dev
 ```
 
-Copy `.env.example` to `.env`, then supply local PostgreSQL values, JWT values,
-and Cloudinary credentials. Never commit `.env` or real credentials.
+Create `.env` from `.env.example` and supply your local database, JWT, and
+Cloudinary values. The local PostgreSQL host is `localhost:1000`; the API keeps
+using `PORT=5000` and exposes endpoints below `/api`.
 
-For production, set `NODE_ENV=production`, `DATABASE_URL`, and `DB_SSL=true`.
-The production Sequelize configuration expects a PostgreSQL connection string,
-which is suitable for Supabase.
+Production uses `DATABASE_URL` with PostgreSQL SSL, suitable for Supabase.
 
 ## Commands
 
 | Command | Purpose |
 | --- | --- |
-| `npm run dev` | Start the API in development mode with Nodemon. |
-| `npm start` | Start the API in production mode. |
-| `npm run db:migrate:dev` | Run migrations against the development database. |
-| `npm run db:seed:dev` | Seed the development database. |
-| `npm run db:migrate:test` | Run migrations against the test database. |
-| `npm run db:migrate:prod` | Run migrations against the production database. |
-| `npm run db:setup` | Create, migrate, and seed the active database environment. |
+| `npm run dev` | Run the API in development mode with Nodemon. |
+| `npm start` | Run the production API. |
+| `npm test` | Run API integration tests with Jest and Supertest. |
+| `npm run db:create` | Create the active environment database. |
+| `npm run db:migrate` | Apply pending migrations. |
+| `npm run db:seed` | Load seed data. |
+| `npm run db:seed:undo` | Undo the most recent seed. |
+| `npm run db:setup` | Create, migrate, and seed the database. |
+| `npm run db:migrate:prod` | Apply migrations with production configuration. |
 
 ## Uploads
 
-Multer streams a single `file` field through Cloudinary. Task, note, and
-material create/update routes also accept a direct URL through `fileUrl`.
-Cloudinary URLs, rather than local files, are stored in PostgreSQL.
+Task, note, and material create/update endpoints accept either `fileUrl` or a
+single `file` multipart field. Uploaded files go directly to Cloudinary; the
+database stores only the resulting URL. The allowed extensions are JPG, JPEG,
+PNG, PDF, DOC, DOCX, PPT, PPTX, and Markdown, with a 5 MB limit.
 
-Allowed upload extensions are JPG, JPEG, PNG, PDF, DOC, DOCX, PPT, PPTX, and
-Markdown. The maximum file size is 5 MB.
+## Response contract
 
-## API base URL
+Every endpoint returns `{ success, message, data }`. Failed responses use
+`success: false` and `data: null`; validation failures include `errors`.
 
-All routes are mounted under `/api`. `/api/auth` is public; all other route
-groups require a valid JWT. See [docs/APICONTRACT.md](docs/APICONTRACT.md) for
-the route groups and [docs/RBAC.md](docs/RBAC.md) for access rules.
+## Testing
+
+The test suite uses Jest and Supertest to verify the API response contract
+without requiring a running PostgreSQL instance. It covers the health check,
+unauthenticated protected routes, and unknown routes.
+
+See the [server documentation index](docs/README.md) for the API contract,
+RBAC matrix, business flow, and schema reference.

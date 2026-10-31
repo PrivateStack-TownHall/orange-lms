@@ -1,9 +1,4 @@
-import React from "react";
-
-import TasksList from "@/pages/tasks";
-import TasksCreate from "@/pages/tasks/Create";
-import TasksEdit from "@/pages/tasks/Edit";
-import TasksDetail from "@/pages/tasks/Detail";
+import { lazyRoute } from "../lazyRoute";
 
 const taskRoutes = {
   path: "tasks",
@@ -11,19 +6,19 @@ const taskRoutes = {
   children: [
     {
       index: true,
-      element: <TasksList />,
+      lazy: lazyRoute(() => import("@/pages/tasks")),
     },
     {
       path: "create",
-      element: <TasksCreate />,
+      lazy: lazyRoute(() => import("@/pages/tasks/Create")),
     },
     {
       path: ":id",
-      element: <TasksDetail />,
+      lazy: lazyRoute(() => import("@/pages/tasks/Detail")),
     },
     {
       path: "edit/:id",
-      element: <TasksEdit />,
+      lazy: lazyRoute(() => import("@/pages/tasks/Edit")),
     },
   ],
 };

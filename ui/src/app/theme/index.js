@@ -3,7 +3,7 @@ import { create } from "zustand";
 const getInitialTheme = () => {
   const savedTheme = localStorage.getItem("orange-theme");
 
-  if (savedTheme) return savedTheme;
+  if (savedTheme === "light" || savedTheme === "dark") return savedTheme;
 
   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
@@ -22,8 +22,12 @@ const applyTheme = (theme) => {
   localStorage.setItem("orange-theme", theme);
 };
 
+const initialTheme = getInitialTheme();
+
+applyTheme(initialTheme);
+
 export const useThemeStore = create((set) => ({
-  theme: getInitialTheme(),
+  theme: initialTheme,
 
   setTheme: (theme) => {
     applyTheme(theme);

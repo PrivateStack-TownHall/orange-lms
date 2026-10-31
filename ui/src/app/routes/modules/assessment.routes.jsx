@@ -1,17 +1,15 @@
-import React from "react";
+import { lazyRoute } from "../lazyRoute";
 
 const assessmentRoutes = {
   path: "assessments",
-
   children: [
     {
       index: true,
-      element: <div>Assessment List</div>,
+      lazy: lazyRoute(() => import("@/pages/Assessment")),
     },
-
     {
       path: ":id",
-      element: <div>Assessment Detail</div>,
+      lazy: lazyRoute(() => import("@/pages/AssessmentDetail")),
     },
   ],
 };
