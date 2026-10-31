@@ -11,6 +11,7 @@ import {
   History,
   Shield,
   Activity,
+  ClipboardCheck,
   Award,
 } from "lucide-react";
 
@@ -186,6 +187,17 @@ export const MENU_BY_ROLE = {
     },
 
     {
+      title: "REPORTS",
+      items: [
+        {
+          name: "Attendance",
+          icon: ClipboardCheck,
+          path: ROUTES.ATTENDANCE,
+        },
+      ],
+    },
+
+    {
       title: "ADMINISTRATION",
       items: [
         {
@@ -247,6 +259,16 @@ export const MENU_BY_ROLE = {
           name: "Materials",
           icon: Archive,
           path: ROUTES.MATERIALS,
+        },
+      ],
+    },
+    {
+      title: "REPORTS",
+      items: [
+        {
+          name: "Attendance",
+          icon: ClipboardCheck,
+          path: ROUTES.ATTENDANCE,
         },
       ],
     },

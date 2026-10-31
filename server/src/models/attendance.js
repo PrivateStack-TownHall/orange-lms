@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       checkedBy: DataTypes.INTEGER,
       checkInAt: DataTypes.DATE,
       notes: DataTypes.TEXT,
+      evidenceUrl: DataTypes.STRING,
     },
     {
       sequelize,
