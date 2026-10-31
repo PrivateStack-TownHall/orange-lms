@@ -47,6 +47,11 @@ const formatEventDate = (date) => new Intl.DateTimeFormat("en-US", {
   year: "numeric",
 }).format(new Date(date));
 
+const formatAgendaDate = (date) => new Intl.DateTimeFormat("en-US", {
+  day: "numeric",
+  month: "short",
+}).format(new Date(date));
+
 const CalendarPage = () => {
   const breadcrumbs = useBreadcrumbs();
   const { openError } = usePopupStore();
@@ -87,6 +92,7 @@ const CalendarPage = () => {
     () => events.filter((event) => typeFilter === "All" || event.type === typeFilter),
     [events, typeFilter],
   );
+  const agendaEvents = useMemo(() => visibleEvents.slice(0, 8), [visibleEvents]);
   const { start, end } = monthRange(month);
   const leadingDays = start.getDay();
   const cells = Array.from({ length: leadingDays + end.getDate() }, (_, index) => index - leadingDays + 1);
@@ -105,6 +111,7 @@ const CalendarPage = () => {
             <button type="button" aria-label="Previous month" onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() - 1, 1))} className="rounded-sm border border-gray-200 p-2 hover:bg-gray-50"><ChevronLeft size={18} /></button>
             <h2 className="min-w-44 text-center text-lg font-semibold text-[var(--color-text)]">{title}</h2>
             <button type="button" aria-label="Next month" onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() + 1, 1))} className="rounded-sm border border-gray-200 p-2 hover:bg-gray-50"><ChevronRight size={18} /></button>
+            <button type="button" onClick={() => { setMonth(new Date()); setSelectedEvent(null); }} className="ml-1 rounded-sm border border-gray-200 px-2 py-1.5 text-xs font-medium text-[var(--color-text-muted)] hover:bg-gray-50">Today</button>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <div className="flex items-center gap-1 rounded-sm border border-gray-200 bg-gray-50 p-1" aria-label="Filter event type">
@@ -182,6 +189,38 @@ const CalendarPage = () => {
             )}
           </aside>
         </div>
+        <section className="mt-4 border-t border-gray-200 pt-4 xl:hidden" aria-label="Calendar agenda">
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="text-sm font-semibold text-[var(--color-text)]">Month agenda</h3>
+            <span className="text-xs text-[var(--color-text-muted)]">{visibleEvents.length} events</span>
+          </div>
+          {agendaEvents.length ? (
+            <div className="mt-3 divide-y divide-gray-200 border-y border-gray-200">
+              {agendaEvents.map((event) => {
+                const style = eventStyles[event.type];
+                const Icon = style.icon;
+                return (
+                  <button
+                    key={event.id}
+                    type="button"
+                    onClick={() => setSelectedEvent(event)}
+                    className="flex w-full items-center gap-3 py-3 text-left hover:bg-gray-50"
+                  >
+                    <span className="w-10 text-xs font-semibold text-[var(--color-text-muted)]">{formatAgendaDate(event.date)}</span>
+                    <span className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-sm ${event.type === "Meeting" ? "bg-blue-100 text-blue-700" : "bg-orange-100 text-orange-700"}`}><Icon size={14} /></span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-medium text-[var(--color-text)]">{event.title}</span>
+                      <span className="block truncate text-xs text-[var(--color-text-muted)]">{event.className || "Class"}</span>
+                    </span>
+                    <ChevronRight size={16} className="shrink-0 text-[var(--color-text-muted)]" />
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="mt-3 text-sm text-[var(--color-text-muted)]">No events match the selected filters this month.</p>
+          )}
+        </section>
       </section>
     </div>
   );
