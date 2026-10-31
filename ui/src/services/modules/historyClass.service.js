@@ -22,6 +22,10 @@ class HistoryClassService {
     return api.put(`${ENDPOINTS.HISTORY_CLASSES}/restore/${id}`);
   }
 
+  static generateCertificate(id) {
+    return api.post(`${ENDPOINTS.HISTORY_CLASSES}/${id}/certificate`);
+  }
+
   static delete(id) {
     return api.delete(`${ENDPOINTS.HISTORY_CLASSES}/${id}`);
   }

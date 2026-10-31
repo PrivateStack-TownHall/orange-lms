@@ -11,6 +11,7 @@ import {
   History,
   Shield,
   Activity,
+  Award,
 } from "lucide-react";
 
 import ROLES from "./roles";
@@ -85,9 +86,9 @@ export const MENU_BY_ROLE = {
       title: "REPORTS",
       items: [
         {
-          name: "History Classes",
-          icon: History,
-          path: ROUTES.HISTORY_CLASSES,
+          name: "Certificates",
+          icon: Award,
+          path: ROUTES.CERTIFICATES,
         },
         {
           name: "Reports",
@@ -101,9 +102,9 @@ export const MENU_BY_ROLE = {
       title: "REPORTS",
       items: [
         {
-          name: "History Classes",
-          icon: History,
-          path: ROUTES.HISTORY_CLASSES,
+          name: "Certificates",
+          icon: Award,
+          path: ROUTES.CERTIFICATES,
         },
       ],
     },

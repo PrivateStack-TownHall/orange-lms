@@ -35,8 +35,8 @@ describe("API response contract", () => {
     });
   });
 
-  it("protects class history routes with the standard error contract", async () => {
-    const response = await request(app).get("/api/history-classes");
+  it("protects certificate generation with the standard error contract", async () => {
+    const response = await request(app).post("/api/history-classes/1/certificate");
 
     expect(response.status).toBe(401);
     expect(response.body).toEqual({
