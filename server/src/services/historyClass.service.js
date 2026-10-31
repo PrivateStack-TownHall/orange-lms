@@ -129,6 +129,16 @@ class HistoryClassService {
       status: "Archived",
     });
 
+    await notifyUsers({
+      userIds: classUsers.map((participant) => participant.UserId),
+      type: "Class",
+      title: "Class Archived",
+      message: `Class "${cls.name}" has been archived. Your learning history is available.`,
+      relatedType: "Class",
+      relatedId: cls.id,
+      ClassId: cls.id,
+    });
+
     await logAudit({
       user: currentUser,
       action: "UPDATE",
@@ -158,6 +168,11 @@ class HistoryClassService {
       throw new Error("Original class not found");
     }
 
+    const participantIds = (await HistoryClass.findAll({
+      where: { ClassId: history.ClassId },
+      attributes: ["UserId"],
+    })).map((record) => record.UserId);
+
     await cls.update({
       status: "Active",
     });
@@ -166,6 +181,16 @@ class HistoryClassService {
       where: {
         ClassId: history.ClassId,
       },
+    });
+
+    await notifyUsers({
+      userIds: participantIds,
+      type: "Class",
+      title: "Class Restored",
+      message: `Class "${cls.name}" is active again.`,
+      relatedType: "Class",
+      relatedId: cls.id,
+      ClassId: cls.id,
     });
 
     await logAudit({
