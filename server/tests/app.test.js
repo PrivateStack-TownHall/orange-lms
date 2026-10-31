@@ -35,14 +35,14 @@ describe("API response contract", () => {
     });
   });
 
-  it("protects the assessment results endpoint", async () => {
-    const response = await request(app).get("/api/assessment-results");
-  it("protects the attendance list endpoint", async () => {
-    const response = await request(app).get("/api/attendances");
-  it("protects the task criteria list endpoint", async () => {
-    const response = await request(app).get("/api/task-criteria");
-  it("protects certificate generation with the standard error contract", async () => {
-    const response = await request(app).post("/api/history-classes/1/certificate");
+  it.each([
+    ["/api/assessment-results", "GET"],
+    ["/api/attendances", "GET"],
+    ["/api/task-criteria", "GET"],
+    ["/api/history-classes", "GET"],
+    ["/api/history-classes/1/certificate", "POST"],
+  ])("protects %s with the standard error contract", async (path, method) => {
+    const response = await request(app)[method.toLowerCase()](path);
 
     expect(response.status).toBe(401);
     expect(response.body).toEqual({
