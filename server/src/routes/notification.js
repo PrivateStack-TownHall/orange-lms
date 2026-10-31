@@ -30,6 +30,9 @@ router.put(
   NotificationController.markAsRead,
 );
 
+router.delete("/read", authorization("notification", "delete"), NotificationController.deleteAllRead);
+router.delete("/bulk", authorization("notification", "delete"), NotificationController.deleteMany);
+
 router.delete(
   "/:id",
   authorization("notification", "delete"),
