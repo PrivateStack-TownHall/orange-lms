@@ -53,6 +53,24 @@ class NotificationController {
       next(err);
     }
   }
+
+  static async deleteMany(req, res, next) {
+    try {
+      const deleted = await notificationService.deleteMany(req.body.ids, req.user);
+      res.json({ deleted });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async deleteAllRead(req, res, next) {
+    try {
+      const deleted = await notificationService.deleteAllRead(req.user);
+      res.json({ deleted });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = NotificationController;
