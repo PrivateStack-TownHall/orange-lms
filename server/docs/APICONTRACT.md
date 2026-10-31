@@ -1,63 +1,25 @@
-# API Contract – Orange LMS
+# API Contract
 
-## USERS
+Base URL: `/api`
 
-- GET /users
-- GET /users/:id
-- POST /users
-- PUT /users/:id
-- DELETE /users/:id
+`/api/auth` is public. All other route groups require a bearer token.
 
-## CLASSES
+| Route group | Primary purpose |
+| --- | --- |
+| `/auth` | Registration, login, and current user. |
+| `/users`, `/mentors`, `/mentees` | User and role-specific management. |
+| `/classes` | Class CRUD, mentor assignment, enrollment, and class users. |
+| `/classes/:classId/meetings`, `/meetings` | Nested and flat meeting access. |
+| `/meetings/:meetingId/tasks`, `/tasks` | Task CRUD, submission, review, and submission details. |
+| `/meetings/:meetingId/notes`, `/notes` | Notes CRUD. |
+| `/meetings/:meetingId/materials`, `/materials` | Materials CRUD. |
+| `/attendances` | Attendance records and meeting summaries. |
+| `/task-criteria`, `/assessment-results`, `/submission-scores` | Assessment and rubric workflow. |
+| `/history-classes` | Archiving and restoring completed classes. |
+| `/notifications`, `/audit-logs`, `/user-activities`, `/reports` | Operational monitoring and communication. |
 
-- GET /classes
-- GET /classes/:id
-- POST /classes
-- PUT /classes/:id
-- DELETE /classes/:id
+## Upload requests
 
-## CLASS_USERS
-
-- GET /classes/:classId/users
-- POST /classes/:classId/users (Enroll)
-- DELETE /classes/:classId/users/:userId
-
-## MEETINGS
-
-- GET /classes/:classId/meetings
-- GET /meetings/:id
-- POST /classes/:classId/meetings
-- PUT /meetings/:id
-- DELETE /meetings/:id
-
-## TASKS
-
-- GET /meetings/:meetingId/tasks
-- GET /tasks/:id
-- POST /meetings/:meetingId/tasks
-- PUT /tasks/:id
-- DELETE /tasks/:id
-
-## TASK_SUBMISSIONS
-
-- GET /tasks/:taskId/submissions
-- GET /submissions/:id
-- POST /tasks/:taskId/submissions
-- PUT /submissions/:id/grade (Mentor only)
-- DELETE /submissions/:id
-
-## NOTES
-
-- GET /meetings/:meetingId/notes
-- GET /notes/:id
-- POST /meetings/:meetingId/notes
-- PUT /notes/:id
-- DELETE /notes/:id
-
-## MATERIALS
-
-- GET /meetings/:meetingId/materials
-- GET /materials/:id
-- POST /meetings/:meetingId/materials
-- PUT /materials/:id
-- DELETE /materials/:id
+Task, note, and material create/update endpoints accept either JSON with a
+`fileUrl` or `multipart/form-data` with a single `file` field. The latter is
+uploaded to Cloudinary. File uploads are limited to 5 MB.

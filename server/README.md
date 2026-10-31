@@ -1,599 +1,69 @@
-# 🍊 Orange LMS Backend
+# Orange LMS Backend
 
-Backend API for Orange LMS built with Node.js, Express.js, PostgreSQL, and Sequelize ORM.
+Express 5 API for Orange LMS. The backend uses PostgreSQL with Sequelize,
+JWT-based authentication, resource/action RBAC, and Cloudinary for persistent
+file uploads.
 
----
-
-## Overview
-
-Orange LMS Backend provides authentication, authorization, class management, learning resources, assessments, submissions, and user management for the Orange Learning Management System.
-
-The system supports multiple user roles:
-
-- Owner
-- Admin
-- Mentor
-- Mentee
-
----
-
-## Core Features
-
-### Authentication & Authorization
-
-- JWT Authentication
-- Role-Based Access Control (RBAC)
-- Protected Routes
-- Permission-Based Access
-
-### User Management
-
-- Manage Users
-- Manage Mentors
-- Manage Mentees
-- User Profiles
-
-### Learning Management
-
-- Classes
-- Meetings
-- Tasks
-- Notes
-- Materials
-
-### Assessment Engine
-
-- Attendance
-- Task Criteria
-- Assessment Results
-- Submission Scores
-- History Classes
-
-### Learning Workflow
-
-- Class Enrollment
-- Mentor Assignment
-- Task Submission
-- Assessment Tracking
-- Learning Progress
-
----
-
-# Table of Contents
-
-- Overview
-- Features
-- System Roles
-- Technology Stack
-- Architecture
-- Database Modules
-- API Workflow
-- Project Structure
-- Installation
-- Environment Variables
-- Database Migration
-- Database Seeder
-- Running the Application
-- Current Status
-- Roadmap
-
----
-
-# Overview
-
-Orange LMS is designed to help educational institutions, bootcamps, training centers, and online learning platforms manage their learning activities efficiently.
-
-The backend follows a layered architecture:
+## Architecture
 
 ```txt
-Routes
-→ Controllers
-→ Services
-→ Models
+Routes -> Controllers -> Services -> Sequelize Models -> PostgreSQL
 ```
 
-This architecture separates concerns and improves maintainability, scalability, and testability.
+Cross-cutting concerns live in `middlewares/` (authentication, authorization,
+request metadata, upload, and error handling) and `helpers/`.
 
----
+## Functional modules
 
-# Features
+| Group | Modules |
+| --- | --- |
+| Core | Auth, users, profiles, mentors, mentees, classes, class users, meetings. |
+| Learning | Tasks, task submissions, notes, materials, and uploads. |
+| Assessment | Attendance, task criteria, assessment results, submission criteria scores, history classes. |
+| Operations | Notifications, audit logs, user activities, and reports. |
 
-## Authentication & Authorization
+## Requirements
 
-- JWT Authentication
-- Password Hashing (bcrypt)
-- Role-Based Access Control (RBAC)
-- Protected API Routes
-- Permission-Based Resource Access
+- Node.js 20+.
+- PostgreSQL for development and test.
+- A Cloudinary account for file uploads.
 
----
-
-## User Management
-
-### Users
-
-- Create User
-- Update User
-- Delete User
-- Get User Details
-
-### Profiles
-
-- User Profile Information
-- Personal Information
-- Contact Information
-- Background Information
-
-### Mentor Management
-
-- Create Mentor
-- Update Mentor
-- Delete Mentor
-- View Mentor Details
-
-### Mentee Management
-
-- Create Mentee
-- Update Mentee
-- Delete Mentee
-- View Mentee Details
-
----
-
-## Learning Management
-
-### Classes
-
-- Create Class
-- Update Class
-- Delete Class
-- Assign Mentor
-- Manage Class Status
-
-### Class Participants
-
-Manage relationships between:
-
-```txt
-Classes ↔ Users
-```
-
-Including:
-
-- Mentor Assignment
-- Mentee Enrollment
-- Role Tracking
-
----
-
-### Meetings
-
-Manage learning sessions:
-
-- Create Meeting
-- Update Meeting
-- Delete Meeting
-- View Meeting Details
-
----
-
-### Learning Resources
-
-#### Tasks
-
-- Create Task
-- Update Task
-- Delete Task
-- Publish Task
-
-#### Notes
-
-- Create Note
-- Update Note
-- Delete Note
-
-#### Materials
-
-- Upload Learning Materials
-- Store Resource Information
-- Organize Learning Assets
-
----
-
-## Submission Management
-
-### Task Submission
-
-Mentees can:
-
-- Submit Assignments
-- Update Submission
-- Track Submission Status
-
-Mentors can:
-
-- Review Submissions
-- Assess Performance
-
----
-
-# Assessment Engine (V3)
-
----
-
-## Attendance
-
-Track participant attendance:
-
-- Present
-- Absent
-- Late
-- Excused
-
-Features:
-
-- Attendance History
-- Attendance Tracking
-- Attendance Statistics Ready
-
----
-
-## Task Criteria
-
-Create assessment rubrics:
-
-Examples:
-
-- Code Quality
-- Logic
-- Architecture
-- Performance
-- UI/UX
-
-Each criterion contains:
-
-- Title
-- Percentage
-- Description
-
----
-
-## Assessment Result
-
-Store final assessment results:
-
-- Final Score
-- Mentor Feedback
-- Graded By
-- Graded At
-
----
-
-## Submission Criteria Score
-
-Store detailed scoring for each criterion:
-
-Example:
-
-```txt
-Code Quality      → 38.5
-Architecture      → 25
-Logic             → 29
-```
-
----
-
-## History Class
-
-Archive completed classes.
-
-Features:
-
-- Archive Class
-- Restore Class
-- Preserve Participant History
-- Preserve Mentor History
-- Preserve Mentee History
-- Preserve Role In Class
-
-Archive process automatically reads participants from ClassUsers.
-
----
-
-# System Roles
-
-Orange LMS supports four roles:
-
-## Owner
-
-Highest level permission.
-
-Can:
-
-- Manage all resources
-- Delete sensitive data
-- Restore archived resources
-
----
-
-## Admin
-
-Can:
-
-- Manage classes
-- Manage meetings
-- Manage users
-- Manage assessments
-
----
-
-## Mentor
-
-Can:
-
-- Manage learning resources
-- Create tasks
-- Grade submissions
-- Create assessment criteria
-- Track attendance
-
----
-
-## Mentee
-
-Can:
-
-- Join classes
-- View learning resources
-- Submit assignments
-- View grades
-
----
-
-# Technology Stack
-
-## Backend
-
-### Backend
-
-- Node.js
-- Express.js
-
-### Database
-
-- PostgreSQL
-
-## ORM
-
-- Sequelize ORM
-
-### Security
-
-- JWT
-- Bcrypt
-
-### Documentation
-
-- Swagger/OpenAPI
-
----
-
-## Project Structure
-
-```txt
-orange-lms-backend/
-│
-├── package.json
-├── server.js
-├── .env
-├── .env.example
-├── .gitignore
-├── .sequelizerc
-│
-├── src/
-│
-├── config/
-│   └── config.js
-│
-├── controllers/
-│   ├── auth.controller.js
-│   ├── user.controller.js
-│   ├── mentor.controller.js
-│   ├── mentee.controller.js
-│   ├── class.controller.js
-│   ├── meeting.controller.js
-│   ├── task.controller.js
-│   ├── note.controller.js
-│   ├── material.controller.js
-│   └── ...
-│
-├── routes/
-│   ├── auth.js
-│   ├── user.js
-│   ├── mentor.js
-│   ├── mentee.js
-│   ├── class.js
-│   ├── meeting.js
-│   ├── task.js
-│   ├── note.js
-│   ├── material.js
-│   └── ...
-│
-├── services/
-│   ├── auth.service.js
-│   ├── user.service.js
-│   ├── mentor.service.js
-│   ├── mentee.service.js
-│   ├── class.service.js
-│   ├── meeting.service.js
-│   ├── task.service.js
-│   ├── note.service.js
-│   ├── material.service.js
-│   └── ...
-│
-├── middlewares/
-│   ├── authentication.js
-│   ├── authorization.js
-│   ├── errorHandler.js
-│   └── ...
-│
-├── helpers/
-│   ├── bcrypt.js
-│   ├── jwt.js
-│   └── ...
-│
-├── models/
-├── migrations/
-└── seeders/
-```
-
----
-
-## Installation
-
-### 1. Clone Repository
-
-```bash
-git clone <repository-url>
-cd orange-lms-backend
-```
-
-### 2. Install Dependencies
+## Setup
 
 ```bash
 npm install
 ```
 
-### 3. Configure Environment
+Copy `.env.example` to `.env`, then supply local PostgreSQL values, JWT values,
+and Cloudinary credentials. Never commit `.env` or real credentials.
 
-Create:
+For production, set `NODE_ENV=production`, `DATABASE_URL`, and `DB_SSL=true`.
+The production Sequelize configuration expects a PostgreSQL connection string,
+which is suitable for Supabase.
 
-```bash
-.env
-```
+## Commands
 
-Example:
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the API in development mode with Nodemon. |
+| `npm start` | Start the API in production mode. |
+| `npm run db:migrate:dev` | Run migrations against the development database. |
+| `npm run db:seed:dev` | Seed the development database. |
+| `npm run db:migrate:test` | Run migrations against the test database. |
+| `npm run db:migrate:prod` | Run migrations against the production database. |
+| `npm run db:setup` | Create, migrate, and seed the active database environment. |
 
-```env
-PORT=3000
+## Uploads
 
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
-DB_NAME=orange_lms_dev
-DB_HOST=127.0.0.1
+Multer streams a single `file` field through Cloudinary. Task, note, and
+material create/update routes also accept a direct URL through `fileUrl`.
+Cloudinary URLs, rather than local files, are stored in PostgreSQL.
 
-JWT_SECRET=orange_lms_secret
-```
+Allowed upload extensions are JPG, JPEG, PNG, PDF, DOC, DOCX, PPT, PPTX, and
+Markdown. The maximum file size is 5 MB.
 
-### 4. Run Migration
+## API base URL
 
-```bash
-npx sequelize db:migrate
-```
-
-### 5. Run Seeder
-
-```bash
-npx sequelize db:seed:all
-```
-
-### 6. Start Development Server
-
-```bash
-npm run dev
-```
-
-Server:
-
-```txt
-http://localhost:3000
-```
-
----
-
-## API Routes
-
-### Authentication
-
-```txt
-POST   /auth/register
-POST   /auth/login
-```
-
-### Users
-
-```txt
-GET    /users
-GET    /users/:id
-POST   /users
-PUT    /users/:id
-DELETE /users/:id
-```
-
-### Classes
-
-```txt
-GET    /classes
-POST   /classes
-GET    /classes/:id
-PUT    /classes/:id
-DELETE /classes/:id
-```
-
-### Meetings
-
-```txt
-GET    /meetings
-POST   /classes/:classId/meetings
-GET    /meetings/:id
-PUT    /meetings/:id
-DELETE /meetings/:id
-```
-
-### Learning Resources
-
-```txt
-POST /meetings/:meetingId/tasks
-POST /meetings/:meetingId/notes
-POST /meetings/:meetingId/materials
-```
-
----
-
-## Development Status
-
-### Core CRUD
-
-- Users
-- Mentors
-- Mentees
-- Classes
-- Meetings
-- Tasks
-- Notes
-- Materials
-
-Status:
-
-```txt
-✅ Completed
-```
-
-### Assessment Engine
-
-- Attendance
-- Assessment Results
-- Submission Scores
-- History Classes
-
-Status:
-
-```txt
-🚧 In Progress
-```
-
----
-
-## License
-
-Private Project — Orange LMS
+All routes are mounted under `/api`. `/api/auth` is public; all other route
+groups require a valid JWT. See [docs/APICONTRACT.md](docs/APICONTRACT.md) for
+the route groups and [docs/RBAC.md](docs/RBAC.md) for access rules.

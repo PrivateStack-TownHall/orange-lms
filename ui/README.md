@@ -1,211 +1,57 @@
-# 🍊 Orange LMS Frontend
+# Orange LMS Frontend
 
-Frontend application for Orange LMS built with React, Vite, Tailwind CSS, Redux Toolkit, and React Router.
+React 19 and Vite frontend for Orange LMS. It provides role-aware routes,
+Redux-backed authentication state, Axios API services, Tailwind CSS v4 styling,
+and reusable form/table components.
 
----
+## Stack
 
-## Overview
+- React 19, React Router 7, Redux Toolkit, Zustand
+- Vite 7 and Tailwind CSS 4
+- Axios, Framer Motion, Lucide React, and Recharts
 
-Orange LMS Frontend provides a modern Learning Management System interface for:
-
-- Owner
-- Admin
-- Mentor
-- Mentee
-
-The application supports class management, meeting management, learning resources, assessments, and student progress tracking.
-
----
-
-## Tech Stack
-
-### Core
-
-- React 19
-- Vite
-- JavaScript (ES6+)
-
-### Styling
-
-- Tailwind CSS v4
-
-### State Management
-
-- Redux Toolkit
-
-### Routing
-
-- React Router DOM
-
-### API
-
-- Axios
-
-### UI
-
-- Lucide React
-- React Loading Skeleton
-
----
-
-## Features
-
-### Dashboard
-
-- Owner Dashboard
-- Admin Dashboard
-- Mentor Dashboard
-- Mentee Dashboard
-
-### User Management
-
-- Mentors
-- Mentees
-
-### Learning Management
-
-- Classes
-- Meetings
-- Tasks
-- Notes
-- Materials
-
-### Assessment
-
-- Attendance
-- Assessment Results
-- Progress Tracking
-
-### UI Features
-
-- Success Popup
-- Error Popup
-- Confirmation Popup
-- Reusable Forms
-- Reusable Tables
-- RBAC UI Permissions
-
----
-
-## Project Structure
-
-```txt
-orange-lms-frontend/
-│
-├── public/
-│
-├── src/
-│
-├── app/
-│   ├── App.jsx
-│   ├── store.js
-│   └── routes.jsx
-│
-├── components/
-│   ├── layouts/
-│   ├── sections/
-│   └── ui/
-│
-├── constants/
-│
-├── features/
-│   ├── auth/
-│   ├── theme/
-│   └── ...
-│
-├── hooks/
-│
-├── helpers/
-│
-├── pages/
-│   ├── dashboard/
-│   ├── mentors/
-│   ├── mentees/
-│   ├── classes/
-│   ├── meetings/
-│   ├── tasks/
-│   ├── notes/
-│   └── materials/
-│
-├── schemas/
-│
-├── services/
-│   ├── api/
-│   └── modules/
-│
-├── styles/
-│
-└── main.jsx
-```
-
----
-
-## Installation
-
-### 1. Install Dependencies
+## Setup
 
 ```bash
 npm install
-```
-
-### 2. Configure Environment
-
-Create:
-
-```bash
-.env.local
-```
-
-Example:
-
-```env
-VITE_APP_NAME=Orange LMS
-
-VITE_API_URL=http://localhost:3000/api
-
-VITE_UPLOAD_URL=http://localhost:3000/uploads
-```
-
-### 3. Start Development Server
-
-```bash
 npm run dev
 ```
 
-Application:
+Vite reads `.env.development` for local development and `.env.production` for
+production builds. Start with `.env.example` when creating a new environment.
 
-```txt
-http://localhost:5173
+Required settings include:
+
+```env
+VITE_API_URL=http://localhost:5000/api
+VITE_MAX_FILE_SIZE=5242880
 ```
 
----
+`VITE_PORT` is optional; Vite falls back to port `5173` when it is unset.
 
-## Development Status
+## Commands
 
-### Core CRUD
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the Vite development server. |
+| `npm run build` | Build the production client into `dist/`. |
+| `npm run preview` | Preview the production build locally. |
+| `npm run lint` | Run ESLint checks. |
 
-```txt
-✅ Mentors
-✅ Mentees
-✅ Classes
-✅ Meetings
-✅ Tasks
-✅ Notes
-✅ Materials
-```
+## Structure
 
-### Current Progress
+| Path | Purpose |
+| --- | --- |
+| `src/app/` | Application root, router, Redux store, providers, and route guards. |
+| `src/pages/` | Feature pages for dashboards, learning modules, operations, and profiles. |
+| `src/services/` | Axios instance, API endpoint definitions, and service modules. |
+| `src/components/` | Shared layout, form, table, popup, navigation, and display components. |
+| `src/constants/`, `hooks/`, `helpers/`, `schemas/` | Shared application behavior. |
+| `src/styles/`, `src/assets/`, `public/` | Styling and visual assets. |
 
-```txt
-✅ Core CRUD Completed
-🚧 Assessment Engine
-🚧 Task Submission
-🚧 Attendance
-🚧 History Classes
-```
+## Current feature coverage
 
----
-
-## License
-
-Private Project — Orange LMS
+Core learning flows (classes, meetings, tasks, notes, materials, submissions)
+and operational views (notifications, audit logs, user activity, reports) have
+frontend modules. Some V3 assessment route modules remain placeholder screens;
+the backend APIs and database support for them are already present.
