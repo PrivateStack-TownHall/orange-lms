@@ -7,6 +7,7 @@ const ROUTES = {
   TASKS: "/tasks",
   NOTES: "/notes",
   MATERIALS: "/materials",
+  HISTORY_CLASSES: "/history-classes",
 
   ADMINS: "/admins",
   MENTORS: "/mentors",

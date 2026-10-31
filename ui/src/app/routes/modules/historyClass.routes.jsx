@@ -1,4 +1,4 @@
-import React from "react";
+import { lazyRoute } from "../lazyRoute";
 
 const historyClassRoutes = {
   path: "history-classes",
@@ -6,12 +6,7 @@ const historyClassRoutes = {
   children: [
     {
       index: true,
-      element: <div>History Classes List</div>,
-    },
-
-    {
-      path: ":id",
-      element: <div>History Classes Detail</div>,
+      lazy: lazyRoute(() => import("@/pages/history-classes")),
     },
   ],
 };

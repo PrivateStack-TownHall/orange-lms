@@ -8,6 +8,7 @@ import {
   User,
   Users,
   BarChart3,
+  History,
   Shield,
   Activity,
 } from "lucide-react";
@@ -84,9 +85,25 @@ export const MENU_BY_ROLE = {
       title: "REPORTS",
       items: [
         {
+          name: "History Classes",
+          icon: History,
+          path: ROUTES.HISTORY_CLASSES,
+        },
+        {
           name: "Reports",
           icon: BarChart3,
           path: ROUTES.REPORTS,
+        },
+      ],
+    },
+
+    {
+      title: "REPORTS",
+      items: [
+        {
+          name: "History Classes",
+          icon: History,
+          path: ROUTES.HISTORY_CLASSES,
         },
       ],
     },
