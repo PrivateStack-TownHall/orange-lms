@@ -30,6 +30,7 @@ const notificationRoutes = require("./notification");
 const auditLogRoutes = require("./auditLog");
 const userActivityRoutes = require("./userActivity");
 const reportsRoutes = require("./reports");
+const calendarRoutes = require("./calendar");
 
 const { authentication } = require("../middlewares");
 
@@ -100,5 +101,6 @@ router.use("/notifications", notificationRoutes);
 router.use("/audit-logs", auditLogRoutes);
 router.use("/user-activities", userActivityRoutes);
 router.use("/reports", reportsRoutes);
+router.use("/calendar", calendarRoutes);
 
 module.exports = router;

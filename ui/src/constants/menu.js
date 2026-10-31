@@ -21,6 +21,7 @@ import ROUTES from "./routes";
 const learningItems = [
   { name: "Classes", icon: BookOpen, path: ROUTES.CLASSES },
   { name: "Meetings", icon: Calendar, path: ROUTES.MEETINGS },
+  { name: "Calendar", icon: Calendar, path: ROUTES.CALENDAR },
   { name: "Tasks", icon: CheckSquare, path: ROUTES.TASKS },
   { name: "Notes", icon: FileText, path: ROUTES.NOTES },
   { name: "Materials", icon: Archive, path: ROUTES.MATERIALS },
