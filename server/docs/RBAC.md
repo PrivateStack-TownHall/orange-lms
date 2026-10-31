@@ -1,6 +1,11 @@
 # Role-Based Access Control
 
+> V4 reference. The permission model is shared by all V1–V4 server modules.
+
 Authorization is evaluated per resource and action after JWT authentication.
+
+The RBAC foundation was introduced in V1 and remains the enforcement layer for
+the V2 learning, V3 assessment, and V4 operational modules.
 
 | Role | Main access |
 | --- | --- |

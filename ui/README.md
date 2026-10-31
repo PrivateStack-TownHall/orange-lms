@@ -3,6 +3,18 @@
 Orange LMS UI is a React 19 application built with Vite, Tailwind CSS, Redux
 Toolkit, React Router, Axios, Framer Motion, and Lucide React.
 
+## Product-version scope
+
+| Version | UI delivery |
+| --- | --- |
+| V1 | Authentication screens, role-aware dashboard layout, people management, profile, settings, and Not Found pages. |
+| V2 | Class, meeting, task, note, and material experiences. |
+| V3 | Submission, attendance, task-criteria, assessment-result, scoring, and class-history experiences. |
+| V4 | Upload and certificate flows, completed assessment pages, calendar, notification center, audit/activity pages, reports, response-contract alignment, and performance improvements. |
+
+Calendar is delivered through the `v4-calendar-*` branch line. Dashboard
+Analytics begins the V5 roadmap.
+
 ## Local setup
 
 ```bash
@@ -25,12 +37,12 @@ The development UI runs on `http://localhost:5250` and connects to the API at
 
 ## Feature areas
 
-| Area | Coverage |
-| --- | --- |
-| Core | Login, dashboard, users, profile, admins, mentors, and mentees. |
-| Learning | Classes, meetings, tasks, submissions, notes, and materials. |
-| Assessment | Attendance integration, task criteria, grading, results, and history routes. |
-| Operations | Notifications, audit logs, user activity, reports, and settings. |
+| Area | Version | Coverage |
+| --- | --- | --- |
+| Foundation | V1 | Login, dashboard shell, users, profile, admins, mentors, mentees, settings, and access handling. |
+| Learning | V2 | Classes, meetings, tasks, notes, and materials. |
+| Assessment | V3 | Submissions, attendance, task criteria, grading, results, scores, and history routes. |
+| Delivery and operations | V4 | File uploads, certificates, calendar, notifications, audit logs, user activity, reports, consistent API data handling, and performance work. |
 
 ## Reusable components
 
