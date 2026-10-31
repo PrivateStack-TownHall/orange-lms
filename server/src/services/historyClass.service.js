@@ -285,6 +285,8 @@ class HistoryClassService {
       };
     }
 
+    cloudinary.assertConfigured();
+
     const { buffer } = await createCertificateBuffer(history);
     const upload = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
