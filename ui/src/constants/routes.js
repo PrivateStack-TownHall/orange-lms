@@ -8,6 +8,8 @@ const ROUTES = {
   NOTES: "/notes",
   MATERIALS: "/materials",
   ASSESSMENTS: "/assessments",
+  ATTENDANCE: "/attendance",
+  CERTIFICATES: "/certificates",
 
   ADMINS: "/admins",
   MENTORS: "/mentors",

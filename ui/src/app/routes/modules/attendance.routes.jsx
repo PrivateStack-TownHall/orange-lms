@@ -1,4 +1,4 @@
-import React from "react";
+import { lazyRoute } from "../lazyRoute";
 
 const attendanceRoutes = {
   path: "attendance",
@@ -6,12 +6,12 @@ const attendanceRoutes = {
   children: [
     {
       index: true,
-      element: <div>Attendance List</div>,
+      lazy: lazyRoute(() => import("@/pages/Attendance")),
     },
 
     {
       path: ":id",
-      element: <div>Attendance Detail</div>,
+      lazy: lazyRoute(() => import("@/pages/AttendanceDetail")),
     },
   ],
 };

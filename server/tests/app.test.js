@@ -37,6 +37,12 @@ describe("API response contract", () => {
 
   it("protects the assessment results endpoint", async () => {
     const response = await request(app).get("/api/assessment-results");
+  it("protects the attendance list endpoint", async () => {
+    const response = await request(app).get("/api/attendances");
+  it("protects the task criteria list endpoint", async () => {
+    const response = await request(app).get("/api/task-criteria");
+  it("protects certificate generation with the standard error contract", async () => {
+    const response = await request(app).post("/api/history-classes/1/certificate");
 
     expect(response.status).toBe(401);
     expect(response.body).toEqual({

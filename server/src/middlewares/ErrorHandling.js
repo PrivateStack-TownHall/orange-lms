@@ -116,6 +116,13 @@ class ErrorHandling {
       });
     }
 
+    if (error.message === "Certificate is only available for completed records") {
+      return res.status(400).json({
+        error: true,
+        message: error.message,
+      });
+    }
+
     /**
      * JWT
      */

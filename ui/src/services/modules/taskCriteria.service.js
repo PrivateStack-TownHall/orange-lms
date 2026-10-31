@@ -2,6 +2,10 @@ import api from "../api/api";
 import ENDPOINTS from "../api/endpoints";
 
 class TaskCriteriaService {
+  static getAll() {
+    return api.get(ENDPOINTS.TASK_CRITERIA);
+  }
+
   static getByTask(taskId) {
     return api.get(`${ENDPOINTS.TASK_CRITERIA}/tasks/${taskId}`);
   }

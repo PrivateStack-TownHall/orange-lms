@@ -36,6 +36,12 @@ router.put(
   HistoryClassController.restore,
 );
 
+router.post(
+  "/:id/certificate",
+  authorization("historyClass", "create"),
+  HistoryClassController.generateCertificate,
+);
+
 router.delete(
   "/:id",
   authorization("historyClass", "delete"),
