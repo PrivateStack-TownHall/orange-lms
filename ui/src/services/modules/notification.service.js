@@ -21,6 +21,10 @@ class NotificationService {
   static delete(id) {
     return api.delete(`${ENDPOINTS.NOTIFICATIONS}/${id}`);
   }
+
+  static deleteAllRead() {
+    return api.delete(`${ENDPOINTS.NOTIFICATIONS}/read`);
+  }
 }
 
 export default NotificationService;

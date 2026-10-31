@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   CheckCheck,
+  Trash2,
   Bell,
   CheckSquare,
   Calendar,
@@ -62,6 +63,11 @@ const Notifications = () => {
     fetchData(pagination.page, filter);
   };
 
+  const handleDeleteAllRead = async () => {
+    await NotificationService.deleteAllRead();
+    fetchData(1, filter);
+  };
+
   const handleMarkRead = async (id) => {
     await NotificationService.markAsRead(id);
     fetchData(pagination.page, filter);
@@ -77,15 +83,7 @@ const Notifications = () => {
         breadcrumbs={breadcrumbs}
         title="Notifications"
         description="Stay updated with your latest activities and learning updates."
-        actions={
-          <button
-            onClick={handleMarkAllRead}
-            className="inline-flex items-center gap-2 rounded-sm border border-gray-200 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-50"
-          >
-            <CheckCheck size={16} />
-            Mark all as read
-          </button>
-        }
+        actions={<div className="flex gap-2"><button onClick={handleMarkAllRead} className="inline-flex items-center gap-2 rounded-sm border border-gray-200 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-50"><CheckCheck size={16} /> Mark all as read</button><button onClick={handleDeleteAllRead} className="inline-flex items-center gap-2 rounded-sm border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50"><Trash2 size={16} /> Clear read</button></div>}
       />
 
       <div className="flex gap-2">
