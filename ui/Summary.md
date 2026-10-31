@@ -4,6 +4,18 @@ The frontend supports four roles: Owner, Admin, Mentor, and Mentee. It consumes
 the REST API in `../server` and uses shared components, route guards, and API
 services to keep modules consistent.
 
+## Version ownership
+
+| Version | Product stage | UI scope |
+| --- | --- | --- |
+| V1 | Core system | Authentication, role-aware dashboard layout, people management, profile, settings, and access states. |
+| V2 | Learning management | Classes, meetings, tasks, notes, and materials. |
+| V3 | Assessment engine | Task submission, attendance, criteria, assessment results, scores, and history classes. |
+| V4 | Delivery and operations | Cloudinary upload flows, certificates, assessment completion screens, calendar, notifications, audit/activity screens, reports, contract alignment, and performance improvements. |
+
+V4 is cumulative: it includes V1–V3 functionality. Calendar is delivered
+through the `v4-calendar-*` branch line; Dashboard Analytics begins V5.
+
 | Layer | Location | Purpose |
 | --- | --- | --- |
 | Application | `src/app/` | Router, guards, Redux store, and popup provider. |
