@@ -10,6 +10,7 @@ import {
   BarChart3,
   Shield,
   Activity,
+  Award,
 } from "lucide-react";
 
 import ROLES from "./roles";
@@ -84,9 +85,25 @@ export const MENU_BY_ROLE = {
       title: "REPORTS",
       items: [
         {
+          name: "Certificates",
+          icon: Award,
+          path: ROUTES.CERTIFICATES,
+        },
+        {
           name: "Reports",
           icon: BarChart3,
           path: ROUTES.REPORTS,
+        },
+      ],
+    },
+
+    {
+      title: "REPORTS",
+      items: [
+        {
+          name: "Certificates",
+          icon: Award,
+          path: ROUTES.CERTIFICATES,
         },
       ],
     },
