@@ -29,6 +29,7 @@ const notificationService = require("./notification.service");
 const auditLogService = require("./auditLog.service");
 const userActivityService = require("./userActivity.service");
 const reportsService = require("./reports.service");
+const calendarService = require("./calendar.service");
 
 module.exports = {
   authService,
@@ -60,4 +61,5 @@ module.exports = {
   auditLogService,
   userActivityService,
   reportsService,
+  calendarService,
 };
