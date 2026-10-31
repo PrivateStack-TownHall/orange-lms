@@ -1,7 +1,8 @@
 {
-  "name": "orange-lms",
+  "name": "orange-lms-ui",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Orange LMS web application built with React, Vite, and Tailwind CSS.",
   "type": "module",
   "scripts": {
     "dev": "vite",
