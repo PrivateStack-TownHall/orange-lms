@@ -1,7 +1,63 @@
-const { TaskCriteria, User } = require("../models");
+const { TaskCriteria, Task, Class, User } = require("../models");
+const ROLES = require("../constants/roles");
 const { logAudit } = require("../helpers");
 
 class TaskCriteriaService {
+  static getIncludes({ restrictToMentorId, restrictToMenteeId } = {}) {
+    const classInclude = {
+      model: Class,
+      attributes: ["id", "name", "code", "MentorId"],
+      ...(restrictToMentorId ? { where: { MentorId: restrictToMentorId } } : {}),
+    };
+
+    if (restrictToMenteeId) {
+      classInclude.required = true;
+      classInclude.include = [
+        {
+          model: User,
+          as: "mentees",
+          attributes: [],
+          through: {
+            attributes: [],
+            where: { roleInClass: "Mentee" },
+          },
+          where: { id: restrictToMenteeId },
+        },
+      ];
+    }
+
+    return [
+      {
+        model: Task,
+        attributes: ["id", "name", "ClassId", "maxScore", "status"],
+        include: [classInclude],
+        ...(restrictToMentorId ? { required: true } : {}),
+      },
+      {
+        model: User,
+        as: "creator",
+        attributes: ["id", "name", "email"],
+      },
+    ];
+  }
+
+  static async getAll(currentUser) {
+    const options = {
+      include: this.getIncludes(),
+      order: [["TaskId", "ASC"], ["order", "ASC"], ["id", "ASC"]],
+    };
+
+    if (currentUser.role === ROLES.MENTOR) {
+      options.include = this.getIncludes({ restrictToMentorId: currentUser.id });
+    }
+
+    if (currentUser.role === ROLES.MENTEE) {
+      options.include = this.getIncludes({ restrictToMenteeId: currentUser.id });
+    }
+
+    return TaskCriteria.findAll(options);
+  }
+
   static async create(currentUser, data, meta = {}) {
     if (!["Admin", "Owner", "Mentor"].includes(currentUser.role)) {
       throw new Error("Permission denied");
@@ -49,13 +105,7 @@ class TaskCriteriaService {
         TaskId,
       },
 
-      include: [
-        {
-          model: User,
-          as: "creator",
-          attributes: ["id", "name", "email"],
-        },
-      ],
+      include: this.getIncludes(),
 
       order: [
         ["order", "ASC"],
@@ -66,13 +116,7 @@ class TaskCriteriaService {
 
   static async findById(id) {
     return TaskCriteria.findByPk(id, {
-      include: [
-        {
-          model: User,
-          as: "creator",
-          attributes: ["id", "name", "email"],
-        },
-      ],
+      include: this.getIncludes(),
     });
   }
 

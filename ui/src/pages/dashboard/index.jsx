@@ -1,29 +1,29 @@
+import { lazy, Suspense } from "react";
 import { useSelector } from "react-redux";
 
-import OwnerDashboard from "./Owner";
-import AdminDashboard from "./Admin";
-import MentorDashboard from "./Mentor";
-import MenteeDashboard from "./Mentee";
+import LoadingPage from "@/components/ui/loading/LoadingPage";
+
+const dashboards = {
+  Owner: lazy(() => import("./Owner")),
+  Admin: lazy(() => import("./Admin")),
+  Mentor: lazy(() => import("./Mentor")),
+  Mentee: lazy(() => import("./Mentee")),
+};
 
 const Dashboard = () => {
   const user = useSelector((state) => state.auth.user);
 
-  switch (user?.role) {
-    case "Owner":
-      return <OwnerDashboard />;
+  const DashboardByRole = dashboards[user?.role];
 
-    case "Admin":
-      return <AdminDashboard />;
-
-    case "Mentor":
-      return <MentorDashboard />;
-
-    case "Mentee":
-      return <MenteeDashboard />;
-
-    default:
-      return <div className="p-6">Dashboard unavailable</div>;
+  if (!DashboardByRole) {
+    return <div className="p-6">Dashboard unavailable</div>;
   }
+
+  return (
+    <Suspense fallback={<LoadingPage />}>
+      <DashboardByRole />
+    </Suspense>
+  );
 };
 
 export default Dashboard;

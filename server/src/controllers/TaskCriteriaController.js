@@ -1,6 +1,16 @@
 const { taskCriteriaService } = require("../services");
 
 class TaskCriteriaController {
+  static async getAll(req, res, next) {
+    try {
+      const criterias = await taskCriteriaService.getAll(req.user);
+
+      res.status(200).json(criterias);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async create(req, res, next) {
     try {
       const criteria = await taskCriteriaService.create(

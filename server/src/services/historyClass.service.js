@@ -1,7 +1,53 @@
 const { HistoryClass, Class, User, ClassUser } = require("../models");
+const { logAudit, notifyUsers } = require("../helpers");
+const {
+  HistoryClass,
+  Class,
+  User,
+  ClassUser,
+  Meeting,
+  Attendance,
+  AssessmentResult,
+  TaskSubmission,
+  Task,
+} = require("../models");
 const { logAudit } = require("../helpers");
+const cloudinary = require("../config/cloudinary");
+const { createCertificateBuffer, makeCertificateId } = require("./certificate.service");
 
 class HistoryClassService {
+  static async getParticipantProgress(ClassId, UserId) {
+    const [results, attendances, meetingCount] = await Promise.all([
+      AssessmentResult.findAll({
+        include: [
+          {
+            model: TaskSubmission,
+            required: true,
+            where: { UserId },
+            include: [{ model: Task, required: true, where: { ClassId } }],
+          },
+        ],
+      }),
+      Attendance.findAll({
+        where: { UserId },
+        include: [{ model: Meeting, required: true, where: { ClassId } }],
+      }),
+      Meeting.count({ where: { ClassId } }),
+    ]);
+
+    const finalScore = results.length
+      ? Math.round((results.reduce((total, result) => total + Number(result.finalScore || 0), 0) / results.length) * 100) / 100
+      : 0;
+    const attended = attendances.filter((attendance) =>
+      ["Present", "Late"].includes(attendance.status),
+    ).length;
+    const attendancePercentage = meetingCount
+      ? Math.round((attended / meetingCount) * 10000) / 100
+      : 0;
+
+    return { finalScore, attendancePercentage };
+  }
+
   static async findAll() {
     return HistoryClass.findAll({
       order: [["createdAt", "DESC"]],
@@ -99,6 +145,8 @@ class HistoryClassService {
           return existing;
         }
 
+        const progress = await this.getParticipantProgress(cls.id, participant.UserId);
+
         return HistoryClass.create({
           ClassId: cls.id,
 
@@ -110,9 +158,7 @@ class HistoryClassService {
 
           status: "Completed",
 
-          finalScore: 0,
-
-          attendancePercentage: 0,
+          ...progress,
 
           completedAt: new Date(),
 
@@ -125,6 +171,16 @@ class HistoryClassService {
 
     await cls.update({
       status: "Archived",
+    });
+
+    await notifyUsers({
+      userIds: classUsers.map((participant) => participant.UserId),
+      type: "Class",
+      title: "Class Archived",
+      message: `Class "${cls.name}" has been archived. Your learning history is available.`,
+      relatedType: "Class",
+      relatedId: cls.id,
+      ClassId: cls.id,
     });
 
     await logAudit({
@@ -156,11 +212,30 @@ class HistoryClassService {
       throw new Error("Original class not found");
     }
 
+    const participantIds = (await HistoryClass.findAll({
+      where: { ClassId: history.ClassId },
+      attributes: ["UserId"],
+    })).map((record) => record.UserId);
+
     await cls.update({
       status: "Active",
     });
 
-    await history.destroy();
+    const deletedCount = await HistoryClass.destroy({
+      where: {
+        ClassId: history.ClassId,
+      },
+    });
+
+    await notifyUsers({
+      userIds: participantIds,
+      type: "Class",
+      title: "Class Restored",
+      message: `Class "${cls.name}" is active again.`,
+      relatedType: "Class",
+      relatedId: cls.id,
+      ClassId: cls.id,
+    });
 
     await logAudit({
       user: currentUser,
@@ -173,6 +248,7 @@ class HistoryClassService {
 
     return {
       message: "Class restored successfully",
+      restoredHistoryCount: deletedCount,
     };
   }
 
@@ -198,6 +274,90 @@ class HistoryClassService {
     await history.destroy();
 
     return true;
+  }
+
+  static async generateCertificate(id, currentUser, meta = {}) {
+    if (!["Owner", "Admin"].includes(currentUser.role)) {
+      throw new Error("Permission denied");
+    }
+
+    const history = await HistoryClass.findByPk(id, {
+      include: [
+        {
+          model: Class,
+          attributes: ["id", "code", "name", "category", "level"],
+        },
+        {
+          model: User,
+          attributes: ["id", "name", "email"],
+        },
+      ],
+    });
+
+    if (!history) {
+      throw new Error("History class not found");
+    }
+
+    if (history.status !== "Completed") {
+      throw new Error("Certificate is only available for completed records");
+    }
+
+    const certificateId = makeCertificateId(history);
+
+    if (history.certificateUrl) {
+      return {
+        certificateId,
+        certificateUrl: history.certificateUrl,
+        generated: false,
+      };
+    }
+
+    cloudinary.assertConfigured();
+
+    const { buffer } = await createCertificateBuffer(history);
+    const upload = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: "raw",
+          folder: "orange-lms/certificates",
+          public_id: certificateId,
+          format: "pdf",
+          overwrite: true,
+        },
+        (error, result) => (error ? reject(error) : resolve(result)),
+      );
+
+      stream.end(buffer);
+    });
+
+    await history.update({
+      certificateUrl: upload.secure_url,
+    });
+
+    await notifyUsers({
+      userIds: history.UserId,
+      type: "Certificate",
+      title: "Certificate Available",
+      message: `Your certificate for "${history.Class.name}" is ready to download.`,
+      relatedType: "HistoryClass",
+      relatedId: history.id,
+      ClassId: history.ClassId,
+    });
+
+    await logAudit({
+      user: currentUser,
+      action: "CREATE",
+      resource: "Certificate",
+      resourceId: history.id,
+      resourceDetail: `Generated certificate ${certificateId}`,
+      meta,
+    });
+
+    return {
+      certificateId,
+      certificateUrl: history.certificateUrl,
+      generated: true,
+    };
   }
 }
 

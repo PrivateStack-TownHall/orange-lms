@@ -21,5 +21,24 @@ export default defineConfig(({ mode }) => {
     server: {
       port: Number(env.VITE_PORT) || 5173,
     },
+
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            "react-vendor": [
+              "react",
+              "react-dom",
+              "react-router-dom",
+              "react-redux",
+              "@reduxjs/toolkit",
+              "zustand",
+            ],
+            "ui-vendor": ["framer-motion", "lucide-react"],
+            "chart-vendor": ["recharts"],
+          },
+        },
+      },
+    },
   };
 });

@@ -1,57 +1,57 @@
-# Orange LMS Frontend
+# Orange LMS UI
 
-React 19 and Vite frontend for Orange LMS. It provides role-aware routes,
-Redux-backed authentication state, Axios API services, Tailwind CSS v4 styling,
-and reusable form/table components.
+Orange LMS UI is a React 19 application built with Vite, Tailwind CSS, Redux
+Toolkit, React Router, Axios, Framer Motion, and Lucide React.
 
-## Stack
-
-- React 19, React Router 7, Redux Toolkit, Zustand
-- Vite 7 and Tailwind CSS 4
-- Axios, Framer Motion, Lucide React, and Recharts
-
-## Setup
+## Local setup
 
 ```bash
 npm install
 npm run dev
 ```
 
-Vite reads `.env.development` for local development and `.env.production` for
-production builds. Start with `.env.example` when creating a new environment.
-
-Required settings include:
-
-```env
-VITE_API_URL=http://localhost:5000/api
-VITE_MAX_FILE_SIZE=5242880
-```
-
-`VITE_PORT` is optional; Vite falls back to port `5173` when it is unset.
+The development UI runs on `http://localhost:5250` and connects to the API at
+`http://localhost:5000/api`. Those values live in `.env.development`; use
+`.env.example` as the clean starting point for a new environment.
 
 ## Commands
 
 | Command | Purpose |
 | --- | --- |
 | `npm run dev` | Start the Vite development server. |
-| `npm run build` | Build the production client into `dist/`. |
-| `npm run preview` | Preview the production build locally. |
-| `npm run lint` | Run ESLint checks. |
+| `npm run build` | Produce a production build in `dist/`. |
+| `npm run preview` | Preview the production build. |
+| `npm run lint` | Run ESLint. |
 
-## Structure
+## Feature areas
 
-| Path | Purpose |
+| Area | Coverage |
 | --- | --- |
-| `src/app/` | Application root, router, Redux store, providers, and route guards. |
-| `src/pages/` | Feature pages for dashboards, learning modules, operations, and profiles. |
-| `src/services/` | Axios instance, API endpoint definitions, and service modules. |
-| `src/components/` | Shared layout, form, table, popup, navigation, and display components. |
-| `src/constants/`, `hooks/`, `helpers/`, `schemas/` | Shared application behavior. |
-| `src/styles/`, `src/assets/`, `public/` | Styling and visual assets. |
+| Core | Login, dashboard, users, profile, admins, mentors, and mentees. |
+| Learning | Classes, meetings, tasks, submissions, notes, and materials. |
+| Assessment | Attendance integration, task criteria, grading, results, and history routes. |
+| Operations | Notifications, audit logs, user activity, reports, and settings. |
 
-## Current feature coverage
+## Reusable components
 
-Core learning flows (classes, meetings, tasks, notes, materials, submissions)
-and operational views (notifications, audit logs, user activity, reports) have
-frontend modules. Some V3 assessment route modules remain placeholder screens;
-the backend APIs and database support for them are already present.
+The UI already has a shared component system and pages consistently consume it.
+
+| Component group | Examples |
+| --- | --- |
+| Forms | `Form`, `FormField`, `TextInput`, `Select`, `FileInput`, and `DateInput`. |
+| Data display | `Table`, `Pagination`, `TableControls`, `StatusBadge`, and `Avatar`. |
+| Layout | `PageHeader`, `Breadcrumbs`, `Tabs`, `StatsGrid`, `Sidebar`, and `TopBar`. |
+| Feedback | Loading components, popups, toasts, and empty states. |
+
+Page-specific components should be introduced only when a shared component does
+not fit the workflow; reusable improvements belong in `src/components/ui/`.
+
+## Performance
+
+- Vite separates React, UI, and chart dependencies into cacheable vendor chunks.
+- Role dashboards, reports, and learning pages load only when their route is
+  opened; the entry bundle is therefore kept focused on application chrome.
+- The main layout memoizes stable children and callbacks to reduce avoidable
+  navigation re-renders.
+- Theme initialization applies the saved preference before the application
+  renders, and dark utilities now use the `.dark` class consistently.

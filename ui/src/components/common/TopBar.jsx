@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import {
   Sun,
   Moon,
@@ -46,14 +46,17 @@ const TopBar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const hasCreateAccess =
-    can(role, "class", "create") ||
-    can(role, "meeting", "create") ||
-    can(role, "mentor", "create") ||
-    can(role, "mentee", "create") ||
-    can(role, "task", "create") ||
-    can(role, "note", "create") ||
-    can(role, "material", "create");
+  const hasCreateAccess = useMemo(
+    () =>
+      can(role, "class", "create") ||
+      can(role, "meeting", "create") ||
+      can(role, "mentor", "create") ||
+      can(role, "mentee", "create") ||
+      can(role, "task", "create") ||
+      can(role, "note", "create") ||
+      can(role, "material", "create"),
+    [role],
+  );
 
   return (
     <header className="flex h-16 items-center justify-between border-b border-[var(--color-border)] bg-[var(--color-surface)] px-6 transition-colors">
@@ -209,4 +212,4 @@ const TopBar = () => {
   );
 };
 
-export default TopBar;
+export default memo(TopBar);

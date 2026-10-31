@@ -67,6 +67,8 @@ const Detail = () => {
   const [attendances, setAttendances] = useState([]);
   const [attendanceLoading, setAttendanceLoading] = useState(false);
   const [markStatuses, setMarkStatuses] = useState({});
+  const [markNotes, setMarkNotes] = useState({});
+  const [markEvidence, setMarkEvidence] = useState({});
   const [savingAttendance, setSavingAttendance] = useState(false);
 
   const fetchMeeting = async () => {
@@ -156,11 +158,15 @@ const Detail = () => {
   };
 
   const openMarkAttendance = () => {
-    const initial = {};
+    const initialStatuses = {};
+    const initialNotes = {};
     attendanceRows.forEach((row) => {
-      initial[row.id] = row.attendance?.status || "Present";
+      initialStatuses[row.id] = row.attendance?.status || "Present";
+      initialNotes[row.id] = row.attendance?.notes || "";
     });
-    setMarkStatuses(initial);
+    setMarkStatuses(initialStatuses);
+    setMarkNotes(initialNotes);
+    setMarkEvidence({});
     setActiveTab("attendance-marking");
   };
 
@@ -170,15 +176,30 @@ const Detail = () => {
       await Promise.all(
         attendanceRows.map((row) => {
           const status = markStatuses[row.id];
+          const notes = markNotes[row.id] || "";
+          const evidence = markEvidence[row.id];
+          const payload = new FormData();
+
+          payload.append("status", status);
+          payload.append("notes", notes);
+
+          if (evidence) payload.append("evidence", evidence);
+
           if (row.attendance) {
-            if (row.attendance.status === status) return Promise.resolve();
-            return AttendanceService.update(row.attendance.id, { status });
+            const hasChanges =
+              row.attendance.status !== status ||
+              (row.attendance.notes || "") !== notes ||
+              Boolean(evidence);
+
+            return hasChanges
+              ? AttendanceService.update(row.attendance.id, payload)
+              : Promise.resolve();
           }
-          return AttendanceService.mark({
-            MeetingId: Number(id),
-            UserId: row.id,
-            status,
-          });
+
+          payload.append("MeetingId", Number(id));
+          payload.append("UserId", row.id);
+
+          return AttendanceService.mark(payload);
         }),
       );
 
@@ -701,6 +722,23 @@ const Detail = () => {
                         label: "Marked By",
                         render: (row) => row.attendance?.checker?.name || "-",
                       },
+                      {
+                        key: "evidence",
+                        label: "Evidence",
+                        render: (row) =>
+                          row.attendance?.evidenceUrl ? (
+                            <a
+                              href={row.attendance.evidenceUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-1 rounded-sm text-xs font-medium text-[var(--color-primary)] hover:underline"
+                            >
+                              <Eye size={14} /> View
+                            </a>
+                          ) : (
+                            "-"
+                          ),
+                      },
                     ]}
                     data={attendanceRows}
                   />
@@ -715,16 +753,13 @@ const Detail = () => {
 
               <div className="space-y-2">
                 {attendanceRows.map((row) => (
-                  <div
-                    key={row.id}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-sm border border-gray-200 p-3"
-                  >
+                  <div key={row.id} className="space-y-3 rounded-sm border border-gray-200 p-3">
                     <div className="flex items-center gap-2">
                       <Avatar name={row.name} size="xs" />
                       <span className="text-sm font-medium">{row.name}</span>
                     </div>
 
-                    <div className="flex gap-1">
+                    <div className="flex flex-wrap gap-1">
                       {["Present", "Late", "Absent", "Excused"].map(
                         (status) => (
                           <button
@@ -746,6 +781,38 @@ const Detail = () => {
                           </button>
                         ),
                       )}
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-2 md:grid-cols-[1fr_auto]">
+                      <input
+                        value={markNotes[row.id] || ""}
+                        onChange={(event) =>
+                          setMarkNotes((previous) => ({
+                            ...previous,
+                            [row.id]: event.target.value,
+                          }))
+                        }
+                        maxLength={500}
+                        placeholder="Attendance note (optional)"
+                        className="w-full rounded-sm border border-gray-200 px-3 py-2 text-sm outline-none focus:border-orange-400"
+                      />
+                      <label className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-sm border border-dashed border-gray-300 px-3 py-2 text-sm text-[var(--color-text-muted)] hover:border-orange-400 hover:text-[var(--color-primary)]">
+                        <Upload size={15} />
+                        <span className="max-w-36 truncate">
+                          {markEvidence[row.id]?.name || "Add evidence"}
+                        </span>
+                        <input
+                          type="file"
+                          accept="image/png,image/jpeg,application/pdf"
+                          className="hidden"
+                          onChange={(event) =>
+                            setMarkEvidence((previous) => ({
+                              ...previous,
+                              [row.id]: event.target.files?.[0] || null,
+                            }))
+                          }
+                        />
+                      </label>
                     </div>
                   </div>
                 ))}

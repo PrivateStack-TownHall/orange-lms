@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @import "./variables.css";
 @import "./utilities.css";
 @import "./components.css";
@@ -17,13 +19,18 @@ body,
 
 html {
   font-family: "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
 }
 
 body {
   margin: 0;
   background-color: var(--color-background);
   color: var(--color-text);
-  transition: all 0.25s ease;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 button {

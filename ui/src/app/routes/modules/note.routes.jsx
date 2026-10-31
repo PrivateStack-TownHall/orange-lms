@@ -1,9 +1,4 @@
-import React from "react";
-
-import NotesList from "@/pages/notes";
-import NotesCreate from "@/pages/notes/Create";
-import NotesEdit from "@/pages/notes/Edit";
-import NotesDetail from "@/pages/notes/Detail";
+import { lazyRoute } from "../lazyRoute";
 
 const noteRoutes = {
   path: "notes",
@@ -11,19 +6,19 @@ const noteRoutes = {
   children: [
     {
       index: true,
-      element: <NotesList />,
+      lazy: lazyRoute(() => import("@/pages/notes")),
     },
     {
       path: "create",
-      element: <NotesCreate />,
+      lazy: lazyRoute(() => import("@/pages/notes/Create")),
     },
     {
       path: ":id",
-      element: <NotesDetail />,
+      lazy: lazyRoute(() => import("@/pages/notes/Detail")),
     },
     {
       path: "edit/:id",
-      element: <NotesEdit />,
+      lazy: lazyRoute(() => import("@/pages/notes/Edit")),
     },
   ],
 };

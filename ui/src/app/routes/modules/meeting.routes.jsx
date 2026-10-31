@@ -1,9 +1,4 @@
-import React from "react";
-
-import MeetingsList from "@/pages/meetings";
-import MeetingsCreate from "@/pages/meetings/Create";
-import MeetingsEdit from "@/pages/meetings/Edit";
-import MeetingsDetail from "@/pages/meetings/Detail";
+import { lazyRoute } from "../lazyRoute";
 
 const meetingRoutes = {
   path: "meetings",
@@ -11,19 +6,19 @@ const meetingRoutes = {
   children: [
     {
       index: true,
-      element: <MeetingsList />,
+      lazy: lazyRoute(() => import("@/pages/meetings")),
     },
     {
       path: "create",
-      element: <MeetingsCreate />,
+      lazy: lazyRoute(() => import("@/pages/meetings/Create")),
     },
     {
       path: ":id",
-      element: <MeetingsDetail />,
+      lazy: lazyRoute(() => import("@/pages/meetings/Detail")),
     },
     {
       path: "edit/:id",
-      element: <MeetingsEdit />,
+      lazy: lazyRoute(() => import("@/pages/meetings/Edit")),
     },
   ],
 };

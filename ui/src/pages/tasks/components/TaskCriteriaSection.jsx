@@ -1,9 +1,18 @@
-import { useEffect, useState } from "react";
-import { Plus, Edit2, Trash2, Award } from "lucide-react";
+import { createElement, useEffect, useMemo, useState } from "react";
+import {
+  Award,
+  CheckCircle2,
+  CircleAlert,
+  Edit2,
+  Plus,
+  Target,
+  Trash2,
+} from "lucide-react";
 
 import PopUp from "@/components/ui/popup/PopUp";
 import TaskCriteriaService from "@/services/modules/taskCriteria.service";
 import { can } from "@/helpers";
+import usePopupStore from "@/app/store/popupStore";
 
 const emptyForm = { title: "", percentage: "", maxScore: "", description: "" };
 
@@ -15,20 +24,26 @@ const emptyForm = { title: "", percentage: "", maxScore: "", description: "" };
  */
 const TaskCriteriaSection = ({ taskId, role }) => {
   const [criteria, setCriteria] = useState([]);
+  const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const { openConfirm } = usePopupStore();
 
   const canManage = can(role, "taskCriteria", "create");
 
   const fetchCriteria = async () => {
     try {
       setLoading(true);
-      const res = await TaskCriteriaService.getByTask(taskId);
-      setCriteria(res.data || []);
+      const [criteriaResponse, summaryResponse] = await Promise.all([
+        TaskCriteriaService.getByTask(taskId),
+        TaskCriteriaService.getSummary(taskId),
+      ]);
+      setCriteria(criteriaResponse.data || []);
+      setSummary(summaryResponse.data || null);
     } catch (err) {
       console.error(err);
     } finally {
@@ -41,10 +56,17 @@ const TaskCriteriaSection = ({ taskId, role }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskId]);
 
-  const totalWeight = criteria.reduce(
-    (sum, c) => sum + Number(c.percentage),
-    0,
+  const totalWeight = useMemo(
+    () =>
+      summary?.totalPercentage ??
+      criteria.reduce((sum, item) => sum + Number(item.percentage || 0), 0),
+    [criteria, summary],
   );
+
+  const availableWeight = useMemo(() => {
+    const editingWeight = Number(editing?.percentage || 0);
+    return Math.max(0, 100 - (Number(totalWeight) - editingWeight));
+  }, [editing?.percentage, totalWeight]);
 
   const openCreate = () => {
     setEditing(null);
@@ -71,6 +93,13 @@ const TaskCriteriaSection = ({ taskId, role }) => {
       return;
     }
 
+    const percentage = Number(form.percentage);
+
+    if (percentage <= 0 || percentage > availableWeight) {
+      setError(`Weight must be between 1% and ${availableWeight}%.`);
+      return;
+    }
+
     try {
       setSaving(true);
       setError("");
@@ -78,7 +107,7 @@ const TaskCriteriaSection = ({ taskId, role }) => {
       const payload = {
         TaskId: taskId,
         title: form.title,
-        percentage: Number(form.percentage),
+        percentage,
         maxScore: Number(form.maxScore),
         description: form.description || null,
       };
@@ -102,14 +131,15 @@ const TaskCriteriaSection = ({ taskId, role }) => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!confirm("Delete this criteria?")) return;
-    try {
-      await TaskCriteriaService.delete(id);
-      await fetchCriteria();
-    } catch (err) {
-      console.error(err);
-    }
+  const handleDelete = (id) => {
+    openConfirm({
+      title: "Delete Criteria",
+      message: "This criterion will be removed from the task assessment.",
+      action: async () => {
+        await TaskCriteriaService.delete(id);
+        await fetchCriteria();
+      },
+    });
   };
 
   return (
@@ -140,6 +170,59 @@ const TaskCriteriaSection = ({ taskId, role }) => {
             Add Criteria
           </button>
         )}
+      </div>
+
+      <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <SummaryStat
+          icon={Award}
+          label="Criteria"
+          value={summary?.totalCriteria ?? criteria.length}
+          tone="purple"
+        />
+        <SummaryStat
+          icon={Target}
+          label="Max Score"
+          value={summary?.totalMaxScore ?? 0}
+          tone="blue"
+        />
+        <div
+          className={`rounded-sm border p-3 ${
+            totalWeight === 100
+              ? "border-green-200 bg-green-50"
+              : "border-amber-200 bg-amber-50"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            {totalWeight === 100 ? (
+              <CheckCircle2 size={17} className="text-green-600" />
+            ) : (
+              <CircleAlert size={17} className="text-amber-600" />
+            )}
+            <p
+              className={`text-sm font-semibold ${
+                totalWeight === 100 ? "text-green-800" : "text-amber-800"
+              }`}
+            >
+              {totalWeight === 100 ? "Ready to grade" : "Weight needs review"}
+            </p>
+          </div>
+          <p
+            className={`mt-1 text-xs ${
+              totalWeight === 100 ? "text-green-700" : "text-amber-700"
+            }`}
+          >
+            {totalWeight}% of 100% configured.
+          </p>
+        </div>
+      </div>
+
+      <div className="mb-4">
+        <div className="h-2 overflow-hidden rounded-sm bg-gray-100">
+          <div
+            className={totalWeight === 100 ? "h-full bg-green-500" : "h-full bg-orange-500"}
+            style={{ width: `${Math.min(Number(totalWeight), 100)}%` }}
+          />
+        </div>
       </div>
 
       {loading ? (
@@ -225,13 +308,16 @@ const TaskCriteriaSection = ({ taskId, role }) => {
               <input
                 type="number"
                 min={1}
-                max={100}
+                max={availableWeight}
                 value={form.percentage}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, percentage: e.target.value }))
                 }
                 className="w-full rounded-sm border border-gray-200 p-2.5 text-sm"
               />
+              <p className="mt-1 text-xs text-[var(--color-text-muted)]">
+                Up to {availableWeight}% available.
+              </p>
             </div>
             <div>
               <label className="mb-1 block text-sm font-medium">
@@ -285,5 +371,23 @@ const TaskCriteriaSection = ({ taskId, role }) => {
     </div>
   );
 };
+
+const SummaryStat = ({ icon, label, value, tone }) => (
+  <div className="flex items-center gap-3 rounded-sm border border-gray-100 bg-gray-50 p-3">
+    <div
+      className={`rounded-sm p-2 ${
+        tone === "purple"
+          ? "bg-purple-100 text-purple-600"
+          : "bg-blue-100 text-blue-600"
+      }`}
+    >
+      {createElement(icon, { size: 17 })}
+    </div>
+    <div>
+      <p className="text-xs text-[var(--color-text-muted)]">{label}</p>
+      <p className="font-semibold">{value}</p>
+    </div>
+  </div>
+);
 
 export default TaskCriteriaSection;
