@@ -8,6 +8,11 @@ const historyClassRoutes = {
       index: true,
       lazy: lazyRoute(() => import("@/pages/history-classes")),
     },
+
+    {
+      path: ":id",
+      lazy: lazyRoute(() => import("@/pages/history-classes/Detail")),
+    },
   ],
 };
 
