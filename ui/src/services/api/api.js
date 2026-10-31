@@ -18,4 +18,26 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use(
+  (response) => {
+    const payload = response.data;
+
+    if (payload?.success === true && Object.hasOwn(payload, "data")) {
+      response.data = payload.data;
+      response.message = payload.message;
+    }
+
+    return response;
+  },
+  (error) => {
+    const payload = error.response?.data;
+
+    if (payload?.success === false) {
+      error.message = payload.message || error.message;
+    }
+
+    return Promise.reject(error);
+  },
+);
+
 export default api;

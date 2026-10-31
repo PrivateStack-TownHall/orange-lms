@@ -61,5 +61,10 @@ single `file` multipart field. Uploaded files go directly to Cloudinary; the
 database stores only the resulting URL. The allowed extensions are JPG, JPEG,
 PNG, PDF, DOC, DOCX, PPT, PPTX, and Markdown, with a 5 MB limit.
 
+## Response contract
+
+Every endpoint returns `{ success, message, data }`. Failed responses use
+`success: false` and `data: null`; validation failures include `errors`.
+
 See `docs/` for the API contract, RBAC matrix, business flow, and schema
 reference.

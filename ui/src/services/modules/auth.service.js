@@ -3,8 +3,7 @@ import ENDPOINTS from "../api/endpoints";
 
 class AuthService {
   static async login(payload) {
-    const { data } = await api.post(ENDPOINTS.AUTH.LOGIN, payload);
-    return data;
+    return api.post(ENDPOINTS.AUTH.LOGIN, payload);
   }
 
   static async register(payload) {

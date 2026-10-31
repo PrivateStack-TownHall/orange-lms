@@ -4,6 +4,22 @@ Base URL: `/api`
 
 `/api/auth` is public. All other route groups require a bearer token.
 
+## Response contract
+
+Every endpoint returns the same top-level structure.
+
+```json
+{
+  "success": true,
+  "message": "Request successful",
+  "data": {}
+}
+```
+
+Failed requests return `success: false` and `data: null`. Validation failures
+also include an `errors` array. The frontend Axios client unwraps successful
+`data` automatically, preserving the existing service and page APIs.
+
 | Route group | Primary purpose |
 | --- | --- |
 | `/auth` | Registration, login, and current user. |
