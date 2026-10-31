@@ -4,6 +4,18 @@ Orange LMS Server is an Express API for role-based learning management. It uses
 Sequelize with PostgreSQL, JWT authentication, permission-based authorization,
 and Cloudinary-backed uploads.
 
+## Product-version scope
+
+| Version | Server delivery |
+| --- | --- |
+| V1 | Authentication, role-aware authorization, user/profile management, and application foundation. |
+| V2 | Classes, class membership, meetings, tasks, notes, and materials. |
+| V3 | Task submissions, attendance, rubrics, assessment results, criterion scores, and class history. |
+| V4 | Cloudinary upload processing, certificate generation, calendar event aggregation, notifications, audit and activity records, reports, response-contract normalization, and Jest/Supertest coverage. |
+
+Calendar is delivered through the `v4-calendar-*` branch line. Dashboard
+Analytics begins the V5 roadmap.
+
 ## Architecture
 
 ```txt
@@ -20,12 +32,12 @@ Routes -> Controllers -> Services -> Models -> PostgreSQL
 
 ## Modules
 
-| Area | Modules |
-| --- | --- |
-| Core | Auth, users, profiles, mentors, mentees, classes, class users, and meetings. |
-| Learning | Tasks, submissions, notes, materials, and file uploads. |
-| Assessment | Attendance, criteria, assessment results, submission scores, and class history. |
-| Operations | Notifications, audit logs, user activities, and reports. |
+| Area | Version | Modules |
+| --- | --- | --- |
+| Foundation | V1 | Auth, users, profiles, mentors, mentees, role permissions, and shared middleware. |
+| Learning | V2 | Classes, class users, meetings, tasks, notes, and materials. |
+| Assessment | V3 | Task submissions, attendance, criteria, assessment results, submission scores, and class history. |
+| Delivery and operations | V4 | Cloudinary upload middleware, certificate generation, calendar event aggregation, notifications, audit logs, user activities, reports, and API tests. |
 
 ## Local setup
 
@@ -73,5 +85,5 @@ The test suite uses Jest and Supertest to verify the API response contract
 without requiring a running PostgreSQL instance. It covers the health check,
 unauthenticated protected routes, and unknown routes.
 
-See `docs/` for the API contract, RBAC matrix, business flow, and schema
-reference.
+See the [server documentation index](docs/README.md) for the API contract,
+RBAC matrix, business flow, and schema reference.
