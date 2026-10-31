@@ -66,6 +66,20 @@ class HistoryClassController {
       next(error);
     }
   }
+
+  static async generateCertificate(req, res, next) {
+    try {
+      const result = await historyClassService.generateCertificate(
+        req.params.id,
+        req.user,
+        req.meta,
+      );
+
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = HistoryClassController;

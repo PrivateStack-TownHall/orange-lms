@@ -8,9 +8,11 @@ import {
   User,
   Users,
   BarChart3,
+  History,
   Shield,
   Activity,
   ClipboardCheck,
+  Award,
 } from "lucide-react";
 
 import ROLES from "./roles";
@@ -85,14 +87,25 @@ export const MENU_BY_ROLE = {
       title: "REPORTS",
       items: [
         {
-          name: "Attendance",
-          icon: ClipboardCheck,
-          path: ROUTES.ATTENDANCE,
+          name: "Certificates",
+          icon: Award,
+          path: ROUTES.CERTIFICATES,
         },
         {
           name: "Reports",
           icon: BarChart3,
           path: ROUTES.REPORTS,
+        },
+      ],
+    },
+
+    {
+      title: "REPORTS",
+      items: [
+        {
+          name: "Certificates",
+          icon: Award,
+          path: ROUTES.CERTIFICATES,
         },
       ],
     },
