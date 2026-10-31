@@ -4,6 +4,18 @@ This document is a quick reference for the Sequelize models and migrations in
 `src/`. Existing schema changes must be created as migrations; model generator
 commands are not used to modify the running database.
 
+## Version ownership
+
+The V4 schema is cumulative: it contains the tables introduced across the
+product's earlier stages and the operational tables completed in V4.
+
+| Version | Schema scope |
+| --- | --- |
+| V1 | `User`, `Profile`, role and account data. |
+| V2 | `Class`, `ClassUser`, `Meeting`, `Task`, `Note`, and `Material`. |
+| V3 | `TaskSubmission`, `Attendance`, `TaskCriteria`, `AssessmentResult`, `SubmissionCriteriaScore`, and `HistoryClass`. |
+| V4 | `Notification`, `AuditLog`, `UserActivity`, and URL fields used by Cloudinary uploads and generated certificates. |
+
 | Group | Models |
 | --- | --- |
 | Identity | User, Profile |
