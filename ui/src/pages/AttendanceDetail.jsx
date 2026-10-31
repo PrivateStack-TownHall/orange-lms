@@ -1,7 +1,15 @@
 import { createElement, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { ArrowLeft, CalendarDays, Clock3, Save, UserRound } from "lucide-react";
+import {
+  ArrowLeft,
+  CalendarDays,
+  Clock3,
+  ExternalLink,
+  Save,
+  Upload,
+  UserRound,
+} from "lucide-react";
 
 import usePopupStore from "@/app/store/popupStore";
 import AttendanceService from "@/services/modules/attendance.service";
@@ -28,6 +36,7 @@ const AttendanceDetail = () => {
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState("Present");
   const [notes, setNotes] = useState("");
+  const [evidence, setEvidence] = useState(null);
 
   useEffect(() => {
     const fetchRecord = async () => {
@@ -53,8 +62,14 @@ const AttendanceDetail = () => {
   const handleSave = async () => {
     try {
       setSaving(true);
-      const response = await AttendanceService.update(id, { status, notes });
+      const payload = new FormData();
+      payload.append("status", status);
+      payload.append("notes", notes);
+      if (evidence) payload.append("evidence", evidence);
+
+      const response = await AttendanceService.update(id, payload);
       setRecord(response.data);
+      setEvidence(null);
       openSuccess({
         title: "Attendance Updated",
         message: "Attendance details were saved successfully.",
@@ -100,6 +115,24 @@ const AttendanceDetail = () => {
           </div>
 
           <div className="rounded-sm border border-gray-200 bg-[var(--color-surface)] p-5">
+            <h2 className="text-base font-semibold">Evidence</h2>
+            {record.evidenceUrl ? (
+              <a
+                href={record.evidenceUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-3 inline-flex items-center gap-2 rounded-sm border border-gray-200 px-3 py-2 text-sm font-medium hover:bg-gray-50"
+              >
+                <ExternalLink size={16} /> Open evidence
+              </a>
+            ) : (
+              <p className="mt-2 text-sm text-[var(--color-text-muted)]">
+                No evidence was uploaded for this record.
+              </p>
+            )}
+          </div>
+
+          <div className="rounded-sm border border-gray-200 bg-[var(--color-surface)] p-5">
             <h2 className="text-base font-semibold">Attendance Details</h2>
             <dl className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <DetailField icon={CalendarDays} label="Meeting">{record.Meeting?.name || "-"}</DetailField>
@@ -124,6 +157,21 @@ const AttendanceDetail = () => {
               <label className="block text-sm font-medium">
                 Notes
                 <textarea value={notes} onChange={(event) => setNotes(event.target.value)} rows={5} maxLength={500} placeholder="Add an attendance note..." className="mt-1.5 w-full resize-y rounded-sm border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:border-orange-400" />
+              </label>
+              <label className="block text-sm font-medium">
+                Evidence
+                <span className="mt-1.5 flex cursor-pointer items-center gap-2 rounded-sm border border-dashed border-gray-300 px-3 py-2 text-sm font-normal text-[var(--color-text-muted)] hover:border-orange-400 hover:text-[var(--color-primary)]">
+                  <Upload size={16} />
+                  <span className="truncate">
+                    {evidence?.name || "Choose JPG, PNG, or PDF"}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,application/pdf"
+                    className="hidden"
+                    onChange={(event) => setEvidence(event.target.files?.[0] || null)}
+                  />
+                </span>
               </label>
               <Button className="w-full" onClick={handleSave} disabled={saving}>
                 <Save size={16} /> {saving ? "Saving..." : "Save Changes"}

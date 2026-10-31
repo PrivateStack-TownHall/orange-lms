@@ -4,7 +4,7 @@ const router = express.Router({ mergeParams: true });
 
 const { AttendanceController } = require("../controllers");
 
-const { authorization } = require("../middlewares");
+const { authorization, upload } = require("../middlewares");
 
 router.get("/", authorization("attendance", "read"), AttendanceController.getAll);
 
@@ -33,12 +33,14 @@ router.get(
 router.post(
   "/",
   authorization("attendance", "create"),
+  upload.single("evidence"),
   AttendanceController.mark,
 );
 
 router.put(
   "/:id",
   authorization("attendance", "update"),
+  upload.single("evidence"),
   AttendanceController.update,
 );
 

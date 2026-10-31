@@ -13,9 +13,14 @@ class AttendanceController {
 
   static async mark(req, res, next) {
     try {
+      const payload = {
+        ...req.body,
+        ...(req.file ? { evidenceUrl: req.file.path } : {}),
+      };
+
       const attendance = await attendanceService.markAttendance(
         req.user,
-        req.body,
+        payload,
         req.meta,
       );
 
@@ -53,9 +58,14 @@ class AttendanceController {
 
   static async update(req, res, next) {
     try {
+      const payload = {
+        ...req.body,
+        ...(req.file ? { evidenceUrl: req.file.path } : {}),
+      };
+
       const attendance = await attendanceService.updateStatus(
         req.params.id,
-        req.body,
+        payload,
         req.user,
         req.meta,
       );
