@@ -7,11 +7,11 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node servers.js",
     "dev": "cross-env NODE_ENV=development nodemon servers.js",
+    "test": "cross-env NODE_ENV=test jest --runInBand",
     "db:create": "sequelize-cli db:create",
     "db:migrate": "sequelize-cli db:migrate",
     "db:seed": "sequelize-cli db:seed:all",
     "db:seed:undo": "sequelize-cli db:seed:undo",
-    "db:setup": "npm run db:create && npm run db:migrate && npm run db:seed",
     "db:setup": "npm run db:create && npm run db:migrate && npm run db:seed",
     "db:migrate:prod": "cross-env NODE_ENV=production sequelize-cli db:migrate"
   },
@@ -34,7 +34,9 @@
     "sequelize": "^6.37.7"
   },
   "devDependencies": {
+    "jest": "^30.5.2",
     "nodemon": "^3.1.11",
-    "sequelize-cli": "^6.6.5"
+    "sequelize-cli": "^6.6.5",
+    "supertest": "^7.3.1"
   }
 }

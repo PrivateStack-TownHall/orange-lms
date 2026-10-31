@@ -47,6 +47,7 @@ Production uses `DATABASE_URL` with PostgreSQL SSL, suitable for Supabase.
 | --- | --- |
 | `npm run dev` | Run the API in development mode with Nodemon. |
 | `npm start` | Run the production API. |
+| `npm test` | Run API integration tests with Jest and Supertest. |
 | `npm run db:create` | Create the active environment database. |
 | `npm run db:migrate` | Apply pending migrations. |
 | `npm run db:seed` | Load seed data. |
@@ -65,6 +66,12 @@ PNG, PDF, DOC, DOCX, PPT, PPTX, and Markdown, with a 5 MB limit.
 
 Every endpoint returns `{ success, message, data }`. Failed responses use
 `success: false` and `data: null`; validation failures include `errors`.
+
+## Testing
+
+The test suite uses Jest and Supertest to verify the API response contract
+without requiring a running PostgreSQL instance. It covers the health check,
+unauthenticated protected routes, and unknown routes.
 
 See `docs/` for the API contract, RBAC matrix, business flow, and schema
 reference.
