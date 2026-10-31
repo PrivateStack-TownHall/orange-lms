@@ -1,49 +1,26 @@
-# Business Flow – Orange LMS
+# Business Flow
 
-## Roles & Responsibilities
+## Learning lifecycle
 
-### Owner
+1. An Owner or Admin creates users and classes.
+2. An Owner or Admin assigns a Mentor and enrolls Mentees through `ClassUser`.
+3. A Mentor creates meetings, then provides notes, materials, and tasks.
+4. A Mentee accesses class resources and submits a task as a link or uploaded file.
+5. A Mentor reviews submissions, records feedback and score, and can add rubric scores.
+6. Attendance is recorded per meeting.
+7. Completed classes can be archived to `HistoryClass`; a certificate URL can be stored there.
 
-- Full access to everything
-- Can CRUD users, classes, meetings, tasks, notes, materials
-- Can assign Admins
+## Operational lifecycle
 
-### Admin
+| Event | Supporting module |
+| --- | --- |
+| Learning or administrative action | Audit log and user activity tracking. |
+| User-facing alert | Notification module. |
+| Owner-level oversight | Reports module. |
 
-- Can CRUD users (except Owner)
-- Can CRUD classes, meetings
-- Can assign mentors to classes
-- Can monitor progress of mentees
-- Cannot delete or update Owner
+## File workflow
 
-### Mentor
-
-- Can create meetings
-- Can upload notes & materials
-- Can create tasks and grade task submissions
-- Can view enrolled mentees
-- Cannot CRUD classes
-
-### Mentee
-
-- Can read class info, notes, materials, tasks
-- Can submit task
-- Cannot create/update/delete classes, meetings, notes, materials, tasks
-
----
-
-## User Registration & Class Enrollment
-
-1. Mentee registers → role assigned automatically
-2. Admin/Owner creates class → assigns mentor
-3. Mentee joins class → record created in `class_users`
-
-## Learning Flow
-
-1. Mentor creates meetings
-2. Mentor uploads materials & notes
-3. Mentor assigns tasks
-4. Mentee reads notes, downloads materials
-5. Mentee submits tasks
-6. Mentor grades tasks → score & feedback stored
-7. Admin/Owner monitors progress
+The client can send a direct URL or `multipart/form-data` with one `file` field.
+For file uploads, Multer passes the file to Cloudinary and the returned URL is
+stored as `fileUrl` or a submission URL. The server never relies on Render's
+ephemeral filesystem.
