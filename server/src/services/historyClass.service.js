@@ -1,5 +1,7 @@
 const { HistoryClass, Class, User, ClassUser } = require("../models");
 const { logAudit } = require("../helpers");
+const cloudinary = require("../config/cloudinary");
+const { createCertificateBuffer, makeCertificateId } = require("./certificate.service");
 
 class HistoryClassService {
   static async findAll() {
@@ -198,6 +200,78 @@ class HistoryClassService {
     await history.destroy();
 
     return true;
+  }
+
+  static async generateCertificate(id, currentUser, meta = {}) {
+    if (!["Owner", "Admin"].includes(currentUser.role)) {
+      throw new Error("Permission denied");
+    }
+
+    const history = await HistoryClass.findByPk(id, {
+      include: [
+        {
+          model: Class,
+          attributes: ["id", "code", "name", "category", "level"],
+        },
+        {
+          model: User,
+          attributes: ["id", "name", "email"],
+        },
+      ],
+    });
+
+    if (!history) {
+      throw new Error("History class not found");
+    }
+
+    if (history.status !== "Completed") {
+      throw new Error("Certificate is only available for completed records");
+    }
+
+    const certificateId = makeCertificateId(history);
+
+    if (history.certificateUrl) {
+      return {
+        certificateId,
+        certificateUrl: history.certificateUrl,
+        generated: false,
+      };
+    }
+
+    const { buffer } = await createCertificateBuffer(history);
+    const upload = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: "raw",
+          folder: "orange-lms/certificates",
+          public_id: certificateId,
+          format: "pdf",
+          overwrite: true,
+        },
+        (error, result) => (error ? reject(error) : resolve(result)),
+      );
+
+      stream.end(buffer);
+    });
+
+    await history.update({
+      certificateUrl: upload.secure_url,
+    });
+
+    await logAudit({
+      user: currentUser,
+      action: "CREATE",
+      resource: "Certificate",
+      resourceId: history.id,
+      resourceDetail: `Generated certificate ${certificateId}`,
+      meta,
+    });
+
+    return {
+      certificateId,
+      certificateUrl: history.certificateUrl,
+      generated: true,
+    };
   }
 }
 
