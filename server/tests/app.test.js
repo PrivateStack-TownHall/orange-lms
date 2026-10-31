@@ -35,6 +35,8 @@ describe("API response contract", () => {
     });
   });
 
+  it("protects the task criteria list endpoint", async () => {
+    const response = await request(app).get("/api/task-criteria");
   it("protects certificate generation with the standard error contract", async () => {
     const response = await request(app).post("/api/history-classes/1/certificate");
 
