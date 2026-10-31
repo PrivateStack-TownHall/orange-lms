@@ -6,6 +6,8 @@ const { AttendanceController } = require("../controllers");
 
 const { authorization } = require("../middlewares");
 
+router.get("/", authorization("attendance", "read"), AttendanceController.getAll);
+
 router.get(
   "/meeting/:meetingId",
   authorization("attendance", "read"),

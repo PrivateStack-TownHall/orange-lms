@@ -1,6 +1,16 @@
 const { attendanceService } = require("../services");
 
 class AttendanceController {
+  static async getAll(req, res, next) {
+    try {
+      const attendances = await attendanceService.findAll(req.user);
+
+      res.status(200).json(attendances);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async mark(req, res, next) {
     try {
       const attendance = await attendanceService.markAttendance(
@@ -19,6 +29,7 @@ class AttendanceController {
     try {
       const attendances = await attendanceService.findAllByMeeting(
         req.params.meetingId,
+        req.user,
       );
 
       res.status(200).json(attendances);
@@ -29,7 +40,10 @@ class AttendanceController {
 
   static async getByUser(req, res, next) {
     try {
-      const attendances = await attendanceService.findByUser(req.params.userId);
+      const attendances = await attendanceService.findByUser(
+        req.params.userId,
+        req.user,
+      );
 
       res.status(200).json(attendances);
     } catch (error) {
@@ -67,7 +81,10 @@ class AttendanceController {
   // tambahan new feature
   static async getById(req, res, next) {
     try {
-      const attendance = await attendanceService.findById(req.params.id);
+      const attendance = await attendanceService.findById(
+        req.params.id,
+        req.user,
+      );
 
       res.status(200).json(attendance);
     } catch (error) {
@@ -77,7 +94,10 @@ class AttendanceController {
 
   static async getSummary(req, res, next) {
     try {
-      const summary = await attendanceService.getSummary(req.params.meetingId);
+      const summary = await attendanceService.getSummary(
+        req.params.meetingId,
+        req.user,
+      );
 
       res.status(200).json(summary);
     } catch (error) {

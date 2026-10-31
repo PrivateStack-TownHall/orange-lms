@@ -10,6 +10,7 @@ import {
   BarChart3,
   Shield,
   Activity,
+  ClipboardCheck,
 } from "lucide-react";
 
 import ROLES from "./roles";
@@ -83,6 +84,11 @@ export const MENU_BY_ROLE = {
     {
       title: "REPORTS",
       items: [
+        {
+          name: "Attendance",
+          icon: ClipboardCheck,
+          path: ROUTES.ATTENDANCE,
+        },
         {
           name: "Reports",
           icon: BarChart3,
@@ -168,6 +174,17 @@ export const MENU_BY_ROLE = {
     },
 
     {
+      title: "REPORTS",
+      items: [
+        {
+          name: "Attendance",
+          icon: ClipboardCheck,
+          path: ROUTES.ATTENDANCE,
+        },
+      ],
+    },
+
+    {
       title: "ADMINISTRATION",
       items: [
         {
@@ -229,6 +246,16 @@ export const MENU_BY_ROLE = {
           name: "Materials",
           icon: Archive,
           path: ROUTES.MATERIALS,
+        },
+      ],
+    },
+    {
+      title: "REPORTS",
+      items: [
+        {
+          name: "Attendance",
+          icon: ClipboardCheck,
+          path: ROUTES.ATTENDANCE,
         },
       ],
     },
