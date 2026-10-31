@@ -1,5 +1,5 @@
 const { HistoryClass, Class, User, ClassUser } = require("../models");
-const { logAudit } = require("../helpers");
+const { logAudit, notifyUsers } = require("../helpers");
 const cloudinary = require("../config/cloudinary");
 const { createCertificateBuffer, makeCertificateId } = require("./certificate.service");
 
@@ -261,6 +261,16 @@ class HistoryClassService {
 
     await history.update({
       certificateUrl: upload.secure_url,
+    });
+
+    await notifyUsers({
+      userIds: history.UserId,
+      type: "Certificate",
+      title: "Certificate Available",
+      message: `Your certificate for "${history.Class.name}" is ready to download.`,
+      relatedType: "HistoryClass",
+      relatedId: history.id,
+      ClassId: history.ClassId,
     });
 
     await logAudit({
