@@ -45,3 +45,13 @@ The UI already has a shared component system and pages consistently consume it.
 
 Page-specific components should be introduced only when a shared component does
 not fit the workflow; reusable improvements belong in `src/components/ui/`.
+
+## Performance
+
+- Vite separates React, UI, and chart dependencies into cacheable vendor chunks.
+- Role dashboards, reports, and learning pages load only when their route is
+  opened; the entry bundle is therefore kept focused on application chrome.
+- The main layout memoizes stable children and callbacks to reduce avoidable
+  navigation re-renders.
+- Theme initialization applies the saved preference before the application
+  renders, and dark utilities now use the `.dark` class consistently.

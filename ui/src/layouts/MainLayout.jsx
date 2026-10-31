@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import React, { useCallback, useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import Sidebar from "../components/common/Sidebar";
@@ -7,6 +7,11 @@ import TopBar from "../components/common/TopBar";
 
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const location = useLocation();
+
+  const toggleSidebar = useCallback(() => {
+    setCollapsed((previous) => !previous);
+  }, []);
 
   return (
     <div className="flex h-screen bg-app text-app transition-all">
@@ -26,7 +31,7 @@ const MainLayout = () => {
         }}
         className="relative h-screen shrink-0 border-r border-gray-200 bg-[var(--color-surface)] shadow-sm"
       >
-        <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((prev) => !prev)} />
+        <Sidebar collapsed={collapsed} onToggle={toggleSidebar} />
       </motion.aside>
 
       {/* Main Area */}

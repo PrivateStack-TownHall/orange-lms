@@ -31,3 +31,12 @@ npm run lint
 
 The current production build succeeds. Lint findings should be addressed
 separately because they span existing page and component code.
+
+## Performance
+
+The initial bundle is split into cacheable React, UI, and chart vendor chunks.
+Dashboards load by role, while reports plus classes, meetings, tasks, notes,
+materials, profile, and settings load only when their route is opened. The
+production entry bundle is now 403 kB before gzip. `useMemo` and `useCallback`
+are used for stable derived layout values and callbacks, not as a blanket
+optimization.
