@@ -3,7 +3,7 @@ const { reportsService } = require("../services");
 class ReportsController {
   static async getDashboard(req, res, next) {
     try {
-      const data = await reportsService.getDashboard(req.query);
+      const data = await reportsService.getDashboard(req.query, req.user);
 
       res.json(data);
     } catch (err) {

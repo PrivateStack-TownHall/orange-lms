@@ -50,7 +50,7 @@ const UI_PERMISSIONS = {
     notification: ["read", "update", "delete"],
     auditLog: ["read"],
     userActivity: ["read"],
-    // Reports is intentionally Owner-only — Admin does NOT get this.
+    reports: ["read"],
 
     profile: ["read", "update"],
     setting: ["read", "update"],
@@ -73,6 +73,8 @@ const UI_PERMISSIONS = {
     score: ["read", "create", "update"],
 
     notification: ["read", "update", "delete"],
+
+    reports: ["read"],
 
     profile: ["read", "update"],
     setting: ["read", "update"],

@@ -318,7 +318,18 @@ Object.assign(paths, {
     get: protectedOperation({ summary: "Get user-activity overview", description: "Returns user-activity summary data." }),
   },
   "/reports/dashboard": {
-    get: protectedOperation({ summary: "Get reports dashboard", description: "Returns Owner-level reporting metrics." }),
+    get: protectedOperation({
+      summary: "Get analytics dashboard",
+      description: "Returns organization-wide analytics for Owner and Admin. Mentor responses are restricted to classes assigned to the authenticated mentor, regardless of the MentorId query parameter.",
+      parameters: [
+        { name: "ClassId", in: "query", description: "Limit analytics to one class.", schema: { type: "integer", minimum: 1 } },
+        { name: "MentorId", in: "query", description: "Limit organization analytics to one mentor. Ignored for Mentor callers.", schema: { type: "integer", minimum: 1 } },
+        { name: "status", in: "query", description: "Class status filter. Use All or omit for every status.", schema: { type: "string", example: "Active" } },
+        { name: "startDate", in: "query", description: "Inclusive ISO-8601 date or datetime filter.", schema: { type: "string", format: "date-time", example: "2026-01-01" } },
+        { name: "endDate", in: "query", description: "Inclusive ISO-8601 date or datetime filter. Must not precede startDate.", schema: { type: "string", format: "date-time", example: "2026-01-31" } },
+      ],
+      responseSchema: schema("ReportDashboard"),
+    }),
   },
   "/calendar/events": {
     get: protectedOperation({
@@ -398,7 +409,25 @@ module.exports = {
       NotificationPage: { type: "object", properties: { data: { type: "array", items: { $ref: "#/components/schemas/Notification" } }, pagination: { type: "object", properties: { total: { type: "integer" }, page: { type: "integer" }, limit: { type: "integer" }, totalPages: { type: "integer" } } } } },
       NotificationSummary: { type: "object", properties: { total: { type: "integer" }, unread: { type: "integer" }, read: { type: "integer" }, byType: { type: "object", additionalProperties: { type: "integer" } } } },
       CalendarEvent: { type: "object", properties: { id: { type: "string", example: "meeting-20" }, resourceId: { type: "integer" }, type: { type: "string", enum: ["Meeting", "Task"] }, title: { type: "string" }, date: { type: "string", format: "date-time" }, ClassId: { type: "integer" }, className: { type: "string" }, classCode: { type: "string" }, detailUrl: { type: "string", example: "/meetings/20" } } },
-      ReportDashboard: { type: "object", additionalProperties: true, description: "Owner dashboard metrics returned by the reports service." },
+      ReportDashboard: {
+        type: "object",
+        required: ["filters", "scope", "stats", "classPerformance", "attendanceOverview", "taskStatistics", "assessmentOverview"],
+        properties: {
+          filters: { type: "object", properties: { startDate: { type: "string", format: "date-time", nullable: true }, endDate: { type: "string", format: "date-time", nullable: true }, ClassId: { type: "integer", nullable: true }, MentorId: { type: "integer", nullable: true }, status: { type: "string", example: "Active" } } },
+          scope: { type: "string", enum: ["Organization", "Mentor"], description: "Scope applied by the authenticated role." },
+          stats: { type: "object", properties: { totalUsers: { type: "integer" }, activeClasses: { type: "integer" }, totalMeetings: { type: "integer" }, taskCompletionRate: { type: "number" }, avgAttendance: { type: "number" }, avgAssessmentScore: { type: "number" }, activeMentors: { type: "integer" } } },
+          classPerformance: { type: "array", items: { type: "object", properties: { id: { type: "integer" }, name: { type: "string" }, mentees: { type: "integer" }, attendance: { type: "number" }, tasks: { type: "number" }, avgScore: { type: "number" }, progress: { type: "number" } } } },
+          attendanceOverview: { type: "object", properties: { present: { type: "integer" }, late: { type: "integer" }, absent: { type: "integer" }, excused: { type: "integer" }, total: { type: "integer" }, avgAttendance: { type: "number" } } },
+          taskStatistics: { type: "object", properties: { total: { type: "integer" }, submitted: { type: "integer" }, pending: { type: "integer" }, reviewed: { type: "integer" }, overdue: { type: "integer" } } },
+          assessmentOverview: { type: "object", properties: { averageScore: { type: "number" }, highestScore: { type: "number" }, lowestScore: { type: "number" }, passRate: { type: "number" } } },
+          scoreDistribution: { type: "array", items: { type: "object", properties: { range: { type: "string" }, count: { type: "integer" }, percentage: { type: "number" } } } },
+          mentorPerformance: { type: "array", items: { type: "object", properties: { id: { type: "integer" }, name: { type: "string" }, classes: { type: "integer" }, meetings: { type: "integer" }, tasks: { type: "integer" }, attendance: { type: "number" }, activityLevel: { type: "string" } } } },
+          menteeProgressOverview: { type: "object", additionalProperties: { type: "integer" } },
+          menteesNeedingAttention: { type: "array", items: { type: "object" } },
+          userGrowth: { type: "array", items: { type: "object", properties: { month: { type: "string" }, mentees: { type: "integer" }, mentors: { type: "integer" }, activeUsers: { type: "integer" } } } },
+          needsAttentionAlerts: { type: "array", items: { type: "object", properties: { type: { type: "string" }, message: { type: "string" }, detail: { type: "string" } } } },
+        },
+      },
       LoginRequest: { type: "object", required: ["email", "password"], properties: { email: { type: "string", format: "email", example: "mentor@example.com" }, password: { type: "string", format: "password", example: "SecurePass123" } } },
       RegisterRequest: { type: "object", required: ["name", "email", "password"], properties: { name: { type: "string", example: "Jane Doe" }, email: { type: "string", format: "email" }, password: { type: "string", format: "password" }, role: { type: "string", enum: ["Owner", "Admin", "Mentor", "Mentee", "Reviewer"], default: "Mentee" } } },
       UserRequest: { type: "object", properties: { name: { type: "string" }, email: { type: "string", format: "email" }, password: { type: "string", format: "password" }, role: { type: "string", enum: ["Owner", "Admin", "Mentor", "Mentee", "Reviewer"] }, avatarUrl: { type: "string", format: "uri" }, status: { type: "string" } } },
