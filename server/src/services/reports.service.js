@@ -16,23 +16,50 @@ const pct = (part, total) => (total > 0 ? Number(((part / total) * 100).toFixed(
 
 const round1 = (n) => Number((n || 0).toFixed(1));
 
+const PRESENT_ATTENDANCE_STATUSES = new Set(["Present", "Late"]);
+
+const toDate = (value, label) => {
+  if (!value) return undefined;
+
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    throw new Error(`Invalid ${label}`);
+  }
+
+  return parsed;
+};
+
 class ReportsService {
   /**
    * Single aggregated payload powering the Reports dashboard.
-   * Only Owner/Admin should be allowed to call this (enforced at route level).
+   * Owner and Admin can query all classes. Mentors are restricted to classes
+   * assigned to them, regardless of user-supplied query parameters.
    */
-  static async getDashboard(filters = {}) {
+  static async getDashboard(filters = {}, currentUser) {
     const { startDate, endDate, ClassId, MentorId, status } = filters;
+    const start = toDate(startDate, "startDate");
+    const end = toDate(endDate, "endDate");
 
-    const dateWhere =
-      startDate && endDate
-        ? { [Op.between]: [new Date(startDate), new Date(endDate)] }
-        : undefined;
+    if (start && end && start > end) {
+      throw new Error("startDate must be before endDate");
+    }
+
+    const dateWhere = start && end
+      ? { [Op.between]: [start, end] }
+      : start
+        ? { [Op.gte]: start }
+        : end
+          ? { [Op.lte]: end }
+          : undefined;
 
     const classWhere = {};
     if (ClassId) classWhere.id = ClassId;
     if (MentorId) classWhere.MentorId = MentorId;
     if (status && status !== "All") classWhere.status = status;
+
+    if (currentUser?.role === ROLES.MENTOR) {
+      classWhere.MentorId = currentUser.id;
+    }
 
     const classes = await Class.findAll({
       where: classWhere,
@@ -47,21 +74,38 @@ class ReportsService {
             where: { roleInClass: "Mentee" },
           },
         },
-        { model: Meeting, as: "meetings" },
+        {
+          model: Meeting,
+          as: "meetings",
+          required: false,
+          ...(dateWhere ? { where: { meetingDate: dateWhere } } : {}),
+        },
         { model: Task, as: "tasks" },
       ],
     });
 
     const classIds = classes.map((c) => c.id);
 
+    const scopedUserIds = new Set(
+      classes.flatMap((cls) => [cls.MentorId, ...(cls.mentees || []).map((mentee) => mentee.id)])
+        .filter(Boolean),
+    );
+    if (currentUser?.role === ROLES.MENTOR) scopedUserIds.add(currentUser.id);
+
     const [users, submissions, attendances] = await Promise.all([
-      User.findAll({ attributes: ["id", "name", "role", "createdAt"] }),
+      User.findAll({
+        attributes: ["id", "name", "role", "createdAt"],
+        ...(currentUser?.role === ROLES.MENTOR
+          ? { where: { id: [...scopedUserIds] } }
+          : {}),
+      }),
       TaskSubmission.findAll({
         include: [
           { model: Task, where: classIds.length ? { ClassId: classIds } : undefined },
           { model: User, attributes: ["id", "name"] },
           { model: AssessmentResult },
         ],
+        where: dateWhere ? { submittedAt: dateWhere } : undefined,
       }),
       Attendance.findAll({
         include: [
@@ -89,7 +133,7 @@ class ReportsService {
     const taskCompletionRate = pct(submittedCount, totalTaskSlots);
 
     const presentLike = attendances.filter((a) =>
-      ["Present", "Late"].includes(a.status),
+      PRESENT_ATTENDANCE_STATUSES.has(a.status),
     ).length;
     const avgAttendance = pct(presentLike, attendances.length);
 
@@ -121,7 +165,7 @@ class ReportsService {
         (a) => a.Meeting?.ClassId === c.id,
       );
       const classAttendanceRate = pct(
-        classAttendances.filter((a) => ["Present", "Late"].includes(a.status)).length,
+        classAttendances.filter((a) => PRESENT_ATTENDANCE_STATUSES.has(a.status)).length,
         classAttendances.length,
       );
 
@@ -237,7 +281,7 @@ class ReportsService {
 
       const classAttendances = attendances.filter((a) => a.Meeting?.ClassId === c.id);
       entry.attendanceSum += classAttendances.filter((a) =>
-        ["Present", "Late"].includes(a.status),
+        PRESENT_ATTENDANCE_STATUSES.has(a.status),
       ).length;
       entry.attendanceCount += classAttendances.length;
     });
@@ -268,7 +312,7 @@ class ReportsService {
           (a) => a.Meeting?.ClassId === c.id && a.UserId === m.id,
         );
         const attendanceRate = pct(
-          classAttendances.filter((a) => ["Present", "Late"].includes(a.status)).length,
+          classAttendances.filter((a) => PRESENT_ATTENDANCE_STATUSES.has(a.status)).length,
           classAttendances.length,
         );
 
@@ -364,6 +408,14 @@ class ReportsService {
     }
 
     return {
+      filters: {
+        startDate: start?.toISOString() || null,
+        endDate: end?.toISOString() || null,
+        ClassId: ClassId ? Number(ClassId) : null,
+        MentorId: currentUser?.role === ROLES.MENTOR ? currentUser.id : MentorId ? Number(MentorId) : null,
+        status: status || "All",
+      },
+      scope: currentUser?.role === ROLES.MENTOR ? "Mentor" : "Organization",
       stats,
       classPerformance,
       attendanceOverview,

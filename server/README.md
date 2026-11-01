@@ -60,6 +60,8 @@ Production uses `DATABASE_URL` with PostgreSQL SSL, suitable for Supabase.
 | `npm run dev` | Run the API in development mode with Nodemon. |
 | `npm start` | Run the production API. |
 | `npm test` | Run API integration tests with Jest and Supertest. |
+| `npm run test:watch` | Run Jest in watch mode during server development. |
+| `npm run test:coverage` | Generate a terminal and LCOV coverage report. |
 | `npm run db:create` | Create the active environment database. |
 | `npm run db:migrate` | Apply pending migrations. |
 | `npm run db:seed` | Load seed data. |
@@ -78,6 +80,13 @@ PNG, PDF, DOC, DOCX, PPT, PPTX, and Markdown, with a 5 MB limit.
 
 Every endpoint returns `{ success, message, data }`. Failed responses use
 `success: false` and `data: null`; validation failures include `errors`.
+
+## API documentation
+
+Start the server, then open `http://localhost:5000/api/docs` for Swagger UI.
+The raw OpenAPI document is available at `/api/openapi.json`. Protected
+operations require a token from `/api/auth/login`; in Swagger, click
+**Authorize** and enter `Bearer <access_token>`.
 
 ## Testing
 
