@@ -8,6 +8,7 @@ const mockModels = {
   Attendance: { findOne: jest.fn(), create: jest.fn() },
   ClassUser: { findOne: jest.fn() },
   TaskCriteria: { findByPk: jest.fn(), sum: jest.fn(), count: jest.fn(), create: jest.fn() },
+  TaskSubmission: { create: jest.fn() },
 };
 
 const mockHelpers = {
@@ -23,6 +24,7 @@ const TaskService = require("../src/services/task.service");
 const NoteService = require("../src/services/note.service");
 const AttendanceService = require("../src/services/attendance.service");
 const TaskCriteriaService = require("../src/services/taskCriteria.service");
+const TaskSubmissionService = require("../src/services/taskSubmission.service");
 
 const mentor = { id: 7, role: "Mentor" };
 
@@ -74,5 +76,15 @@ describe("class-scoped CRUD access", () => {
       title: "Quality",
       percentage: 100,
     })).rejects.toThrow("Permission denied");
+  });
+
+  it("prevents a mentee from submitting a task outside their enrolled class", async () => {
+    mockModels.Task.findByPk.mockResolvedValue({ id: 3, ClassId: 9 });
+    mockModels.ClassUser.findOne.mockResolvedValue(null);
+
+    await expect(TaskSubmissionService.create(
+      { id: 12, role: "Mentee" },
+      { TaskId: 3, submissionUrl: "https://example.test/work" },
+    )).rejects.toThrow("Permission denied");
   });
 });
