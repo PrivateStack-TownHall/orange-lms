@@ -9,7 +9,7 @@ class MeetingController {
         throw new Error("Invalid ClassId");
       }
 
-      const meetings = await meetingService.findAllByClass(ClassId);
+      const meetings = await meetingService.findAllByClass(ClassId, req.user);
 
       res.status(200).json(meetings);
     } catch (error) {
@@ -44,7 +44,7 @@ class MeetingController {
 
   static async getById(req, res, next) {
     try {
-      const meeting = await meetingService.findById(req.params.id);
+      const meeting = await meetingService.findById(req.params.id, req.user);
 
       res.status(200).json(meeting);
     } catch (error) {

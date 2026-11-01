@@ -9,6 +9,7 @@ const {
 } = require("../models");
 const ROLES = require("../constants/roles");
 const { logAudit } = require("../helpers");
+const mentorSubstitutionService = require("./mentorSubstitution.service");
 
 class SubmissionCriteriaScoreService {
   static async create(currentUser, data, meta = {}) {
@@ -146,9 +147,13 @@ class SubmissionCriteriaScoreService {
     }
 
     const isOwnerOrAdmin = [ROLES.OWNER, ROLES.ADMIN].includes(currentUser.role);
-    const isAssignedMentor =
-      currentUser.role === ROLES.MENTOR &&
-      assessment.TaskSubmission?.Task?.Class?.MentorId === currentUser.id;
+    const isAssignedMentor = currentUser.role === ROLES.MENTOR &&
+      await mentorSubstitutionService.canAccess({
+        ClassId: assessment.TaskSubmission?.Task?.ClassId,
+        MeetingId: assessment.TaskSubmission?.Task?.MeetingId,
+        currentUser,
+        cls: assessment.TaskSubmission?.Task?.Class,
+      });
     const isOwningMentee =
       currentUser.role === ROLES.MENTEE &&
       assessment.TaskSubmission?.UserId === currentUser.id;

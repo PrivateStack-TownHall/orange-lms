@@ -29,6 +29,7 @@ class TaskCriteriaController {
     try {
       const criterias = await taskCriteriaService.findAllByTask(
         req.params.taskId,
+        req.user,
       );
 
       res.status(200).json(criterias);
@@ -39,7 +40,7 @@ class TaskCriteriaController {
 
   static async getSummary(req, res, next) {
     try {
-      const summary = await taskCriteriaService.getSummary(req.params.taskId);
+      const summary = await taskCriteriaService.getSummary(req.params.taskId, req.user);
 
       res.status(200).json(summary);
     } catch (error) {
@@ -49,7 +50,7 @@ class TaskCriteriaController {
 
   static async getById(req, res, next) {
     try {
-      const criteria = await taskCriteriaService.findById(req.params.id);
+      const criteria = await taskCriteriaService.findById(req.params.id, req.user);
 
       res.status(200).json(criteria);
     } catch (error) {

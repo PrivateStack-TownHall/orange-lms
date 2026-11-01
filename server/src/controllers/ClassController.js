@@ -1,4 +1,8 @@
-const { classService, classUserService } = require("../services");
+const {
+  classService,
+  classUserService,
+  mentorSubstitutionService,
+} = require("../services");
 
 class ClassController {
   static async getAll(req, res, next) {
@@ -186,6 +190,61 @@ class ClassController {
       await classService.assertCanAccess(req.params.id, req.user);
       const reviewers = await classUserService.getReviewers(req.params.id);
       res.json(reviewers);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async getMentorSubstitutions(req, res, next) {
+    try {
+      const substitutions = await mentorSubstitutionService.findAll(
+        req.params.id,
+        req.user,
+      );
+      res.json(substitutions);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async createMentorSubstitution(req, res, next) {
+    try {
+      const substitution = await mentorSubstitutionService.create(
+        req.params.id,
+        req.body,
+        req.user,
+        req.meta,
+      );
+      res.status(201).json(substitution);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async updateMentorSubstitution(req, res, next) {
+    try {
+      const substitution = await mentorSubstitutionService.update(
+        req.params.id,
+        req.params.assignmentId,
+        req.body,
+        req.user,
+        req.meta,
+      );
+      res.json(substitution);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async cancelMentorSubstitution(req, res, next) {
+    try {
+      const substitution = await mentorSubstitutionService.cancel(
+        req.params.id,
+        req.params.assignmentId,
+        req.user,
+        req.meta,
+      );
+      res.json(substitution);
     } catch (err) {
       next(err);
     }

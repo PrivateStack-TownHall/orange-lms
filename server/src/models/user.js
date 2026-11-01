@@ -15,6 +15,16 @@ module.exports = (sequelize, DataTypes) => {
         as: "mentoredClasses",
       });
 
+      User.hasMany(models.MentorSubstitution, {
+        foreignKey: "MentorId",
+        as: "substituteAssignments",
+      });
+
+      User.hasMany(models.MentorSubstitution, {
+        foreignKey: "assignedBy",
+        as: "createdSubstituteAssignments",
+      });
+
       User.belongsToMany(models.Class, {
         through: {
           model: models.ClassUser,

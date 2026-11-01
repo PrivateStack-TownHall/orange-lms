@@ -7,6 +7,7 @@ const mockModels = {
   User: {},
   Attendance: { findOne: jest.fn(), create: jest.fn() },
   ClassUser: { findOne: jest.fn() },
+  MentorSubstitution: { findAll: jest.fn() },
   TaskCriteria: { findByPk: jest.fn(), sum: jest.fn(), count: jest.fn(), create: jest.fn() },
   TaskSubmission: { create: jest.fn() },
 };
@@ -31,6 +32,7 @@ const mentor = { id: 7, role: "Mentor" };
 describe("class-scoped CRUD access", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockModels.MentorSubstitution.findAll.mockResolvedValue([]);
   });
 
   it("prevents a mentor from updating a task in another mentor's class", async () => {

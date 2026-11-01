@@ -53,6 +53,12 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
       });
 
+      Class.hasMany(models.MentorSubstitution, {
+        foreignKey: "ClassId",
+        as: "mentorSubstitutions",
+        onDelete: "CASCADE",
+      });
+
       Class.hasMany(models.Note, {
         foreignKey: "ClassId",
         as: "notes",

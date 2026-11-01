@@ -13,9 +13,10 @@ const {
 const ROLES = require("../constants/roles");
 
 const { logAudit, logActivity, notifyUsers } = require("../helpers");
+const mentorSubstitutionService = require("./mentorSubstitution.service");
 
 class AssessmentResultService {
-  static getIncludes({ restrictToMentorId, restrictToReviewerId } = {}) {
+  static getIncludes({ mentorScope, restrictToReviewerId } = {}) {
     return [
       {
         model: TaskSubmission,
@@ -23,6 +24,9 @@ class AssessmentResultService {
           {
             model: Task,
             attributes: ["id", "name", "ClassId", "MeetingId", "maxScore"],
+            ...(mentorScope ? {
+              where: mentorSubstitutionService.resourceScopeWhere(mentorScope),
+            } : {}),
             include: [
               {
                 model: Meeting,
@@ -31,9 +35,6 @@ class AssessmentResultService {
               {
                 model: Class,
                 attributes: ["id", "name", "code", "MentorId"],
-                ...(restrictToMentorId
-                  ? { where: { MentorId: restrictToMentorId } }
-                  : {}),
                 ...(restrictToReviewerId
                   ? {
                     include: [{
@@ -47,14 +48,14 @@ class AssessmentResultService {
                   : {}),
               },
             ],
-            ...((restrictToMentorId || restrictToReviewerId) ? { required: true } : {}),
+            ...((mentorScope || restrictToReviewerId) ? { required: true } : {}),
           },
           {
             model: User,
             attributes: ["id", "name", "email"],
           },
         ],
-        ...((restrictToMentorId || restrictToReviewerId) ? { required: true } : {}),
+        ...((mentorScope || restrictToReviewerId) ? { required: true } : {}),
       },
       {
         model: SubmissionCriteriaScore,
@@ -101,8 +102,9 @@ class AssessmentResultService {
 
   static async findAll(currentUser) {
     const submissionWhere = {};
-    const restrictToMentorId =
-      currentUser.role === ROLES.MENTOR ? currentUser.id : undefined;
+    const mentorScope = currentUser.role === ROLES.MENTOR
+      ? await mentorSubstitutionService.getScope(currentUser)
+      : undefined;
     const restrictToReviewerId =
       currentUser.role === ROLES.REVIEWER ? currentUser.id : undefined;
 
@@ -111,7 +113,7 @@ class AssessmentResultService {
     }
 
     return AssessmentResult.findAll({
-      include: this.getIncludes({ restrictToMentorId, restrictToReviewerId }).map((include) =>
+      include: this.getIncludes({ mentorScope, restrictToReviewerId }).map((include) =>
         include.model === TaskSubmission
           ? { ...include, ...(Object.keys(submissionWhere).length ? { where: submissionWhere } : {}) }
           : include,
@@ -131,8 +133,9 @@ class AssessmentResultService {
 
   static async findOne(where, currentUser) {
     const submissionWhere = {};
-    const restrictToMentorId =
-      currentUser.role === ROLES.MENTOR ? currentUser.id : undefined;
+    const mentorScope = currentUser.role === ROLES.MENTOR
+      ? await mentorSubstitutionService.getScope(currentUser)
+      : undefined;
     const restrictToReviewerId =
       currentUser.role === ROLES.REVIEWER ? currentUser.id : undefined;
 
@@ -142,7 +145,7 @@ class AssessmentResultService {
 
     const result = await AssessmentResult.findOne({
       where,
-      include: this.getIncludes({ restrictToMentorId, restrictToReviewerId }).map((include) =>
+      include: this.getIncludes({ mentorScope, restrictToReviewerId }).map((include) =>
         include.model === TaskSubmission
           ? { ...include, ...(Object.keys(submissionWhere).length ? { where: submissionWhere } : {}) }
           : include,
@@ -186,12 +189,12 @@ class AssessmentResultService {
       throw new Error("Submission not found");
     }
 
-    if (
-      currentUser.role === ROLES.MENTOR &&
-      submission.Task?.Class?.MentorId !== currentUser.id
-    ) {
-      throw new Error("Permission denied");
-    }
+    await mentorSubstitutionService.assertCanAccess({
+      ClassId: submission.Task?.ClassId,
+      MeetingId: submission.Task?.MeetingId,
+      currentUser,
+      cls: submission.Task?.Class,
+    });
 
     if (currentUser.role === ROLES.REVIEWER) {
       const assignment = await ClassUser.findOne({

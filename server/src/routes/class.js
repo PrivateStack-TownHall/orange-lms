@@ -49,6 +49,30 @@ router.post(
   ClassController.assignReviewer,
 );
 
+router.get(
+  "/:id/mentor-substitutions",
+  authorization("class", "read"),
+  ClassController.getMentorSubstitutions,
+);
+
+router.post(
+  "/:id/mentor-substitutions",
+  authorization("class", "update"),
+  ClassController.createMentorSubstitution,
+);
+
+router.put(
+  "/:id/mentor-substitutions/:assignmentId",
+  authorization("class", "update"),
+  ClassController.updateMentorSubstitution,
+);
+
+router.delete(
+  "/:id/mentor-substitutions/:assignmentId",
+  authorization("class", "update"),
+  ClassController.cancelMentorSubstitution,
+);
+
 router.delete(
   "/:classId/reviewers/:userId",
   authorization("class", "update"),
