@@ -1,9 +1,19 @@
 const { Task, Meeting, Class, User } = require("../models");
 const ROLES = require("../constants/roles");
 const { logAudit, notifyUsers } = require("../helpers");
+const mentorSubstitutionService = require("./mentorSubstitution.service");
 
 class TaskService {
   static async findAllByMeeting(MeetingId, currentUser) {
+    const meeting = await Meeting.findByPk(MeetingId);
+    if (!meeting) throw new Error("Meeting not found");
+
+    await mentorSubstitutionService.assertCanAccess({
+      ClassId: meeting.ClassId,
+      MeetingId: meeting.id,
+      currentUser,
+    });
+
     if (currentUser?.role === ROLES.REVIEWER) {
       return Task.findAll({
         where: { MeetingId },
@@ -59,15 +69,13 @@ class TaskService {
      * Mentor
      */
     if (currentUser.role === ROLES.MENTOR) {
+      const scope = await mentorSubstitutionService.getScope(currentUser);
+
       return Task.findAll({
+        where: mentorSubstitutionService.resourceScopeWhere(scope),
         include: [
           Meeting,
-          {
-            model: Class,
-            where: {
-              MentorId: currentUser.id,
-            },
-          },
+          Class,
           {
             model: User,
             as: "creator",
@@ -156,6 +164,13 @@ class TaskService {
       }
     }
 
+    await mentorSubstitutionService.assertCanAccess({
+      ClassId: task.ClassId,
+      MeetingId: task.MeetingId,
+      currentUser,
+      cls: task.Class,
+    });
+
     return task;
   }
 
@@ -170,7 +185,7 @@ class TaskService {
       throw new Error("Meeting not found");
     }
 
-    await this.assertMentorClassAccess(meeting.ClassId, currentUser);
+    await this.assertMentorClassAccess(meeting.ClassId, currentUser, undefined, meeting.id);
 
     const task = await Task.create({
       ...data,
@@ -216,7 +231,7 @@ class TaskService {
       throw new Error("Task not found");
     }
 
-    await this.assertMentorClassAccess(task.ClassId, currentUser, task.Class);
+    await this.assertMentorClassAccess(task.ClassId, currentUser, task.Class, task.MeetingId);
 
     await task.update(data);
 
@@ -243,7 +258,7 @@ class TaskService {
       throw new Error("Task not found");
     }
 
-    await this.assertMentorClassAccess(task.ClassId, currentUser, task.Class);
+    await this.assertMentorClassAccess(task.ClassId, currentUser, task.Class, task.MeetingId);
 
     await logAudit({
       user: currentUser,
@@ -257,14 +272,13 @@ class TaskService {
     return task.destroy();
   }
 
-  static async assertMentorClassAccess(ClassId, currentUser, cls) {
-    if (currentUser.role !== ROLES.MENTOR) return;
-
-    const targetClass = cls || await Class.findByPk(ClassId);
-
-    if (!targetClass || targetClass.MentorId !== currentUser.id) {
-      throw new Error("Permission denied");
-    }
+  static async assertMentorClassAccess(ClassId, currentUser, cls, MeetingId) {
+    await mentorSubstitutionService.assertCanAccess({
+      ClassId,
+      MeetingId,
+      currentUser,
+      cls,
+    });
   }
 }
 

@@ -31,6 +31,7 @@ const userActivityService = require("./userActivity.service");
 const reportsService = require("./reports.service");
 const calendarService = require("./calendar.service");
 const courseBlueprintService = require("./courseBlueprint.service");
+const mentorSubstitutionService = require("./mentorSubstitution.service");
 
 module.exports = {
   authService,
@@ -64,4 +65,5 @@ module.exports = {
   reportsService,
   calendarService,
   courseBlueprintService,
+  mentorSubstitutionService,
 };

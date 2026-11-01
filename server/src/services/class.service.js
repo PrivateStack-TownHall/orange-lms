@@ -18,6 +18,7 @@ const {
 
 const ROLES = require("../constants/roles");
 const { logAudit } = require("../helpers");
+const mentorSubstitutionService = require("./mentorSubstitution.service");
 
 class ClassService {
   static async getAll(currentUser) {
@@ -68,10 +69,12 @@ class ClassService {
      * Mentor
      */
     if (currentUser.role === ROLES.MENTOR) {
+      const scope = await mentorSubstitutionService.getScope(currentUser);
+
       return Class.findAll({
         order: [["id", "ASC"]],
         where: {
-          MentorId: currentUser.id,
+          id: scope.classIds,
         },
         include: [
           {
@@ -245,6 +248,11 @@ class ClassService {
   }
 
   static async assertCanAccess(ClassId, currentUser) {
+    if (currentUser?.role === ROLES.MENTOR) {
+      await mentorSubstitutionService.assertCanAccess({ ClassId, currentUser });
+      return;
+    }
+
     if (currentUser?.role !== ROLES.REVIEWER) return;
 
     const assignment = await ClassUser.findOne({

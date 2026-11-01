@@ -11,6 +11,7 @@ const {
 
 const ROLES = require("../constants/roles");
 const { logAudit, logActivity, notifyUsers } = require("../helpers");
+const mentorSubstitutionService = require("./mentorSubstitution.service");
 
 // Deep include reused by every "single submission" read so Mentor / Mentee /
 // Admin submission-detail pages all get the same fully-populated shape:
@@ -112,17 +113,15 @@ class TaskSubmissionService {
      * Mentor
      */
     if (currentUser.role === ROLES.MENTOR) {
+      const scope = await mentorSubstitutionService.getScope(currentUser);
+
       return TaskSubmission.findAll({
         include: [
           {
             model: Task,
+            where: mentorSubstitutionService.resourceScopeWhere(scope),
             include: [
-              {
-                model: Class,
-                where: {
-                  MentorId: currentUser.id,
-                },
-              },
+              Class,
             ],
           },
           User,
@@ -205,33 +204,19 @@ class TaskSubmissionService {
      * Mentor
      */
     if (currentUser.role === ROLES.MENTOR) {
+      const task = await Task.findByPk(TaskId, { include: [Class] });
+      if (!task) throw new Error("Task not found");
+
+      await mentorSubstitutionService.assertCanAccess({
+        ClassId: task.ClassId,
+        MeetingId: task.MeetingId,
+        currentUser,
+        cls: task.Class,
+      });
+
       return TaskSubmission.findAll({
         where: { TaskId },
-        include: [
-          {
-            model: Task,
-            include: [
-              {
-                model: Class,
-                where: {
-                  MentorId: currentUser.id,
-                },
-              },
-            ],
-          },
-          User,
-          {
-            model: AssessmentResult,
-            include: [
-              {
-                model: SubmissionCriteriaScore,
-                as: "scores",
-                include: [{ model: TaskCriteria, as: "criteria" }],
-              },
-              { model: User, as: "grader", attributes: ["id", "name", "email"] },
-            ],
-          },
-        ],
+        include: DETAIL_INCLUDE,
       });
     }
 
@@ -291,9 +276,7 @@ class TaskSubmissionService {
     }
 
     const isOwnerOrAdmin = [ROLES.OWNER, ROLES.ADMIN].includes(currentUser.role);
-    const isAssignedMentor =
-      currentUser.role === ROLES.MENTOR &&
-      submission.Task?.Class?.MentorId === currentUser.id;
+    const isAssignedMentor = await this.isAssignedMentor(submission.Task, currentUser);
     const isOwningMentee =
       currentUser.role === ROLES.MENTEE && submission.UserId === currentUser.id;
 
@@ -336,9 +319,7 @@ class TaskSubmissionService {
     }
 
     const isOwnerOrAdmin = [ROLES.OWNER, ROLES.ADMIN].includes(currentUser.role);
-    const isAssignedMentor =
-      currentUser.role === ROLES.MENTOR &&
-      submission.Task?.Class?.MentorId === currentUser.id;
+    const isAssignedMentor = await this.isAssignedMentor(submission.Task, currentUser);
     const isOwningMentee =
       currentUser.role === ROLES.MENTEE && submission.UserId === currentUser.id;
 
@@ -382,9 +363,7 @@ class TaskSubmissionService {
     }
 
     const isOwnerOrAdmin = [ROLES.OWNER, ROLES.ADMIN].includes(currentUser.role);
-    const isAssignedMentor =
-      currentUser.role === ROLES.MENTOR &&
-      submission.Task?.Class?.MentorId === currentUser.id;
+    const isAssignedMentor = await this.isAssignedMentor(submission.Task, currentUser);
     const isAssignedReviewer = await this.isAssignedReviewer(
       submission.Task?.ClassId,
       currentUser,
@@ -418,6 +397,17 @@ class TaskSubmissionService {
     });
 
     return Boolean(assignment);
+  }
+
+  static async isAssignedMentor(task, currentUser) {
+    if (currentUser?.role !== ROLES.MENTOR || !task?.ClassId) return false;
+
+    return mentorSubstitutionService.canAccess({
+      ClassId: task.ClassId,
+      MeetingId: task.MeetingId,
+      currentUser,
+      cls: task.Class,
+    });
   }
 
   static async delete(id, currentUser, meta = {}) {

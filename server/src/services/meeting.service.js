@@ -2,9 +2,12 @@ const { Meeting, Class, User, Task, Note, Material } = require("../models");
 
 const ROLES = require("../constants/roles");
 const { logAudit, notifyUsers } = require("../helpers");
+const mentorSubstitutionService = require("./mentorSubstitution.service");
 
 class MeetingService {
-  static async findAllByClass(ClassId) {
+  static async findAllByClass(ClassId, currentUser) {
+    await mentorSubstitutionService.assertCanAccess({ ClassId, currentUser });
+
     return Meeting.findAll({
       where: { ClassId },
       include: [
@@ -77,14 +80,14 @@ class MeetingService {
      * Mentor
      */
     if (currentUser.role === ROLES.MENTOR) {
+      const scope = await mentorSubstitutionService.getScope(currentUser);
+
       return Meeting.findAll({
+        where: mentorSubstitutionService.meetingScopeWhere(scope),
         include: [
           {
             model: Class,
             as: "class",
-            where: {
-              MentorId: currentUser.id,
-            },
             attributes: ["id", "name", "code", "description"],
           },
           {
@@ -164,8 +167,8 @@ class MeetingService {
     throw new Error("Unauthorized");
   }
 
-  static async findById(id) {
-    return Meeting.findByPk(id, {
+  static async findById(id, currentUser) {
+    const meeting = await Meeting.findByPk(id, {
       include: [
         {
           model: Class,
@@ -215,12 +218,27 @@ class MeetingService {
         },
       ],
     });
+
+    if (!meeting) return null;
+
+    await mentorSubstitutionService.assertCanAccess({
+      ClassId: meeting.ClassId,
+      MeetingId: meeting.id,
+      currentUser,
+    });
+
+    return meeting;
   }
 
   static async create(currentUser, classId, data, meta = {}) {
     if (![ROLES.ADMIN, ROLES.OWNER, ROLES.MENTOR].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
+
+    await mentorSubstitutionService.assertCanAccess({
+      ClassId: classId,
+      currentUser,
+    });
 
     const meeting = await Meeting.create({
       ...data,

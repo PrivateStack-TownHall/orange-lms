@@ -36,6 +36,12 @@ module.exports = (sequelize, DataTypes) => {
         as: "materials",
         onDelete: "CASCADE",
       });
+
+      Meeting.hasMany(models.MentorSubstitution, {
+        foreignKey: "MeetingId",
+        as: "mentorSubstitutions",
+        onDelete: "CASCADE",
+      });
     }
   }
 
