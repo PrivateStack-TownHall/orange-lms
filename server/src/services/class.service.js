@@ -9,10 +9,16 @@ const {
   TaskSubmission,
   AssessmentResult,
   ClassUser,
+  CourseBlueprint,
+  BlueprintMeeting,
+  BlueprintMaterial,
+  BlueprintTask,
+  sequelize,
 } = require("../models");
 
 const ROLES = require("../constants/roles");
 const { logAudit } = require("../helpers");
+const mentorSubstitutionService = require("./mentorSubstitution.service");
 
 class ClassService {
   static async getAll(currentUser) {
@@ -63,10 +69,12 @@ class ClassService {
      * Mentor
      */
     if (currentUser.role === ROLES.MENTOR) {
+      const scope = await mentorSubstitutionService.getScope(currentUser);
+
       return Class.findAll({
         order: [["id", "ASC"]],
         where: {
-          MentorId: currentUser.id,
+          id: scope.classIds,
         },
         include: [
           {
@@ -151,10 +159,29 @@ class ClassService {
       });
     }
 
+    if (currentUser.role === ROLES.REVIEWER) {
+      return Class.findAll({
+        order: [["id", "ASC"]],
+        include: [
+          {
+            model: User,
+            as: "reviewers",
+            attributes: [],
+            through: { attributes: [], where: { roleInClass: "Reviewer" } },
+            where: { id: currentUser.id },
+          },
+          { model: User, as: "creator", attributes: ["id", "name", "email"] },
+          { model: User, as: "mentor", attributes: ["id", "name", "email"] },
+          { model: Meeting, as: "meetings" },
+          { model: Task, as: "tasks" },
+        ],
+      });
+    }
+
     throw new Error("Unauthorized");
   }
 
-  static async findById(id) {
+  static async findById(id, currentUser) {
     const cls = await Class.findByPk(id, {
       include: [
         {
@@ -197,6 +224,8 @@ class ClassService {
 
     if (!cls) return null;
 
+    await this.assertCanAccess(id, currentUser);
+
     const menteeStats = await ClassService.computeMenteeStats(
       id,
       (cls.mentees || []).map((m) => m.id),
@@ -216,6 +245,23 @@ class ClassService {
     plain.mentees = menteesWithStats;
 
     return plain;
+  }
+
+  static async assertCanAccess(ClassId, currentUser) {
+    if (currentUser?.role === ROLES.MENTOR) {
+      await mentorSubstitutionService.assertCanAccess({ ClassId, currentUser });
+      return;
+    }
+
+    if (currentUser?.role !== ROLES.REVIEWER) return;
+
+    const assignment = await ClassUser.findOne({
+      where: { ClassId, UserId: currentUser.id, roleInClass: "Reviewer" },
+    });
+
+    if (!assignment) {
+      throw new Error("Permission denied");
+    }
   }
 
   /**
@@ -298,6 +344,136 @@ class ClassService {
     });
 
     return cls;
+  }
+
+  static generateMeetingDates(startDate, count, meetingDays) {
+    const days = [...new Set(meetingDays.map(Number))].sort((a, b) => a - b);
+
+    if (!days.length || days.some((day) => !Number.isInteger(day) || day < 0 || day > 6)) {
+      throw new Error("meetingDays must contain weekdays from 0 to 6");
+    }
+
+    const cursor = new Date(`${startDate}T00:00:00.000Z`);
+    if (Number.isNaN(cursor.getTime())) throw new Error("Invalid startDate");
+
+    const dates = [];
+    while (dates.length < count) {
+      if (days.includes(cursor.getUTCDay())) dates.push(new Date(cursor));
+      cursor.setUTCDate(cursor.getUTCDate() + 1);
+    }
+
+    return dates;
+  }
+
+  static finishHour(startHour, durationMinutes) {
+    const [hours, minutes] = String(startHour || "00:00").split(":").map(Number);
+    const total = ((hours * 60) + minutes + Number(durationMinutes || 0)) % (24 * 60);
+    return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}:00`;
+  }
+
+  static async createFromBlueprint(data, currentUser, meta = {}) {
+    if (![ROLES.ADMIN, ROLES.OWNER].includes(currentUser.role)) {
+      throw new Error("Permission denied");
+    }
+
+    const {
+      CourseBlueprintId,
+      meetingDays,
+      startHour,
+      finishHour,
+      ...classData
+    } = data;
+
+    const blueprint = await CourseBlueprint.findByPk(CourseBlueprintId, {
+      include: [{
+        model: BlueprintMeeting,
+        as: "meetings",
+        include: [
+          { model: BlueprintMaterial, as: "materials" },
+          { model: BlueprintTask, as: "tasks" },
+        ],
+      }],
+      order: [[{ model: BlueprintMeeting, as: "meetings" }, "sequence", "ASC"]],
+    });
+
+    if (!blueprint) throw new Error("Course blueprint not found");
+    if (blueprint.status !== "Published") throw new Error("Course blueprint must be published");
+    if (!Array.isArray(meetingDays)) throw new Error("meetingDays is required");
+
+    const blueprintMeetings = blueprint.meetings || [];
+    const meetingDates = this.generateMeetingDates(classData.startDate, blueprintMeetings.length, meetingDays);
+
+    const result = await sequelize.transaction(async (transaction) => {
+      const batch = await Class.create({
+        ...classData,
+        CourseBlueprintId,
+        scheduleDays: meetingDays,
+        startHour,
+        finishHour,
+        createdBy: currentUser.id,
+      }, { transaction });
+
+      for (const [index, blueprintMeeting] of blueprintMeetings.entries()) {
+        const meetingDate = meetingDates[index];
+        const generatedMeeting = await Meeting.create({
+          ClassId: batch.id,
+          BlueprintMeetingId: blueprintMeeting.id,
+          meetingNumber: blueprintMeeting.sequence,
+          name: blueprintMeeting.title,
+          description: blueprintMeeting.description,
+          meetingDate,
+          startHour,
+          finishHour: finishHour || this.finishHour(startHour, blueprintMeeting.durationMinutes),
+          mode: classData.deliveryMode,
+          location: classData.location,
+          meetingUrl: classData.meetingUrl,
+          createdBy: currentUser.id,
+        }, { transaction });
+
+        for (const material of blueprintMeeting.materials || []) {
+          await Material.create({
+            ClassId: batch.id,
+            MeetingId: generatedMeeting.id,
+            BlueprintMaterialId: material.id,
+            name: material.name,
+            description: material.description,
+            type: material.type,
+            fileUrl: material.fileUrl,
+            uploadedBy: currentUser.id,
+          }, { transaction });
+        }
+
+        for (const task of blueprintMeeting.tasks || []) {
+          const dueDate = new Date(meetingDate);
+          dueDate.setDate(dueDate.getDate() + Number(task.dueOffsetDays || 0));
+          await Task.create({
+            ClassId: batch.id,
+            MeetingId: generatedMeeting.id,
+            BlueprintTaskId: task.id,
+            name: task.name,
+            description: task.description,
+            dueDate,
+            maxScore: task.maxScore,
+            status: task.status,
+            fileUrl: task.fileUrl,
+            createdBy: currentUser.id,
+          }, { transaction });
+        }
+      }
+
+      return batch;
+    });
+
+    await logAudit({
+      user: currentUser,
+      action: "CREATE",
+      resource: "Class",
+      resourceId: result.id,
+      resourceDetail: `${result.name} from blueprint ${blueprint.code}`,
+      meta,
+    });
+
+    return result;
   }
 
   static async update(id, data, currentUser, meta = {}) {

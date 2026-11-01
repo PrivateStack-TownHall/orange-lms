@@ -6,10 +6,12 @@ const {
   AssessmentResult,
   SubmissionCriteriaScore,
   TaskCriteria,
+  ClassUser,
 } = require("../models");
 
 const ROLES = require("../constants/roles");
 const { logAudit, logActivity, notifyUsers } = require("../helpers");
+const mentorSubstitutionService = require("./mentorSubstitution.service");
 
 // Deep include reused by every "single submission" read so Mentor / Mentee /
 // Admin submission-detail pages all get the same fully-populated shape:
@@ -39,12 +41,29 @@ class TaskSubmissionService {
       throw new Error("Only mentee can submit task");
     }
 
-    const submission = await TaskSubmission.create({
-      ...data,
-      status: "Submitted",
+    const task = await Task.findByPk(data.TaskId, { include: [Class] });
+
+    if (!task) {
+      throw new Error("Task not found");
+    }
+
+    const enrollment = await ClassUser.findOne({
+      where: {
+        ClassId: task.ClassId,
+        UserId: currentUser.id,
+        roleInClass: "Mentee",
+      },
     });
 
-    const task = await Task.findByPk(data.TaskId, { include: [Class] });
+    if (!enrollment) {
+      throw new Error("Permission denied");
+    }
+
+    const submission = await TaskSubmission.create({
+      ...data,
+      UserId: currentUser.id,
+      status: "Submitted",
+    });
 
     await logAudit({
       user: currentUser,
@@ -94,6 +113,34 @@ class TaskSubmissionService {
      * Mentor
      */
     if (currentUser.role === ROLES.MENTOR) {
+      const scope = await mentorSubstitutionService.getScope(currentUser);
+
+      return TaskSubmission.findAll({
+        include: [
+          {
+            model: Task,
+            where: mentorSubstitutionService.resourceScopeWhere(scope),
+            include: [
+              Class,
+            ],
+          },
+          User,
+          {
+            model: AssessmentResult,
+            include: [
+              {
+                model: SubmissionCriteriaScore,
+                as: "scores",
+                include: [{ model: TaskCriteria, as: "criteria" }],
+              },
+              { model: User, as: "grader", attributes: ["id", "name", "email"] },
+            ],
+          },
+        ],
+      });
+    }
+
+    if (currentUser.role === ROLES.REVIEWER) {
       return TaskSubmission.findAll({
         include: [
           {
@@ -101,9 +148,13 @@ class TaskSubmissionService {
             include: [
               {
                 model: Class,
-                where: {
-                  MentorId: currentUser.id,
-                },
+                include: [{
+                  model: User,
+                  as: "reviewers",
+                  attributes: [],
+                  through: { attributes: [], where: { roleInClass: "Reviewer" } },
+                  where: { id: currentUser.id },
+                }],
               },
             ],
           },
@@ -153,32 +204,41 @@ class TaskSubmissionService {
      * Mentor
      */
     if (currentUser.role === ROLES.MENTOR) {
+      const task = await Task.findByPk(TaskId, { include: [Class] });
+      if (!task) throw new Error("Task not found");
+
+      await mentorSubstitutionService.assertCanAccess({
+        ClassId: task.ClassId,
+        MeetingId: task.MeetingId,
+        currentUser,
+        cls: task.Class,
+      });
+
+      return TaskSubmission.findAll({
+        where: { TaskId },
+        include: DETAIL_INCLUDE,
+      });
+    }
+
+    if (currentUser.role === ROLES.REVIEWER) {
       return TaskSubmission.findAll({
         where: { TaskId },
         include: [
           {
             model: Task,
-            include: [
-              {
-                model: Class,
-                where: {
-                  MentorId: currentUser.id,
-                },
-              },
-            ],
+            include: [{
+              model: Class,
+              include: [{
+                model: User,
+                as: "reviewers",
+                attributes: [],
+                through: { attributes: [], where: { roleInClass: "Reviewer" } },
+                where: { id: currentUser.id },
+              }],
+            }],
           },
           User,
-          {
-            model: AssessmentResult,
-            include: [
-              {
-                model: SubmissionCriteriaScore,
-                as: "scores",
-                include: [{ model: TaskCriteria, as: "criteria" }],
-              },
-              { model: User, as: "grader", attributes: ["id", "name", "email"] },
-            ],
-          },
+          { model: AssessmentResult, include: DETAIL_INCLUDE[2].include },
         ],
       });
     }
@@ -216,13 +276,16 @@ class TaskSubmissionService {
     }
 
     const isOwnerOrAdmin = [ROLES.OWNER, ROLES.ADMIN].includes(currentUser.role);
-    const isAssignedMentor =
-      currentUser.role === ROLES.MENTOR &&
-      submission.Task?.Class?.MentorId === currentUser.id;
+    const isAssignedMentor = await this.isAssignedMentor(submission.Task, currentUser);
     const isOwningMentee =
       currentUser.role === ROLES.MENTEE && submission.UserId === currentUser.id;
 
-    if (!isOwnerOrAdmin && !isAssignedMentor && !isOwningMentee) {
+    const isAssignedReviewer = await this.isAssignedReviewer(
+      submission.Task?.ClassId,
+      currentUser,
+    );
+
+    if (!isOwnerOrAdmin && !isAssignedMentor && !isOwningMentee && !isAssignedReviewer) {
       throw new Error("Permission denied");
     }
 
@@ -256,9 +319,7 @@ class TaskSubmissionService {
     }
 
     const isOwnerOrAdmin = [ROLES.OWNER, ROLES.ADMIN].includes(currentUser.role);
-    const isAssignedMentor =
-      currentUser.role === ROLES.MENTOR &&
-      submission.Task?.Class?.MentorId === currentUser.id;
+    const isAssignedMentor = await this.isAssignedMentor(submission.Task, currentUser);
     const isOwningMentee =
       currentUser.role === ROLES.MENTEE && submission.UserId === currentUser.id;
 
@@ -290,6 +351,63 @@ class TaskSubmissionService {
     }
 
     return submission;
+  }
+
+  static async review(id, data, currentUser, meta = {}) {
+    const submission = await TaskSubmission.findByPk(id, {
+      include: [{ model: Task, include: [Class] }],
+    });
+
+    if (!submission) {
+      throw new Error("Submission not found");
+    }
+
+    const isOwnerOrAdmin = [ROLES.OWNER, ROLES.ADMIN].includes(currentUser.role);
+    const isAssignedMentor = await this.isAssignedMentor(submission.Task, currentUser);
+    const isAssignedReviewer = await this.isAssignedReviewer(
+      submission.Task?.ClassId,
+      currentUser,
+    );
+
+    if (!isOwnerOrAdmin && !isAssignedMentor && !isAssignedReviewer) {
+      throw new Error("Permission denied");
+    }
+
+    await submission.update(data);
+
+    await logAudit({
+      user: currentUser,
+      action: "UPDATE",
+      resource: "TaskSubmission",
+      resourceId: submission.id,
+      resourceDetail: submission.Task?.name,
+      meta,
+    });
+
+    return submission;
+  }
+
+  static async isAssignedReviewer(ClassId, currentUser) {
+    if (currentUser.role !== ROLES.REVIEWER || !ClassId) {
+      return false;
+    }
+
+    const assignment = await ClassUser.findOne({
+      where: { ClassId, UserId: currentUser.id, roleInClass: "Reviewer" },
+    });
+
+    return Boolean(assignment);
+  }
+
+  static async isAssignedMentor(task, currentUser) {
+    if (currentUser?.role !== ROLES.MENTOR || !task?.ClassId) return false;
+
+    return mentorSubstitutionService.canAccess({
+      ClassId: task.ClassId,
+      MeetingId: task.MeetingId,
+      currentUser,
+      cls: task.Class,
+    });
   }
 
   static async delete(id, currentUser, meta = {}) {

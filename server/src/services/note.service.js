@@ -1,9 +1,19 @@
 const { Note, Meeting, Class, User } = require("../models");
 const ROLES = require("../constants/roles");
 const { logAudit, logActivity } = require("../helpers");
+const mentorSubstitutionService = require("./mentorSubstitution.service");
 
 class NoteService {
-  static async findAllByMeeting(MeetingId) {
+  static async findAllByMeeting(MeetingId, currentUser) {
+    const meeting = await Meeting.findByPk(MeetingId);
+    if (!meeting) throw new Error("Meeting not found");
+
+    await mentorSubstitutionService.assertCanAccess({
+      ClassId: meeting.ClassId,
+      MeetingId: meeting.id,
+      currentUser,
+    });
+
     return Note.findAll({
       where: { MeetingId },
       include: [
@@ -38,15 +48,13 @@ class NoteService {
      * Mentor
      */
     if (currentUser.role === ROLES.MENTOR) {
+      const scope = await mentorSubstitutionService.getScope(currentUser);
+
       return Note.findAll({
+        where: mentorSubstitutionService.resourceScopeWhere(scope),
         include: [
           Meeting,
-          {
-            model: Class,
-            where: {
-              MentorId: currentUser.id,
-            },
-          },
+          Class,
           {
             model: User,
             as: "creator",
@@ -91,8 +99,8 @@ class NoteService {
     throw new Error("Unauthorized");
   }
 
-  static async findById(id) {
-    return Note.findByPk(id, {
+  static async findById(id, currentUser) {
+    const note = await Note.findByPk(id, {
       include: [
         Meeting,
         Class,
@@ -102,6 +110,17 @@ class NoteService {
         },
       ],
     });
+
+    if (!note) return null;
+
+    await mentorSubstitutionService.assertCanAccess({
+      ClassId: note.ClassId,
+      MeetingId: note.MeetingId,
+      currentUser,
+      cls: note.Class,
+    });
+
+    return note;
   }
 
   static async create(currentUser, meetingId, data, meta = {}) {
@@ -114,6 +133,8 @@ class NoteService {
     if (!meeting) {
       throw new Error("Meeting not found");
     }
+
+    await this.assertMentorClassAccess(meeting.ClassId, currentUser, undefined, meeting.id);
 
     const note = await Note.create({
       ...data,
@@ -149,11 +170,13 @@ class NoteService {
       throw new Error("Permission denied");
     }
 
-    const note = await Note.findByPk(id);
+    const note = await Note.findByPk(id, { include: [Class] });
 
     if (!note) {
       throw new Error("Note not found");
     }
+
+    await this.assertMentorClassAccess(note.ClassId, currentUser, note.Class, note.MeetingId);
 
     await note.update(data);
 
@@ -174,11 +197,13 @@ class NoteService {
       throw new Error("Permission denied");
     }
 
-    const note = await Note.findByPk(id);
+    const note = await Note.findByPk(id, { include: [Class] });
 
     if (!note) {
       throw new Error("Note not found");
     }
+
+    await this.assertMentorClassAccess(note.ClassId, currentUser, note.Class, note.MeetingId);
 
     await logAudit({
       user: currentUser,
@@ -190,6 +215,15 @@ class NoteService {
     });
 
     return note.destroy();
+  }
+
+  static async assertMentorClassAccess(ClassId, currentUser, cls, MeetingId) {
+    await mentorSubstitutionService.assertCanAccess({
+      ClassId,
+      MeetingId,
+      currentUser,
+      cls,
+    });
   }
 }
 

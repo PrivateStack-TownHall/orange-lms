@@ -15,6 +15,16 @@ module.exports = (sequelize, DataTypes) => {
         as: "mentoredClasses",
       });
 
+      User.hasMany(models.MentorSubstitution, {
+        foreignKey: "MentorId",
+        as: "substituteAssignments",
+      });
+
+      User.hasMany(models.MentorSubstitution, {
+        foreignKey: "assignedBy",
+        as: "createdSubstituteAssignments",
+      });
+
       User.belongsToMany(models.Class, {
         through: {
           model: models.ClassUser,
@@ -25,6 +35,18 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "UserId",
         otherKey: "ClassId",
         as: "enrolledClasses",
+      });
+
+      User.belongsToMany(models.Class, {
+        through: {
+          model: models.ClassUser,
+          where: {
+            roleInClass: "Reviewer",
+          },
+        },
+        foreignKey: "UserId",
+        otherKey: "ClassId",
+        as: "reviewClasses",
       });
 
       User.hasMany(models.ClassUser, {

@@ -81,6 +81,10 @@ class ErrorHandling {
       "Original class not found",
       "Score not found",
       "No participants found",
+      "Course blueprint not found",
+      "Blueprint meeting not found",
+      "Blueprint material not found",
+      "Blueprint task not found",
     ];
 
     if (notFoundErrors.includes(error.message)) {
@@ -88,6 +92,10 @@ class ErrorHandling {
         error: true,
         message: error.message,
       });
+    }
+
+    if (["Course blueprint must be published", "meetingDays is required", "meetingDays must contain weekdays from 0 to 6", "Invalid startDate"].includes(error.message)) {
+      return res.status(400).json({ error: true, message: error.message });
     }
 
     /**

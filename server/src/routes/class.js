@@ -8,6 +8,12 @@ router.get("/", authorization("class", "read"), ClassController.getAll);
 
 router.post("/", authorization("class", "create"), ClassController.create);
 
+router.post(
+  "/from-blueprint",
+  authorization("class", "create"),
+  ClassController.createFromBlueprint,
+);
+
 router.get("/:id", authorization("class", "read"), ClassController.getById);
 
 router.put("/:id", authorization("class", "update"), ClassController.update);
@@ -37,6 +43,42 @@ router.post(
   ClassController.assignMentor,
 );
 
+router.post(
+  "/:id/assign-reviewer",
+  authorization("class", "update"),
+  ClassController.assignReviewer,
+);
+
+router.get(
+  "/:id/mentor-substitutions",
+  authorization("class", "read"),
+  ClassController.getMentorSubstitutions,
+);
+
+router.post(
+  "/:id/mentor-substitutions",
+  authorization("class", "update"),
+  ClassController.createMentorSubstitution,
+);
+
+router.put(
+  "/:id/mentor-substitutions/:assignmentId",
+  authorization("class", "update"),
+  ClassController.updateMentorSubstitution,
+);
+
+router.delete(
+  "/:id/mentor-substitutions/:assignmentId",
+  authorization("class", "update"),
+  ClassController.cancelMentorSubstitution,
+);
+
+router.delete(
+  "/:classId/reviewers/:userId",
+  authorization("class", "update"),
+  ClassController.removeReviewer,
+);
+
 router.get(
   "/:id/users",
   authorization("class", "read"),
@@ -53,6 +95,12 @@ router.get(
   "/:id/mentor",
   authorization("class", "read"),
   ClassController.getMentor,
+);
+
+router.get(
+  "/:id/reviewers",
+  authorization("class", "read"),
+  ClassController.getReviewers,
 );
 
 module.exports = router;

@@ -93,7 +93,7 @@ const publicOperation = ({ summary, description, requestBody, status = 200, resp
   },
 });
 
-const crud = (tag, requestSchema, label, itemSchema, listSchema) => ({
+const crud = (requestSchema, label, itemSchema, listSchema) => ({
   get: protectedOperation({ summary: `List ${label}`, description: `Returns ${label} available to the authenticated user.`, responseSchema: listSchema ? schema(listSchema) : arrayOf(itemSchema) }),
   post: protectedOperation({ summary: `Create ${label === "task criteria" ? "task criterion" : label.slice(0, -1)}`, description: `Creates a ${label === "task criteria" ? "task criterion" : label.slice(0, -1)}.`, requestBody: body(requestSchema), status: 201, responseSchema: schema(itemSchema) }),
 });
@@ -123,25 +123,28 @@ const paths = {
   "/auth/logout": {
     post: protectedOperation({ summary: "Logout", description: "Records a logout audit and activity event.", responseSchema: schema("ActionResult"), responseExample: null, responseMessage: "Logout success" }),
   },
-  "/users": crud("Users", "UserRequest", "users", "User", "UserList"),
+  "/users": crud("UserRequest", "users", "User", "UserList"),
   "/users/{id}": crudById("UserRequest", "user", "User"),
   "/users/{id}/profile": {
     get: protectedOperation({ summary: "Get user profile", description: "Returns the profile associated with a user.", parameters: [id()], responseSchema: schema("Profile") }),
     put: protectedOperation({ summary: "Update user profile", description: "Updates profile fields for a user.", parameters: [id()], requestBody: body("ProfileRequest"), responseSchema: schema("Profile") }),
   },
-  "/mentors": crud("Mentors", "UserRequest", "mentors", "User", "UserList"),
+  "/mentors": crud("UserRequest", "mentors", "User", "UserList"),
   "/mentors/{id}": crudById("UserRequest", "mentor", "User"),
   "/mentors/{id}/profile": {
     get: protectedOperation({ summary: "Get mentor profile", description: "Returns a mentor profile.", parameters: [id()], responseSchema: schema("Profile") }),
     put: protectedOperation({ summary: "Update mentor profile", description: "Updates a mentor profile.", parameters: [id()], requestBody: body("ProfileRequest"), responseSchema: schema("Profile") }),
   },
-  "/mentees": crud("Mentees", "UserRequest", "mentees", "User", "UserList"),
+  "/mentees": crud("UserRequest", "mentees", "User", "UserList"),
   "/mentees/{id}": crudById("UserRequest", "mentee", "User"),
   "/mentees/{id}/profile": {
     get: protectedOperation({ summary: "Get mentee profile", description: "Returns a mentee profile.", parameters: [id()], responseSchema: schema("Profile") }),
     put: protectedOperation({ summary: "Update mentee profile", description: "Updates a mentee profile.", parameters: [id()], requestBody: body("ProfileRequest"), responseSchema: schema("Profile") }),
   },
-  "/classes": crud("Classes", "ClassRequest", "classes", "Class", "ClassList"),
+  "/classes": crud("ClassRequest", "classes", "Class", "ClassList"),
+  "/classes/from-blueprint": {
+    post: protectedOperation({ summary: "Create batch from course blueprint", description: "Creates a Class batch from a published Course Blueprint, generates its Meetings on selected weekdays, and clones the blueprint Materials and Tasks. Owner and Admin only.", requestBody: body("BlueprintBatchRequest"), status: 201, responseSchema: schema("Class") }),
+  },
   "/classes/{id}": crudById("ClassRequest", "class", "Class"),
   "/classes/{id}/enrollMentee": {
     post: protectedOperation({ summary: "Enroll one mentee", description: "Enrolls one mentee in a class.", parameters: [id()], requestBody: body("EnrollmentRequest") }),
@@ -155,6 +158,20 @@ const paths = {
   "/classes/{id}/assign-mentor": {
     post: protectedOperation({ summary: "Assign mentor", description: "Assigns the class mentor.", parameters: [id()], requestBody: body("MentorAssignmentRequest") }),
   },
+  "/classes/{id}/assign-reviewer": {
+    post: protectedOperation({ summary: "Assign reviewer", description: "Assigns a Reviewer user to assess submissions for one class. Owner and Admin only.", parameters: [id()], requestBody: body("ReviewerAssignmentRequest"), status: 201, responseSchema: schema("ClassUser") }),
+  },
+  "/classes/{id}/mentor-substitutions": {
+    get: protectedOperation({ summary: "List mentor substitutions", description: "Returns the substitute-mentor assignment history for one class. Owner, Admin, the primary mentor, and an assigned substitute mentor may read it.", parameters: [id()], responseSchema: arrayOf("MentorSubstitution") }),
+    post: protectedOperation({ summary: "Assign substitute mentor", description: "Assigns an active Mentor as a substitute without changing Class.MentorId. Omit MeetingId for class-wide access; provide MeetingId to limit access to one meeting. Owner and Admin only.", parameters: [id()], requestBody: body("MentorSubstitutionRequest"), status: 201, responseSchema: schema("MentorSubstitution") }),
+  },
+  "/classes/{id}/mentor-substitutions/{assignmentId}": {
+    put: protectedOperation({ summary: "Update substitute mentor assignment", description: "Updates the reason, active period, or status of a substitute-mentor assignment. Class, meeting, and substitute mentor cannot be changed after creation. Owner and Admin only.", parameters: [id(), id("assignmentId", "Mentor substitution assignment identifier")], requestBody: body("MentorSubstitutionUpdateRequest"), responseSchema: schema("MentorSubstitution") }),
+    delete: protectedOperation({ summary: "Cancel substitute mentor assignment", description: "Cancels an active substitute-mentor assignment without deleting its audit history. Owner and Admin only.", parameters: [id(), id("assignmentId", "Mentor substitution assignment identifier")], responseSchema: schema("MentorSubstitution") }),
+  },
+  "/classes/{classId}/reviewers/{userId}": {
+    delete: protectedOperation({ summary: "Remove reviewer", description: "Removes a Reviewer's class-scoped assessment access. Owner and Admin only.", parameters: [id("classId", "Class identifier"), id("userId", "Reviewer user identifier")], responseSchema: schema("ActionResult"), responseExample: { message: "Reviewer removed successfully" } }),
+  },
   "/classes/{id}/users": {
     get: protectedOperation({ summary: "List class users", description: "Returns users enrolled or assigned to a class.", parameters: [id()] }),
   },
@@ -163,6 +180,35 @@ const paths = {
   },
   "/classes/{id}/mentor": {
     get: protectedOperation({ summary: "Get class mentor", description: "Returns the mentor assigned to a class.", parameters: [id()] }),
+  },
+  "/classes/{id}/reviewers": {
+    get: protectedOperation({ summary: "List class reviewers", description: "Returns Reviewer assignments for a class. A Reviewer can only access classes assigned to them.", parameters: [id()], responseSchema: arrayOf("ClassUser") }),
+  },
+  "/course-blueprints": {
+    get: protectedOperation({ summary: "List course blueprints", description: "Returns reusable curriculum templates. Owner, Admin, and Mentor may read; only Owner and Admin can manage templates.", responseSchema: arrayOf("CourseBlueprint") }),
+    post: protectedOperation({ summary: "Create course blueprint", description: "Creates a reusable course curriculum without any batch schedule, mentor, or enrolment.", requestBody: body("CourseBlueprintRequest"), status: 201, responseSchema: schema("CourseBlueprint") }),
+  },
+  "/course-blueprints/{id}": crudById("CourseBlueprintRequest", "course blueprint", "CourseBlueprint"),
+  "/course-blueprints/{id}/meetings": {
+    post: protectedOperation({ summary: "Add blueprint meeting", description: "Adds an ordered meeting template. Sequence is assigned automatically when omitted.", parameters: [id()], requestBody: body("BlueprintMeetingRequest"), status: 201, responseSchema: schema("BlueprintMeeting") }),
+  },
+  "/course-blueprints/meetings/{meetingId}": {
+    put: protectedOperation({ summary: "Update blueprint meeting", description: "Updates a reusable meeting template.", parameters: [id("meetingId", "Blueprint meeting identifier")], requestBody: body("BlueprintMeetingRequest"), responseSchema: schema("BlueprintMeeting") }),
+    delete: protectedOperation({ summary: "Delete blueprint meeting", description: "Deletes a meeting and its template materials and tasks.", parameters: [id("meetingId", "Blueprint meeting identifier")], responseSchema: schema("ActionResult") }),
+  },
+  "/course-blueprints/meetings/{meetingId}/materials": {
+    post: protectedOperation({ summary: "Add blueprint material", description: "Adds a reusable material template to a meeting.", parameters: [id("meetingId", "Blueprint meeting identifier")], requestBody: body("BlueprintMaterialRequest"), status: 201, responseSchema: schema("BlueprintMaterial") }),
+  },
+  "/course-blueprints/materials/{materialId}": {
+    put: protectedOperation({ summary: "Update blueprint material", description: "Updates a reusable material template.", parameters: [id("materialId", "Blueprint material identifier")], requestBody: body("BlueprintMaterialRequest"), responseSchema: schema("BlueprintMaterial") }),
+    delete: protectedOperation({ summary: "Delete blueprint material", description: "Deletes a reusable material template.", parameters: [id("materialId", "Blueprint material identifier")], responseSchema: schema("ActionResult") }),
+  },
+  "/course-blueprints/meetings/{meetingId}/tasks": {
+    post: protectedOperation({ summary: "Add blueprint task", description: "Adds a reusable task template with its due-date offset from a generated meeting.", parameters: [id("meetingId", "Blueprint meeting identifier")], requestBody: body("BlueprintTaskRequest"), status: 201, responseSchema: schema("BlueprintTask") }),
+  },
+  "/course-blueprints/tasks/{taskId}": {
+    put: protectedOperation({ summary: "Update blueprint task", description: "Updates a reusable task template.", parameters: [id("taskId", "Blueprint task identifier")], requestBody: body("BlueprintTaskRequest"), responseSchema: schema("BlueprintTask") }),
+    delete: protectedOperation({ summary: "Delete blueprint task", description: "Deletes a reusable task template.", parameters: [id("taskId", "Blueprint task identifier")], responseSchema: schema("ActionResult") }),
   },
   "/classes/{classId}/meetings": {
     get: protectedOperation({ summary: "List class meetings", description: "Returns meetings for one class.", parameters: [id("classId", "Class identifier")] }),
@@ -236,7 +282,7 @@ Object.assign(paths, {
     get: protectedOperation({ summary: "Get user attendance", description: "Returns attendance records for one user.", parameters: [id("userId", "User identifier")] }),
   },
   "/attendances/{id}": crudById("AttendanceRequest", "attendance", "Attendance", uploadBody("AttendanceRequest")),
-  "/task-criteria": crud("Task criteria", "TaskCriteriaRequest", "task criteria", "TaskCriteria", "TaskCriteriaList"),
+  "/task-criteria": crud("TaskCriteriaRequest", "task criteria", "TaskCriteria", "TaskCriteriaList"),
   "/task-criteria/{id}": crudById("TaskCriteriaRequest", "task criterion", "TaskCriteria"),
   "/task-criteria/tasks/{taskId}": {
     get: protectedOperation({ summary: "List task criteria", description: "Returns criteria for one task.", parameters: [id("taskId", "Task identifier")] }),
@@ -244,7 +290,7 @@ Object.assign(paths, {
   "/task-criteria/tasks/{taskId}/summary": {
     get: protectedOperation({ summary: "Get task-criteria summary", description: "Returns criterion totals for one task.", parameters: [id("taskId", "Task identifier")] }),
   },
-  "/assessment-results": crud("Assessment results", "AssessmentResultRequest", "assessment results", "AssessmentResult", "AssessmentResultList"),
+  "/assessment-results": crud("AssessmentResultRequest", "assessment results", "AssessmentResult", "AssessmentResultList"),
   "/assessment-results/{id}": crudById("AssessmentResultRequest", "assessment result", "AssessmentResult"),
   "/assessment-results/submission/{submissionId}": {
     get: protectedOperation({ summary: "Get assessment by submission", description: "Returns the assessment result for one submission.", parameters: [id("submissionId", "Submission identifier")] }),
@@ -309,7 +355,18 @@ Object.assign(paths, {
     get: protectedOperation({ summary: "Get user-activity overview", description: "Returns user-activity summary data." }),
   },
   "/reports/dashboard": {
-    get: protectedOperation({ summary: "Get reports dashboard", description: "Returns Owner-level reporting metrics." }),
+    get: protectedOperation({
+      summary: "Get analytics dashboard",
+      description: "Returns organization-wide analytics for Owner and Admin. Mentor responses are restricted to classes assigned to the authenticated mentor, regardless of the MentorId query parameter.",
+      parameters: [
+        { name: "ClassId", in: "query", description: "Limit analytics to one class.", schema: { type: "integer", minimum: 1 } },
+        { name: "MentorId", in: "query", description: "Limit organization analytics to one mentor. Ignored for Mentor callers.", schema: { type: "integer", minimum: 1 } },
+        { name: "status", in: "query", description: "Class status filter. Use All or omit for every status.", schema: { type: "string", example: "Active" } },
+        { name: "startDate", in: "query", description: "Inclusive ISO-8601 date or datetime filter.", schema: { type: "string", format: "date-time", example: "2026-01-01" } },
+        { name: "endDate", in: "query", description: "Inclusive ISO-8601 date or datetime filter. Must not precede startDate.", schema: { type: "string", format: "date-time", example: "2026-01-31" } },
+      ],
+      responseSchema: schema("ReportDashboard"),
+    }),
   },
   "/calendar/events": {
     get: protectedOperation({
@@ -368,9 +425,14 @@ module.exports = {
       Profile: { type: "object", properties: { id: { type: "integer", example: 7 }, UserId: { type: "integer", example: 7 }, phone: { type: "string", example: "+628123456789" }, address: { type: "string", example: "Jakarta" }, city: { type: "string", example: "Jakarta" }, country: { type: "string", example: "Indonesia" }, background: { type: "string", example: "Frontend developer" } } },
       User: { type: "object", properties: { id: { type: "integer", example: 7 }, name: { type: "string", example: "Jane Doe" }, email: { type: "string", format: "email", example: "jane@example.com" }, role: { type: "string", example: "Mentee" }, avatarUrl: { type: "string", nullable: true }, isActive: { type: "boolean", example: true }, profile: { $ref: "#/components/schemas/Profile" } } },
       UserList: { type: "array", items: { $ref: "#/components/schemas/User" } },
-      ClassUser: { type: "object", properties: { id: { type: "integer" }, ClassId: { type: "integer" }, UserId: { type: "integer" }, roleInClass: { type: "string", example: "Mentee" }, progressPercentage: { type: "number", example: 75 }, status: { type: "string", example: "Active" }, joinedAt: { type: "string", format: "date-time" } } },
+      ClassUser: { type: "object", properties: { id: { type: "integer" }, ClassId: { type: "integer" }, UserId: { type: "integer" }, roleInClass: { type: "string", enum: ["Mentee", "Mentor", "Reviewer"], example: "Reviewer" }, progressPercentage: { type: "number", example: 75 }, status: { type: "string", example: "Active" }, joinedAt: { type: "string", format: "date-time" } } },
+      MentorSubstitution: { type: "object", required: ["id", "ClassId", "MentorId", "assignedBy", "startAt", "status"], properties: { id: { type: "integer", example: 42 }, ClassId: { type: "integer", example: 12 }, MeetingId: { type: "integer", nullable: true, example: 20, description: "Null means this assignment applies to every meeting in the class." }, MentorId: { type: "integer", example: 7 }, assignedBy: { type: "integer", example: 2 }, reason: { type: "string", nullable: true, example: "Primary mentor is unavailable for the final presentation." }, startAt: { type: "string", format: "date-time", example: "2026-11-16T12:00:00.000Z" }, endAt: { type: "string", format: "date-time", nullable: true, example: "2026-11-16T15:00:00.000Z" }, status: { type: "string", enum: ["Active", "Ended", "Cancelled"], example: "Active" }, mentor: { $ref: "#/components/schemas/User" }, meeting: { $ref: "#/components/schemas/Meeting" }, assigner: { $ref: "#/components/schemas/User" } } },
       Class: { type: "object", properties: { id: { type: "integer", example: 12 }, code: { type: "string", example: "FS-2026-01" }, name: { type: "string", example: "Full Stack Web Development" }, description: { type: "string" }, category: { type: "string" }, level: { type: "string" }, MentorId: { type: "integer" }, startDate: { type: "string", format: "date-time" }, endDate: { type: "string", format: "date-time" }, status: { type: "string", example: "Active" } } },
       ClassList: { type: "array", items: { $ref: "#/components/schemas/Class" } },
+      CourseBlueprint: { type: "object", properties: { id: { type: "integer", example: 4 }, code: { type: "string", example: "FS-WEB-FOUNDATIONS" }, name: { type: "string", example: "Full Stack Web Foundations" }, description: { type: "string" }, category: { type: "string" }, level: { type: "string" }, totalMeetings: { type: "integer", example: 16 }, durationWeeks: { type: "integer", example: 8 }, status: { type: "string", enum: ["Draft", "Published", "Archived"] }, meetings: { type: "array", items: { $ref: "#/components/schemas/BlueprintMeeting" } } } },
+      BlueprintMeeting: { type: "object", properties: { id: { type: "integer" }, CourseBlueprintId: { type: "integer" }, sequence: { type: "integer", example: 1 }, title: { type: "string", example: "HTML Foundations" }, description: { type: "string" }, learningObjectives: { type: "string" }, durationMinutes: { type: "integer", example: 120 }, materials: { type: "array", items: { $ref: "#/components/schemas/BlueprintMaterial" } }, tasks: { type: "array", items: { $ref: "#/components/schemas/BlueprintTask" } } } },
+      BlueprintMaterial: { type: "object", properties: { id: { type: "integer" }, BlueprintMeetingId: { type: "integer" }, name: { type: "string" }, description: { type: "string" }, type: { type: "string", example: "Slide" }, fileUrl: { type: "string", format: "uri" }, sortOrder: { type: "integer" } } },
+      BlueprintTask: { type: "object", properties: { id: { type: "integer" }, BlueprintMeetingId: { type: "integer" }, name: { type: "string" }, description: { type: "string" }, dueOffsetDays: { type: "integer", example: 2 }, maxScore: { type: "integer", example: 100 }, status: { type: "string", example: "Open" }, fileUrl: { type: "string", format: "uri" }, sortOrder: { type: "integer" } } },
       Meeting: { type: "object", properties: { id: { type: "integer", example: 20 }, ClassId: { type: "integer", example: 12 }, meetingNumber: { type: "integer", example: 1 }, name: { type: "string", example: "Introduction" }, description: { type: "string" }, meetingDate: { type: "string", format: "date-time" }, startHour: { type: "string", example: "19:00:00" }, finishHour: { type: "string", example: "21:00:00" } } },
       Task: { type: "object", properties: { id: { type: "integer", example: 31 }, ClassId: { type: "integer" }, MeetingId: { type: "integer" }, name: { type: "string", example: "Build a landing page" }, description: { type: "string" }, dueDate: { type: "string", format: "date-time" }, maxScore: { type: "number", example: 100 }, status: { type: "string", example: "Open" }, fileUrl: { type: "string", format: "uri", nullable: true } } },
       Resource: { type: "object", properties: { id: { type: "integer" }, ClassId: { type: "integer" }, MeetingId: { type: "integer" }, name: { type: "string" }, description: { type: "string" }, fileUrl: { type: "string", format: "uri", nullable: true } } },
@@ -389,12 +451,38 @@ module.exports = {
       NotificationPage: { type: "object", properties: { data: { type: "array", items: { $ref: "#/components/schemas/Notification" } }, pagination: { type: "object", properties: { total: { type: "integer" }, page: { type: "integer" }, limit: { type: "integer" }, totalPages: { type: "integer" } } } } },
       NotificationSummary: { type: "object", properties: { total: { type: "integer" }, unread: { type: "integer" }, read: { type: "integer" }, byType: { type: "object", additionalProperties: { type: "integer" } } } },
       CalendarEvent: { type: "object", properties: { id: { type: "string", example: "meeting-20" }, resourceId: { type: "integer" }, type: { type: "string", enum: ["Meeting", "Task"] }, title: { type: "string" }, date: { type: "string", format: "date-time" }, ClassId: { type: "integer" }, className: { type: "string" }, classCode: { type: "string" }, detailUrl: { type: "string", example: "/meetings/20" } } },
-      ReportDashboard: { type: "object", additionalProperties: true, description: "Owner dashboard metrics returned by the reports service." },
+      ReportDashboard: {
+        type: "object",
+        required: ["filters", "scope", "stats", "classPerformance", "attendanceOverview", "taskStatistics", "assessmentOverview"],
+        properties: {
+          filters: { type: "object", properties: { startDate: { type: "string", format: "date-time", nullable: true }, endDate: { type: "string", format: "date-time", nullable: true }, ClassId: { type: "integer", nullable: true }, MentorId: { type: "integer", nullable: true }, status: { type: "string", example: "Active" } } },
+          scope: { type: "string", enum: ["Organization", "Mentor"], description: "Scope applied by the authenticated role." },
+          stats: { type: "object", properties: { totalUsers: { type: "integer" }, activeClasses: { type: "integer" }, totalMeetings: { type: "integer" }, taskCompletionRate: { type: "number" }, avgAttendance: { type: "number" }, avgAssessmentScore: { type: "number" }, activeMentors: { type: "integer" } } },
+          classPerformance: { type: "array", items: { type: "object", properties: { id: { type: "integer" }, name: { type: "string" }, mentees: { type: "integer" }, attendance: { type: "number" }, tasks: { type: "number" }, avgScore: { type: "number" }, progress: { type: "number" } } } },
+          attendanceOverview: { type: "object", properties: { present: { type: "integer" }, late: { type: "integer" }, absent: { type: "integer" }, excused: { type: "integer" }, total: { type: "integer" }, avgAttendance: { type: "number" } } },
+          taskStatistics: { type: "object", properties: { total: { type: "integer" }, submitted: { type: "integer" }, pending: { type: "integer" }, reviewed: { type: "integer" }, overdue: { type: "integer" } } },
+          assessmentOverview: { type: "object", properties: { averageScore: { type: "number" }, highestScore: { type: "number" }, lowestScore: { type: "number" }, passRate: { type: "number" } } },
+          scoreDistribution: { type: "array", items: { type: "object", properties: { range: { type: "string" }, count: { type: "integer" }, percentage: { type: "number" } } } },
+          mentorPerformance: { type: "array", items: { type: "object", properties: { id: { type: "integer" }, name: { type: "string" }, classes: { type: "integer" }, meetings: { type: "integer" }, tasks: { type: "integer" }, attendance: { type: "number" }, activityLevel: { type: "string" } } } },
+          menteeProgressOverview: { type: "object", additionalProperties: { type: "integer" } },
+          menteesNeedingAttention: { type: "array", items: { type: "object" } },
+          userGrowth: { type: "array", items: { type: "object", properties: { month: { type: "string" }, mentees: { type: "integer" }, mentors: { type: "integer" }, activeUsers: { type: "integer" } } } },
+          needsAttentionAlerts: { type: "array", items: { type: "object", properties: { type: { type: "string" }, message: { type: "string" }, detail: { type: "string" } } } },
+        },
+      },
       LoginRequest: { type: "object", required: ["email", "password"], properties: { email: { type: "string", format: "email", example: "mentor@example.com" }, password: { type: "string", format: "password", example: "SecurePass123" } } },
-      RegisterRequest: { type: "object", required: ["name", "email", "password"], properties: { name: { type: "string", example: "Jane Doe" }, email: { type: "string", format: "email" }, password: { type: "string", format: "password" }, role: { type: "string", enum: ["Owner", "Admin", "Mentor", "Mentee"], default: "Mentee" } } },
-      UserRequest: { type: "object", properties: { name: { type: "string" }, email: { type: "string", format: "email" }, password: { type: "string", format: "password" }, role: { type: "string", enum: ["Owner", "Admin", "Mentor", "Mentee"] }, avatarUrl: { type: "string", format: "uri" }, status: { type: "string" } } },
+      RegisterRequest: { type: "object", required: ["name", "email", "password"], properties: { name: { type: "string", example: "Jane Doe" }, email: { type: "string", format: "email" }, password: { type: "string", format: "password" }, role: { type: "string", enum: ["Owner", "Admin", "Mentor", "Mentee", "Reviewer"], default: "Mentee" } } },
+      UserRequest: { type: "object", properties: { name: { type: "string" }, email: { type: "string", format: "email" }, password: { type: "string", format: "password" }, role: { type: "string", enum: ["Owner", "Admin", "Mentor", "Mentee", "Reviewer"] }, avatarUrl: { type: "string", format: "uri" }, status: { type: "string" } } },
+      ReviewerAssignmentRequest: { type: "object", required: ["UserId"], properties: { UserId: { type: "integer", minimum: 1, example: 9, description: "ID of an active user whose global role is Reviewer." } } },
+      MentorSubstitutionRequest: { type: "object", required: ["MentorId"], properties: { MentorId: { type: "integer", minimum: 1, example: 7, description: "ID of an active user whose global role is Mentor. It cannot be the primary mentor of the class." }, MeetingId: { type: "integer", minimum: 1, nullable: true, example: 20, description: "Optional meeting inside the URL class. Omit this field for a class-wide substitution." }, reason: { type: "string", maxLength: 2000, example: "Primary mentor is unavailable for the final presentation." }, startAt: { type: "string", format: "date-time", example: "2026-11-16T12:00:00.000Z", description: "Defaults to the current server time when omitted." }, endAt: { type: "string", format: "date-time", nullable: true, example: "2026-11-16T15:00:00.000Z", description: "Optional end of the active period. Must be after startAt." } } },
+      MentorSubstitutionUpdateRequest: { type: "object", properties: { reason: { type: "string", maxLength: 2000 }, startAt: { type: "string", format: "date-time" }, endAt: { type: "string", format: "date-time", nullable: true }, status: { type: "string", enum: ["Active", "Ended", "Cancelled"] } } },
       ProfileRequest: { type: "object", properties: { phone: { type: "string" }, address: { type: "string" }, city: { type: "string" }, country: { type: "string" }, background: { type: "string" } } },
       ClassRequest: { type: "object", required: ["code", "name"], properties: { code: { type: "string", example: "FS-2026-01" }, name: { type: "string" }, description: { type: "string" }, category: { type: "string" }, level: { type: "string" }, MentorId: { type: "integer" }, startDate: { type: "string", format: "date-time" }, endDate: { type: "string", format: "date-time" }, status: { type: "string" }, imageUrl: { type: "string", format: "uri" } } },
+      BlueprintBatchRequest: { type: "object", required: ["CourseBlueprintId", "code", "name", "startDate", "meetingDays", "startHour"], properties: { CourseBlueprintId: { type: "integer", minimum: 1 }, code: { type: "string", example: "FS-B12" }, name: { type: "string", example: "Full Stack Batch 12" }, MentorId: { type: "integer" }, startDate: { type: "string", format: "date", example: "2026-11-02" }, endDate: { type: "string", format: "date" }, meetingDays: { type: "array", minItems: 1, items: { type: "integer", minimum: 0, maximum: 6 }, example: [2, 4], description: "JavaScript weekdays: 0 Sunday through 6 Saturday." }, startHour: { type: "string", example: "19:00" }, finishHour: { type: "string", example: "21:00" }, deliveryMode: { type: "string", enum: ["Online", "Offline", "Blended"] }, location: { type: "string" }, meetingUrl: { type: "string", format: "uri" } } },
+      CourseBlueprintRequest: { type: "object", required: ["code", "name"], properties: { code: { type: "string", example: "FS-WEB-FOUNDATIONS" }, name: { type: "string" }, description: { type: "string" }, category: { type: "string" }, level: { type: "string" }, durationWeeks: { type: "integer", minimum: 1 }, status: { type: "string", enum: ["Draft", "Published", "Archived"] } } },
+      BlueprintMeetingRequest: { type: "object", required: ["title"], properties: { sequence: { type: "integer", minimum: 1, description: "Optional explicit meeting order." }, title: { type: "string" }, description: { type: "string" }, learningObjectives: { type: "string" }, durationMinutes: { type: "integer", minimum: 1 } } },
+      BlueprintMaterialRequest: { type: "object", required: ["name"], properties: { name: { type: "string" }, description: { type: "string" }, type: { type: "string" }, fileUrl: { type: "string", format: "uri" }, sortOrder: { type: "integer", minimum: 1 } } },
+      BlueprintTaskRequest: { type: "object", required: ["name"], properties: { name: { type: "string" }, description: { type: "string" }, dueOffsetDays: { type: "integer", minimum: 0 }, maxScore: { type: "integer", minimum: 0 }, status: { type: "string" }, fileUrl: { type: "string", format: "uri" }, sortOrder: { type: "integer", minimum: 1 } } },
       MeetingRequest: { type: "object", required: ["ClassId", "name", "meetingDate"], properties: { ClassId: { type: "integer" }, meetingNumber: { type: "integer" }, name: { type: "string" }, description: { type: "string" }, meetingDate: { type: "string", format: "date-time" }, startHour: { type: "string", example: "19:00" }, finishHour: { type: "string", example: "21:00" }, imageUrl: { type: "string", format: "uri" } } },
       TaskRequest: { type: "object", properties: { ClassId: { type: "integer" }, MeetingId: { type: "integer" }, name: { type: "string" }, description: { type: "string" }, dueDate: { type: "string", format: "date-time" }, maxScore: { type: "number" }, status: { type: "string" }, fileUrl: { type: "string", format: "uri" }, file: { type: "string", format: "binary", description: "Use multipart/form-data when uploading a file." } } },
       ResourceRequest: { type: "object", properties: { ClassId: { type: "integer" }, MeetingId: { type: "integer" }, name: { type: "string" }, description: { type: "string" }, fileUrl: { type: "string", format: "uri" }, file: { type: "string", format: "binary" } } },

@@ -1,4 +1,8 @@
-const { classService, classUserService } = require("../services");
+const {
+  classService,
+  classUserService,
+  mentorSubstitutionService,
+} = require("../services");
 
 class ClassController {
   static async getAll(req, res, next) {
@@ -12,7 +16,7 @@ class ClassController {
 
   static async getById(req, res, next) {
     try {
-      const cls = await classService.findById(req.params.id);
+      const cls = await classService.findById(req.params.id, req.user);
       res.json(cls);
     } catch (err) {
       next(err);
@@ -22,6 +26,15 @@ class ClassController {
   static async create(req, res, next) {
     try {
       const cls = await classService.create(req.body, req.user, req.meta);
+      res.status(201).json(cls);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async createFromBlueprint(req, res, next) {
+    try {
+      const cls = await classService.createFromBlueprint(req.body, req.user, req.meta);
       res.status(201).json(cls);
     } catch (err) {
       next(err);
@@ -115,8 +128,36 @@ class ClassController {
     }
   }
 
+  static async assignReviewer(req, res, next) {
+    try {
+      const assignment = await classUserService.assignReviewer(
+        { ClassId: req.params.id, UserId: req.body.UserId },
+        req.user,
+        req.meta,
+      );
+      res.status(201).json(assignment);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async removeReviewer(req, res, next) {
+    try {
+      await classUserService.removeReviewer(
+        req.params.classId,
+        req.params.userId,
+        req.user,
+        req.meta,
+      );
+      res.json({ message: "Reviewer removed successfully" });
+    } catch (err) {
+      next(err);
+    }
+  }
+
   static async getUsers(req, res, next) {
     try {
+      await classService.assertCanAccess(req.params.id, req.user);
       const users = await classUserService.getUsers(req.params.id);
       res.json(users);
     } catch (err) {
@@ -126,6 +167,7 @@ class ClassController {
 
   static async getMentees(req, res, next) {
     try {
+      await classService.assertCanAccess(req.params.id, req.user);
       const mentees = await classUserService.getMentees(req.params.id);
       res.json(mentees);
     } catch (err) {
@@ -135,8 +177,74 @@ class ClassController {
 
   static async getMentor(req, res, next) {
     try {
+      await classService.assertCanAccess(req.params.id, req.user);
       const mentor = await classUserService.getMentor(req.params.id);
       res.json(mentor);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async getReviewers(req, res, next) {
+    try {
+      await classService.assertCanAccess(req.params.id, req.user);
+      const reviewers = await classUserService.getReviewers(req.params.id);
+      res.json(reviewers);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async getMentorSubstitutions(req, res, next) {
+    try {
+      const substitutions = await mentorSubstitutionService.findAll(
+        req.params.id,
+        req.user,
+      );
+      res.json(substitutions);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async createMentorSubstitution(req, res, next) {
+    try {
+      const substitution = await mentorSubstitutionService.create(
+        req.params.id,
+        req.body,
+        req.user,
+        req.meta,
+      );
+      res.status(201).json(substitution);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async updateMentorSubstitution(req, res, next) {
+    try {
+      const substitution = await mentorSubstitutionService.update(
+        req.params.id,
+        req.params.assignmentId,
+        req.body,
+        req.user,
+        req.meta,
+      );
+      res.json(substitution);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async cancelMentorSubstitution(req, res, next) {
+    try {
+      const substitution = await mentorSubstitutionService.cancel(
+        req.params.id,
+        req.params.assignmentId,
+        req.user,
+        req.meta,
+      );
+      res.json(substitution);
     } catch (err) {
       next(err);
     }

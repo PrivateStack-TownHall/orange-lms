@@ -3,7 +3,10 @@ const { taskService, taskSubmissionService } = require("../services");
 class TaskController {
   static async getByMeeting(req, res, next) {
     try {
-      const tasks = await taskService.findAllByMeeting(+req.params.meetingId);
+      const tasks = await taskService.findAllByMeeting(
+        +req.params.meetingId,
+        req.user,
+      );
 
       res.json(tasks);
     } catch (err) {
@@ -43,7 +46,7 @@ class TaskController {
 
   static async getById(req, res, next) {
     try {
-      const task = await taskService.findById(req.params.id);
+      const task = await taskService.findById(req.params.id, req.user);
 
       res.json(task);
     } catch (err) {
@@ -148,7 +151,7 @@ class TaskController {
 
   static async reviewSubmission(req, res, next) {
     try {
-      const submission = await taskSubmissionService.update(
+      const submission = await taskSubmissionService.review(
         req.params.submissionId,
         {
           score: req.body.score,

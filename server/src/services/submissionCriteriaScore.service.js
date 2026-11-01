@@ -2,12 +2,18 @@ const {
   SubmissionCriteriaScore,
   TaskCriteria,
   AssessmentResult,
+  TaskSubmission,
+  Task,
+  Class,
+  ClassUser,
 } = require("../models");
+const ROLES = require("../constants/roles");
 const { logAudit } = require("../helpers");
+const mentorSubstitutionService = require("./mentorSubstitution.service");
 
 class SubmissionCriteriaScoreService {
   static async create(currentUser, data, meta = {}) {
-    if (!["Admin", "Owner", "Mentor"].includes(currentUser.role)) {
+    if (![ROLES.ADMIN, ROLES.OWNER, ROLES.MENTOR, ROLES.REVIEWER].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
 
@@ -16,6 +22,8 @@ class SubmissionCriteriaScoreService {
     if (!assessment) {
       throw new Error("Assessment result not found");
     }
+
+    await this.assertCanManageAssessment(assessment.id, currentUser);
 
     const criteria = await TaskCriteria.findByPk(data.TaskCriteriaId);
 
@@ -37,7 +45,9 @@ class SubmissionCriteriaScoreService {
     return score;
   }
 
-  static async findAllByAssessment(AssessmentResultId) {
+  static async findAllByAssessment(AssessmentResultId, currentUser) {
+    await this.assertCanReadAssessment(AssessmentResultId, currentUser);
+
     return SubmissionCriteriaScore.findAll({
       where: {
         AssessmentResultId,
@@ -54,8 +64,8 @@ class SubmissionCriteriaScoreService {
     });
   }
 
-  static async findById(id) {
-    return SubmissionCriteriaScore.findByPk(id, {
+  static async findById(id, currentUser) {
+    const score = await SubmissionCriteriaScore.findByPk(id, {
       include: [
         {
           model: TaskCriteria,
@@ -67,10 +77,15 @@ class SubmissionCriteriaScoreService {
         },
       ],
     });
+
+    if (!score) return null;
+
+    await this.assertCanReadAssessment(score.AssessmentResultId, currentUser);
+    return score;
   }
 
   static async update(id, data, currentUser, meta = {}) {
-    if (!["Admin", "Owner", "Mentor"].includes(currentUser.role)) {
+    if (![ROLES.ADMIN, ROLES.OWNER, ROLES.MENTOR, ROLES.REVIEWER].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
 
@@ -79,6 +94,8 @@ class SubmissionCriteriaScoreService {
     if (!score) {
       throw new Error("Score not found");
     }
+
+    await this.assertCanManageAssessment(score.AssessmentResultId, currentUser);
 
     await score.update(data);
 
@@ -90,7 +107,7 @@ class SubmissionCriteriaScoreService {
       meta,
     });
 
-    return this.findById(id);
+    return this.findById(id, currentUser);
   }
 
   static async delete(id, currentUser, meta = {}) {
@@ -115,6 +132,55 @@ class SubmissionCriteriaScoreService {
     await score.destroy();
 
     return true;
+  }
+
+  static async assertCanReadAssessment(AssessmentResultId, currentUser) {
+    const assessment = await AssessmentResult.findByPk(AssessmentResultId, {
+      include: [{
+        model: TaskSubmission,
+        include: [{ model: Task, include: [Class] }],
+      }],
+    });
+
+    if (!assessment) {
+      throw new Error("Assessment result not found");
+    }
+
+    const isOwnerOrAdmin = [ROLES.OWNER, ROLES.ADMIN].includes(currentUser.role);
+    const isAssignedMentor = currentUser.role === ROLES.MENTOR &&
+      await mentorSubstitutionService.canAccess({
+        ClassId: assessment.TaskSubmission?.Task?.ClassId,
+        MeetingId: assessment.TaskSubmission?.Task?.MeetingId,
+        currentUser,
+        cls: assessment.TaskSubmission?.Task?.Class,
+      });
+    const isOwningMentee =
+      currentUser.role === ROLES.MENTEE &&
+      assessment.TaskSubmission?.UserId === currentUser.id;
+
+    if (isOwnerOrAdmin || isAssignedMentor || isOwningMentee) return assessment;
+
+    if (currentUser.role === ROLES.REVIEWER) {
+      const assignment = await ClassUser.findOne({
+        where: {
+          ClassId: assessment.TaskSubmission?.Task?.ClassId,
+          UserId: currentUser.id,
+          roleInClass: "Reviewer",
+        },
+      });
+
+      if (assignment) return assessment;
+    }
+
+    throw new Error("Permission denied");
+  }
+
+  static async assertCanManageAssessment(AssessmentResultId, currentUser) {
+    if (![ROLES.OWNER, ROLES.ADMIN, ROLES.MENTOR, ROLES.REVIEWER].includes(currentUser.role)) {
+      throw new Error("Permission denied");
+    }
+
+    return this.assertCanReadAssessment(AssessmentResultId, currentUser);
   }
 }
 

@@ -1,13 +1,13 @@
 const { TaskCriteria, Task, Class, User } = require("../models");
 const ROLES = require("../constants/roles");
 const { logAudit } = require("../helpers");
+const mentorSubstitutionService = require("./mentorSubstitution.service");
 
 class TaskCriteriaService {
-  static getIncludes({ restrictToMentorId, restrictToMenteeId } = {}) {
+  static getIncludes({ mentorScope, restrictToMenteeId } = {}) {
     const classInclude = {
       model: Class,
       attributes: ["id", "name", "code", "MentorId"],
-      ...(restrictToMentorId ? { where: { MentorId: restrictToMentorId } } : {}),
     };
 
     if (restrictToMenteeId) {
@@ -29,9 +29,12 @@ class TaskCriteriaService {
     return [
       {
         model: Task,
-        attributes: ["id", "name", "ClassId", "maxScore", "status"],
+        attributes: ["id", "name", "ClassId", "MeetingId", "maxScore", "status"],
         include: [classInclude],
-        ...(restrictToMentorId ? { required: true } : {}),
+        ...(mentorScope ? {
+          where: mentorSubstitutionService.resourceScopeWhere(mentorScope),
+          required: true,
+        } : {}),
       },
       {
         model: User,
@@ -48,7 +51,8 @@ class TaskCriteriaService {
     };
 
     if (currentUser.role === ROLES.MENTOR) {
-      options.include = this.getIncludes({ restrictToMentorId: currentUser.id });
+      const mentorScope = await mentorSubstitutionService.getScope(currentUser);
+      options.include = this.getIncludes({ mentorScope });
     }
 
     if (currentUser.role === ROLES.MENTEE) {
@@ -62,6 +66,8 @@ class TaskCriteriaService {
     if (!["Admin", "Owner", "Mentor"].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
+
+    await this.assertMentorTaskAccess(data.TaskId, currentUser);
 
     const totalPercentage = await TaskCriteria.sum("percentage", {
       where: {
@@ -99,7 +105,9 @@ class TaskCriteriaService {
     return criteria;
   }
 
-  static async findAllByTask(TaskId) {
+  static async findAllByTask(TaskId, currentUser) {
+    await this.assertMentorTaskAccess(TaskId, currentUser);
+
     return TaskCriteria.findAll({
       where: {
         TaskId,
@@ -114,13 +122,21 @@ class TaskCriteriaService {
     });
   }
 
-  static async findById(id) {
-    return TaskCriteria.findByPk(id, {
+  static async findById(id, currentUser) {
+    const criteria = await TaskCriteria.findByPk(id, {
       include: this.getIncludes(),
     });
+
+    if (!criteria) return null;
+
+    await this.assertMentorTaskAccess(criteria.TaskId, currentUser);
+
+    return criteria;
   }
 
-  static async getSummary(TaskId) {
+  static async getSummary(TaskId, currentUser) {
+    await this.assertMentorTaskAccess(TaskId, currentUser);
+
     const criterias = await TaskCriteria.findAll({
       where: {
         TaskId,
@@ -151,6 +167,8 @@ class TaskCriteriaService {
       throw new Error("Task criteria not found");
     }
 
+    await this.assertMentorTaskAccess(criteria.TaskId, currentUser);
+
     const totalPercentage = await TaskCriteria.sum("percentage", {
       where: {
         TaskId: criteria.TaskId,
@@ -178,7 +196,7 @@ class TaskCriteriaService {
       meta,
     });
 
-    return this.findById(id);
+    return this.findById(id, currentUser);
   }
 
   static async delete(id, currentUser, meta = {}) {
@@ -192,6 +210,8 @@ class TaskCriteriaService {
       throw new Error("Task criteria not found");
     }
 
+    await this.assertMentorTaskAccess(criteria.TaskId, currentUser);
+
     await logAudit({
       user: currentUser,
       action: "DELETE",
@@ -204,6 +224,21 @@ class TaskCriteriaService {
     await criteria.destroy();
 
     return true;
+  }
+
+  static async assertMentorTaskAccess(TaskId, currentUser) {
+    if (currentUser?.role !== ROLES.MENTOR) return;
+
+    const task = await Task.findByPk(TaskId, { include: [Class] });
+
+    if (!task?.Class) throw new Error("Permission denied");
+
+    await mentorSubstitutionService.assertCanAccess({
+      ClassId: task.ClassId,
+      MeetingId: task.MeetingId,
+      currentUser,
+      cls: task.Class,
+    });
   }
 }
 

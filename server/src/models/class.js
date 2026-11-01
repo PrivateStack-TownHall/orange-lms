@@ -9,6 +9,11 @@ module.exports = (sequelize, DataTypes) => {
         as: "mentor",
       });
 
+      Class.belongsTo(models.CourseBlueprint, {
+        foreignKey: "CourseBlueprintId",
+        as: "blueprint",
+      });
+
       Class.belongsTo(models.User, {
         foreignKey: "createdBy",
         as: "creator",
@@ -26,6 +31,18 @@ module.exports = (sequelize, DataTypes) => {
         as: "mentees",
       });
 
+      Class.belongsToMany(models.User, {
+        through: {
+          model: models.ClassUser,
+          where: {
+            roleInClass: "Reviewer",
+          },
+        },
+        foreignKey: "ClassId",
+        otherKey: "UserId",
+        as: "reviewers",
+      });
+
       Class.hasMany(models.ClassUser, {
         foreignKey: "ClassId",
       });
@@ -33,6 +50,12 @@ module.exports = (sequelize, DataTypes) => {
       Class.hasMany(models.Meeting, {
         foreignKey: "ClassId",
         as: "meetings",
+        onDelete: "CASCADE",
+      });
+
+      Class.hasMany(models.MentorSubstitution, {
+        foreignKey: "ClassId",
+        as: "mentorSubstitutions",
         onDelete: "CASCADE",
       });
 
@@ -69,6 +92,13 @@ module.exports = (sequelize, DataTypes) => {
       endDate: DataTypes.DATE,
       status: DataTypes.STRING,
       imageUrl: DataTypes.STRING,
+      CourseBlueprintId: DataTypes.INTEGER,
+      deliveryMode: DataTypes.STRING,
+      location: DataTypes.STRING,
+      meetingUrl: DataTypes.STRING,
+      scheduleDays: DataTypes.JSON,
+      startHour: DataTypes.TIME,
+      finishHour: DataTypes.TIME,
     },
     {
       sequelize,

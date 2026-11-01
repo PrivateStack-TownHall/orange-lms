@@ -1,11 +1,32 @@
-const { Attendance, User, Meeting, Class } = require("../models");
+const { Attendance, User, Meeting, Class, ClassUser } = require("../models");
 const ROLES = require("../constants/roles");
 const { logAudit, logActivity, notifyUsers } = require("../helpers");
+const mentorSubstitutionService = require("./mentorSubstitution.service");
 
 class AttendanceService {
   static async markAttendance(currentUser, data, meta = {}) {
     if (!["Admin", "Owner", "Mentor"].includes(currentUser.role)) {
       throw new Error("Permission denied");
+    }
+
+    const meeting = await Meeting.findByPk(data.MeetingId);
+
+    if (!meeting) {
+      throw new Error("Meeting not found");
+    }
+
+    await this.assertMentorClassAccess(meeting.ClassId, currentUser, meeting.id);
+
+    const enrollment = await ClassUser.findOne({
+      where: {
+        ClassId: meeting.ClassId,
+        UserId: data.UserId,
+        roleInClass: "Mentee",
+      },
+    });
+
+    if (!enrollment) {
+      throw new Error("Mentee is not enrolled in this class");
     }
 
     const existing = await Attendance.findOne({
@@ -24,8 +45,6 @@ class AttendanceService {
       checkedBy: currentUser.id,
       checkInAt: new Date(),
     });
-
-    const meeting = await Meeting.findByPk(data.MeetingId);
 
     await logAudit({
       user: currentUser,
@@ -58,7 +77,7 @@ class AttendanceService {
     return attendance;
   }
 
-  static getIncludes({ restrictToMentorId } = {}) {
+  static getIncludes({ mentorScope } = {}) {
     const meetingInclude = {
       model: Meeting,
       attributes: ["id", "name", "meetingNumber", "meetingDate", "ClassId"],
@@ -67,10 +86,12 @@ class AttendanceService {
           model: Class,
           as: "class",
           attributes: ["id", "name", "code", "MentorId"],
-          ...(restrictToMentorId ? { where: { MentorId: restrictToMentorId } } : {}),
         },
       ],
-      ...(restrictToMentorId ? { required: true } : {}),
+      ...(mentorScope ? {
+        where: mentorSubstitutionService.meetingScopeWhere(mentorScope),
+        required: true,
+      } : {}),
     };
 
     return [
@@ -89,38 +110,45 @@ class AttendanceService {
 
   static async findAll(currentUser) {
     const where = {};
-    let restrictToMentorId;
+    let mentorScope;
 
     if (currentUser.role === ROLES.MENTEE) {
       where.UserId = currentUser.id;
     }
 
     if (currentUser.role === ROLES.MENTOR) {
-      restrictToMentorId = currentUser.id;
+      mentorScope = await mentorSubstitutionService.getScope(currentUser);
     }
 
     return Attendance.findAll({
       where,
-      include: this.getIncludes({ restrictToMentorId }),
+      include: this.getIncludes({ mentorScope }),
       order: [["checkInAt", "DESC"]],
     });
   }
 
   static async findAllByMeeting(MeetingId, currentUser) {
     const where = { MeetingId };
-    let restrictToMentorId;
+    let mentorScope;
 
     if (currentUser.role === ROLES.MENTEE) {
       where.UserId = currentUser.id;
     }
 
     if (currentUser.role === ROLES.MENTOR) {
-      restrictToMentorId = currentUser.id;
+      const meeting = await Meeting.findByPk(MeetingId);
+      if (!meeting) throw new Error("Meeting not found");
+      await mentorSubstitutionService.assertCanAccess({
+        ClassId: meeting.ClassId,
+        MeetingId: meeting.id,
+        currentUser,
+      });
+      mentorScope = await mentorSubstitutionService.getScope(currentUser);
     }
 
     return Attendance.findAll({
       where,
-      include: this.getIncludes({ restrictToMentorId }),
+      include: this.getIncludes({ mentorScope }),
       order: [["id", "ASC"]],
     });
   }
@@ -130,15 +158,16 @@ class AttendanceService {
       throw new Error("Forbidden");
     }
 
-    const restrictToMentorId =
-      currentUser.role === ROLES.MENTOR ? currentUser.id : undefined;
+    const mentorScope = currentUser.role === ROLES.MENTOR
+      ? await mentorSubstitutionService.getScope(currentUser)
+      : undefined;
 
     return Attendance.findAll({
       where: {
         UserId,
       },
 
-      include: this.getIncludes({ restrictToMentorId }),
+      include: this.getIncludes({ mentorScope }),
 
       order: [["id", "DESC"]],
     });
@@ -146,8 +175,9 @@ class AttendanceService {
 
   static async findById(id, currentUser) {
     const where = { id };
-    const restrictToMentorId =
-      currentUser.role === ROLES.MENTOR ? currentUser.id : undefined;
+    const mentorScope = currentUser.role === ROLES.MENTOR
+      ? await mentorSubstitutionService.getScope(currentUser)
+      : undefined;
 
     if (currentUser.role === ROLES.MENTEE) {
       where.UserId = currentUser.id;
@@ -155,7 +185,7 @@ class AttendanceService {
 
     const attendance = await Attendance.findOne({
       where,
-      include: this.getIncludes({ restrictToMentorId }),
+      include: this.getIncludes({ mentorScope }),
     });
 
     if (!attendance) {
@@ -210,6 +240,14 @@ class AttendanceService {
     await attendance.destroy();
 
     return true;
+  }
+
+  static async assertMentorClassAccess(ClassId, currentUser, MeetingId) {
+    await mentorSubstitutionService.assertCanAccess({
+      ClassId,
+      MeetingId,
+      currentUser,
+    });
   }
 
   // tambahan new feature

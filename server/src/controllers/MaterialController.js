@@ -5,6 +5,7 @@ class MaterialController {
     try {
       const materials = await materialService.findAllByMeeting(
         +req.params.meetingId,
+        req.user,
       );
       res.json(materials);
     } catch (err) {
@@ -42,7 +43,7 @@ class MaterialController {
 
   static async getById(req, res, next) {
     try {
-      const material = await materialService.findById(req.params.id);
+      const material = await materialService.findById(req.params.id, req.user);
       res.json(material);
     } catch (err) {
       next(err);

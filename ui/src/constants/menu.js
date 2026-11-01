@@ -77,7 +77,10 @@ export const MENU_BY_ROLE = {
         { name: "Mentees", icon: Users, path: ROUTES.MENTEES },
       ],
     },
-    { title: "REPORTS", items: ownerAdminReports },
+    {
+      title: "REPORTS",
+      items: [...ownerAdminReports, { name: "Reports", icon: BarChart3, path: ROUTES.REPORTS }],
+    },
     {
       title: "ADMINISTRATION",
       items: [
@@ -90,12 +93,20 @@ export const MENU_BY_ROLE = {
     mainSection,
     { title: "MY LEARNING", items: learningItems.slice(0, 2) },
     { title: "CONTENT", items: learningItems.slice(2) },
-    { title: "REPORTS", items: assessmentItems },
+    {
+      title: "REPORTS",
+      items: [...assessmentItems, { name: "Reports", icon: BarChart3, path: ROUTES.REPORTS }],
+    },
   ],
   [ROLES.MENTEE]: [
     mainSection,
     { title: "MY LEARNING", items: learningItems.slice(0, 2) },
     { title: "LEARNING RESOURCES", items: learningItems.slice(2) },
     { title: "REPORTS", items: assessmentItems },
+  ],
+  [ROLES.REVIEWER]: [
+    mainSection,
+    { title: "REVIEW", items: [learningItems[0], learningItems[3]] },
+    { title: "ASSESSMENT", items: [assessmentItems[1]] },
   ],
 };
