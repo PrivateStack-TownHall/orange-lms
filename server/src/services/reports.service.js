@@ -16,6 +16,8 @@ const pct = (part, total) => (total > 0 ? Number(((part / total) * 100).toFixed(
 
 const round1 = (n) => Number((n || 0).toFixed(1));
 
+const PRESENT_ATTENDANCE_STATUSES = new Set(["Present", "Late"]);
+
 class ReportsService {
   /**
    * Single aggregated payload powering the Reports dashboard.
@@ -89,7 +91,7 @@ class ReportsService {
     const taskCompletionRate = pct(submittedCount, totalTaskSlots);
 
     const presentLike = attendances.filter((a) =>
-      ["Present", "Late"].includes(a.status),
+      PRESENT_ATTENDANCE_STATUSES.has(a.status),
     ).length;
     const avgAttendance = pct(presentLike, attendances.length);
 
@@ -121,7 +123,7 @@ class ReportsService {
         (a) => a.Meeting?.ClassId === c.id,
       );
       const classAttendanceRate = pct(
-        classAttendances.filter((a) => ["Present", "Late"].includes(a.status)).length,
+        classAttendances.filter((a) => PRESENT_ATTENDANCE_STATUSES.has(a.status)).length,
         classAttendances.length,
       );
 
@@ -237,7 +239,7 @@ class ReportsService {
 
       const classAttendances = attendances.filter((a) => a.Meeting?.ClassId === c.id);
       entry.attendanceSum += classAttendances.filter((a) =>
-        ["Present", "Late"].includes(a.status),
+        PRESENT_ATTENDANCE_STATUSES.has(a.status),
       ).length;
       entry.attendanceCount += classAttendances.length;
     });
@@ -268,7 +270,7 @@ class ReportsService {
           (a) => a.Meeting?.ClassId === c.id && a.UserId === m.id,
         );
         const attendanceRate = pct(
-          classAttendances.filter((a) => ["Present", "Late"].includes(a.status)).length,
+          classAttendances.filter((a) => PRESENT_ATTENDANCE_STATUSES.has(a.status)).length,
           classAttendances.length,
         );
 

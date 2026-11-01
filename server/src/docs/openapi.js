@@ -93,7 +93,7 @@ const publicOperation = ({ summary, description, requestBody, status = 200, resp
   },
 });
 
-const crud = (tag, requestSchema, label, itemSchema, listSchema) => ({
+const crud = (requestSchema, label, itemSchema, listSchema) => ({
   get: protectedOperation({ summary: `List ${label}`, description: `Returns ${label} available to the authenticated user.`, responseSchema: listSchema ? schema(listSchema) : arrayOf(itemSchema) }),
   post: protectedOperation({ summary: `Create ${label === "task criteria" ? "task criterion" : label.slice(0, -1)}`, description: `Creates a ${label === "task criteria" ? "task criterion" : label.slice(0, -1)}.`, requestBody: body(requestSchema), status: 201, responseSchema: schema(itemSchema) }),
 });
@@ -123,25 +123,25 @@ const paths = {
   "/auth/logout": {
     post: protectedOperation({ summary: "Logout", description: "Records a logout audit and activity event.", responseSchema: schema("ActionResult"), responseExample: null, responseMessage: "Logout success" }),
   },
-  "/users": crud("Users", "UserRequest", "users", "User", "UserList"),
+  "/users": crud("UserRequest", "users", "User", "UserList"),
   "/users/{id}": crudById("UserRequest", "user", "User"),
   "/users/{id}/profile": {
     get: protectedOperation({ summary: "Get user profile", description: "Returns the profile associated with a user.", parameters: [id()], responseSchema: schema("Profile") }),
     put: protectedOperation({ summary: "Update user profile", description: "Updates profile fields for a user.", parameters: [id()], requestBody: body("ProfileRequest"), responseSchema: schema("Profile") }),
   },
-  "/mentors": crud("Mentors", "UserRequest", "mentors", "User", "UserList"),
+  "/mentors": crud("UserRequest", "mentors", "User", "UserList"),
   "/mentors/{id}": crudById("UserRequest", "mentor", "User"),
   "/mentors/{id}/profile": {
     get: protectedOperation({ summary: "Get mentor profile", description: "Returns a mentor profile.", parameters: [id()], responseSchema: schema("Profile") }),
     put: protectedOperation({ summary: "Update mentor profile", description: "Updates a mentor profile.", parameters: [id()], requestBody: body("ProfileRequest"), responseSchema: schema("Profile") }),
   },
-  "/mentees": crud("Mentees", "UserRequest", "mentees", "User", "UserList"),
+  "/mentees": crud("UserRequest", "mentees", "User", "UserList"),
   "/mentees/{id}": crudById("UserRequest", "mentee", "User"),
   "/mentees/{id}/profile": {
     get: protectedOperation({ summary: "Get mentee profile", description: "Returns a mentee profile.", parameters: [id()], responseSchema: schema("Profile") }),
     put: protectedOperation({ summary: "Update mentee profile", description: "Updates a mentee profile.", parameters: [id()], requestBody: body("ProfileRequest"), responseSchema: schema("Profile") }),
   },
-  "/classes": crud("Classes", "ClassRequest", "classes", "Class", "ClassList"),
+  "/classes": crud("ClassRequest", "classes", "Class", "ClassList"),
   "/classes/{id}": crudById("ClassRequest", "class", "Class"),
   "/classes/{id}/enrollMentee": {
     post: protectedOperation({ summary: "Enroll one mentee", description: "Enrolls one mentee in a class.", parameters: [id()], requestBody: body("EnrollmentRequest") }),
@@ -236,7 +236,7 @@ Object.assign(paths, {
     get: protectedOperation({ summary: "Get user attendance", description: "Returns attendance records for one user.", parameters: [id("userId", "User identifier")] }),
   },
   "/attendances/{id}": crudById("AttendanceRequest", "attendance", "Attendance", uploadBody("AttendanceRequest")),
-  "/task-criteria": crud("Task criteria", "TaskCriteriaRequest", "task criteria", "TaskCriteria", "TaskCriteriaList"),
+  "/task-criteria": crud("TaskCriteriaRequest", "task criteria", "TaskCriteria", "TaskCriteriaList"),
   "/task-criteria/{id}": crudById("TaskCriteriaRequest", "task criterion", "TaskCriteria"),
   "/task-criteria/tasks/{taskId}": {
     get: protectedOperation({ summary: "List task criteria", description: "Returns criteria for one task.", parameters: [id("taskId", "Task identifier")] }),
@@ -244,7 +244,7 @@ Object.assign(paths, {
   "/task-criteria/tasks/{taskId}/summary": {
     get: protectedOperation({ summary: "Get task-criteria summary", description: "Returns criterion totals for one task.", parameters: [id("taskId", "Task identifier")] }),
   },
-  "/assessment-results": crud("Assessment results", "AssessmentResultRequest", "assessment results", "AssessmentResult", "AssessmentResultList"),
+  "/assessment-results": crud("AssessmentResultRequest", "assessment results", "AssessmentResult", "AssessmentResultList"),
   "/assessment-results/{id}": crudById("AssessmentResultRequest", "assessment result", "AssessmentResult"),
   "/assessment-results/submission/{submissionId}": {
     get: protectedOperation({ summary: "Get assessment by submission", description: "Returns the assessment result for one submission.", parameters: [id("submissionId", "Submission identifier")] }),
