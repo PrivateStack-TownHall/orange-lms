@@ -155,6 +155,12 @@ const paths = {
   "/classes/{id}/assign-mentor": {
     post: protectedOperation({ summary: "Assign mentor", description: "Assigns the class mentor.", parameters: [id()], requestBody: body("MentorAssignmentRequest") }),
   },
+  "/classes/{id}/assign-reviewer": {
+    post: protectedOperation({ summary: "Assign reviewer", description: "Assigns a Reviewer user to assess submissions for one class. Owner and Admin only.", parameters: [id()], requestBody: body("ReviewerAssignmentRequest"), status: 201, responseSchema: schema("ClassUser") }),
+  },
+  "/classes/{classId}/reviewers/{userId}": {
+    delete: protectedOperation({ summary: "Remove reviewer", description: "Removes a Reviewer's class-scoped assessment access. Owner and Admin only.", parameters: [id("classId", "Class identifier"), id("userId", "Reviewer user identifier")], responseSchema: schema("ActionResult"), responseExample: { message: "Reviewer removed successfully" } }),
+  },
   "/classes/{id}/users": {
     get: protectedOperation({ summary: "List class users", description: "Returns users enrolled or assigned to a class.", parameters: [id()] }),
   },
@@ -163,6 +169,9 @@ const paths = {
   },
   "/classes/{id}/mentor": {
     get: protectedOperation({ summary: "Get class mentor", description: "Returns the mentor assigned to a class.", parameters: [id()] }),
+  },
+  "/classes/{id}/reviewers": {
+    get: protectedOperation({ summary: "List class reviewers", description: "Returns Reviewer assignments for a class. A Reviewer can only access classes assigned to them.", parameters: [id()], responseSchema: arrayOf("ClassUser") }),
   },
   "/classes/{classId}/meetings": {
     get: protectedOperation({ summary: "List class meetings", description: "Returns meetings for one class.", parameters: [id("classId", "Class identifier")] }),
@@ -368,7 +377,7 @@ module.exports = {
       Profile: { type: "object", properties: { id: { type: "integer", example: 7 }, UserId: { type: "integer", example: 7 }, phone: { type: "string", example: "+628123456789" }, address: { type: "string", example: "Jakarta" }, city: { type: "string", example: "Jakarta" }, country: { type: "string", example: "Indonesia" }, background: { type: "string", example: "Frontend developer" } } },
       User: { type: "object", properties: { id: { type: "integer", example: 7 }, name: { type: "string", example: "Jane Doe" }, email: { type: "string", format: "email", example: "jane@example.com" }, role: { type: "string", example: "Mentee" }, avatarUrl: { type: "string", nullable: true }, isActive: { type: "boolean", example: true }, profile: { $ref: "#/components/schemas/Profile" } } },
       UserList: { type: "array", items: { $ref: "#/components/schemas/User" } },
-      ClassUser: { type: "object", properties: { id: { type: "integer" }, ClassId: { type: "integer" }, UserId: { type: "integer" }, roleInClass: { type: "string", example: "Mentee" }, progressPercentage: { type: "number", example: 75 }, status: { type: "string", example: "Active" }, joinedAt: { type: "string", format: "date-time" } } },
+      ClassUser: { type: "object", properties: { id: { type: "integer" }, ClassId: { type: "integer" }, UserId: { type: "integer" }, roleInClass: { type: "string", enum: ["Mentee", "Mentor", "Reviewer"], example: "Reviewer" }, progressPercentage: { type: "number", example: 75 }, status: { type: "string", example: "Active" }, joinedAt: { type: "string", format: "date-time" } } },
       Class: { type: "object", properties: { id: { type: "integer", example: 12 }, code: { type: "string", example: "FS-2026-01" }, name: { type: "string", example: "Full Stack Web Development" }, description: { type: "string" }, category: { type: "string" }, level: { type: "string" }, MentorId: { type: "integer" }, startDate: { type: "string", format: "date-time" }, endDate: { type: "string", format: "date-time" }, status: { type: "string", example: "Active" } } },
       ClassList: { type: "array", items: { $ref: "#/components/schemas/Class" } },
       Meeting: { type: "object", properties: { id: { type: "integer", example: 20 }, ClassId: { type: "integer", example: 12 }, meetingNumber: { type: "integer", example: 1 }, name: { type: "string", example: "Introduction" }, description: { type: "string" }, meetingDate: { type: "string", format: "date-time" }, startHour: { type: "string", example: "19:00:00" }, finishHour: { type: "string", example: "21:00:00" } } },
@@ -391,8 +400,9 @@ module.exports = {
       CalendarEvent: { type: "object", properties: { id: { type: "string", example: "meeting-20" }, resourceId: { type: "integer" }, type: { type: "string", enum: ["Meeting", "Task"] }, title: { type: "string" }, date: { type: "string", format: "date-time" }, ClassId: { type: "integer" }, className: { type: "string" }, classCode: { type: "string" }, detailUrl: { type: "string", example: "/meetings/20" } } },
       ReportDashboard: { type: "object", additionalProperties: true, description: "Owner dashboard metrics returned by the reports service." },
       LoginRequest: { type: "object", required: ["email", "password"], properties: { email: { type: "string", format: "email", example: "mentor@example.com" }, password: { type: "string", format: "password", example: "SecurePass123" } } },
-      RegisterRequest: { type: "object", required: ["name", "email", "password"], properties: { name: { type: "string", example: "Jane Doe" }, email: { type: "string", format: "email" }, password: { type: "string", format: "password" }, role: { type: "string", enum: ["Owner", "Admin", "Mentor", "Mentee"], default: "Mentee" } } },
-      UserRequest: { type: "object", properties: { name: { type: "string" }, email: { type: "string", format: "email" }, password: { type: "string", format: "password" }, role: { type: "string", enum: ["Owner", "Admin", "Mentor", "Mentee"] }, avatarUrl: { type: "string", format: "uri" }, status: { type: "string" } } },
+      RegisterRequest: { type: "object", required: ["name", "email", "password"], properties: { name: { type: "string", example: "Jane Doe" }, email: { type: "string", format: "email" }, password: { type: "string", format: "password" }, role: { type: "string", enum: ["Owner", "Admin", "Mentor", "Mentee", "Reviewer"], default: "Mentee" } } },
+      UserRequest: { type: "object", properties: { name: { type: "string" }, email: { type: "string", format: "email" }, password: { type: "string", format: "password" }, role: { type: "string", enum: ["Owner", "Admin", "Mentor", "Mentee", "Reviewer"] }, avatarUrl: { type: "string", format: "uri" }, status: { type: "string" } } },
+      ReviewerAssignmentRequest: { type: "object", required: ["UserId"], properties: { UserId: { type: "integer", minimum: 1, example: 9, description: "ID of an active user whose global role is Reviewer." } } },
       ProfileRequest: { type: "object", properties: { phone: { type: "string" }, address: { type: "string" }, city: { type: "string" }, country: { type: "string" }, background: { type: "string" } } },
       ClassRequest: { type: "object", required: ["code", "name"], properties: { code: { type: "string", example: "FS-2026-01" }, name: { type: "string" }, description: { type: "string" }, category: { type: "string" }, level: { type: "string" }, MentorId: { type: "integer" }, startDate: { type: "string", format: "date-time" }, endDate: { type: "string", format: "date-time" }, status: { type: "string" }, imageUrl: { type: "string", format: "uri" } } },
       MeetingRequest: { type: "object", required: ["ClassId", "name", "meetingDate"], properties: { ClassId: { type: "integer" }, meetingNumber: { type: "integer" }, name: { type: "string" }, description: { type: "string" }, meetingDate: { type: "string", format: "date-time" }, startHour: { type: "string", example: "19:00" }, finishHour: { type: "string", example: "21:00" }, imageUrl: { type: "string", format: "uri" } } },

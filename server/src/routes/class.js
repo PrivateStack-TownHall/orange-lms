@@ -37,6 +37,18 @@ router.post(
   ClassController.assignMentor,
 );
 
+router.post(
+  "/:id/assign-reviewer",
+  authorization("class", "update"),
+  ClassController.assignReviewer,
+);
+
+router.delete(
+  "/:classId/reviewers/:userId",
+  authorization("class", "update"),
+  ClassController.removeReviewer,
+);
+
 router.get(
   "/:id/users",
   authorization("class", "read"),
@@ -53,6 +65,12 @@ router.get(
   "/:id/mentor",
   authorization("class", "read"),
   ClassController.getMentor,
+);
+
+router.get(
+  "/:id/reviewers",
+  authorization("class", "read"),
+  ClassController.getReviewers,
 );
 
 module.exports = router;

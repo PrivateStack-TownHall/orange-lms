@@ -53,7 +53,7 @@ router.put(
 
 router.put(
   "/submissions/:submissionId/review",
-  authorization("task", "update"),
+  authorization("task", "review"),
   TaskController.reviewSubmission,
 );
 module.exports = router;

@@ -3,4 +3,5 @@ module.exports = {
   ADMIN: "Admin",
   MENTOR: "Mentor",
   MENTEE: "Mentee",
+  REVIEWER: "Reviewer",
 };
