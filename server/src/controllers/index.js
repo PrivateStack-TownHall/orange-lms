@@ -28,6 +28,7 @@ const AuditLogController = require("./AuditLogController");
 const UserActivityController = require("./UserActivityController");
 const ReportsController = require("./ReportsController");
 const CalendarController = require("./CalendarController");
+const CourseBlueprintController = require("./CourseBlueprintController");
 
 module.exports = {
   AuthController,
@@ -57,4 +58,5 @@ module.exports = {
   UserActivityController,
   ReportsController,
   CalendarController,
+  CourseBlueprintController,
 };

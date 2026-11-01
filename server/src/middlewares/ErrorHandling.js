@@ -81,6 +81,10 @@ class ErrorHandling {
       "Original class not found",
       "Score not found",
       "No participants found",
+      "Course blueprint not found",
+      "Blueprint meeting not found",
+      "Blueprint material not found",
+      "Blueprint task not found",
     ];
 
     if (notFoundErrors.includes(error.message)) {

@@ -29,6 +29,13 @@ module.exports = {
     delete: [ROLES.OWNER, ROLES.ADMIN],
   },
 
+  courseBlueprint: {
+    read: [ROLES.OWNER, ROLES.ADMIN, ROLES.MENTOR],
+    create: [ROLES.OWNER, ROLES.ADMIN],
+    update: [ROLES.OWNER, ROLES.ADMIN],
+    delete: [ROLES.OWNER, ROLES.ADMIN],
+  },
+
   meeting: {
     read: [ROLES.OWNER, ROLES.ADMIN, ROLES.MENTOR, ROLES.MENTEE],
     create: [ROLES.OWNER, ROLES.ADMIN],

@@ -31,6 +31,7 @@ const auditLogRoutes = require("./auditLog");
 const userActivityRoutes = require("./userActivity");
 const reportsRoutes = require("./reports");
 const calendarRoutes = require("./calendar");
+const courseBlueprintRoutes = require("./courseBlueprint");
 
 const { authentication } = require("../middlewares");
 
@@ -64,6 +65,7 @@ router.use("/mentees", menteeRoutes);
  * Learning Management
  */
 router.use("/classes", classRoutes);
+router.use("/course-blueprints", courseBlueprintRoutes);
 
 /**
  * Nested Meeting Routes
