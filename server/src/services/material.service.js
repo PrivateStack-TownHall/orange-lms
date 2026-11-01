@@ -115,6 +115,8 @@ class MaterialService {
       throw new Error("Meeting not found");
     }
 
+    await this.assertMentorClassAccess(meeting.ClassId, currentUser);
+
     const material = await Material.create({
       ...data,
       MeetingId: Number(meetingId),
@@ -153,11 +155,13 @@ class MaterialService {
       throw new Error("Permission denied");
     }
 
-    const material = await Material.findByPk(id);
+    const material = await Material.findByPk(id, { include: [Class] });
 
     if (!material) {
       throw new Error("Material not found");
     }
+
+    await this.assertMentorClassAccess(material.ClassId, currentUser, material.Class);
 
     await material.update(data);
 
@@ -178,11 +182,13 @@ class MaterialService {
       throw new Error("Permission denied");
     }
 
-    const material = await Material.findByPk(id);
+    const material = await Material.findByPk(id, { include: [Class] });
 
     if (!material) {
       throw new Error("Material not found");
     }
+
+    await this.assertMentorClassAccess(material.ClassId, currentUser, material.Class);
 
     await logAudit({
       user: currentUser,
@@ -194,6 +200,16 @@ class MaterialService {
     });
 
     return material.destroy();
+  }
+
+  static async assertMentorClassAccess(ClassId, currentUser, cls) {
+    if (currentUser.role !== ROLES.MENTOR) return;
+
+    const targetClass = cls || await Class.findByPk(ClassId);
+
+    if (!targetClass || targetClass.MentorId !== currentUser.id) {
+      throw new Error("Permission denied");
+    }
   }
 }
 
