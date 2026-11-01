@@ -94,6 +94,10 @@ class ErrorHandling {
       });
     }
 
+    if (["Course blueprint must be published", "meetingDays is required", "meetingDays must contain weekdays from 0 to 6", "Invalid startDate"].includes(error.message)) {
+      return res.status(400).json({ error: true, message: error.message });
+    }
+
     /**
      * Duplicate / Conflict
      */

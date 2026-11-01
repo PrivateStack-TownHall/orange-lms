@@ -8,6 +8,12 @@ router.get("/", authorization("class", "read"), ClassController.getAll);
 
 router.post("/", authorization("class", "create"), ClassController.create);
 
+router.post(
+  "/from-blueprint",
+  authorization("class", "create"),
+  ClassController.createFromBlueprint,
+);
+
 router.get("/:id", authorization("class", "read"), ClassController.getById);
 
 router.put("/:id", authorization("class", "update"), ClassController.update);

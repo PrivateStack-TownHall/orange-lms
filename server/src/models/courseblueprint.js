@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       CourseBlueprint.belongsTo(models.User, { foreignKey: "createdBy", as: "creator" });
       CourseBlueprint.belongsTo(models.User, { foreignKey: "updatedBy", as: "updater" });
       CourseBlueprint.hasMany(models.BlueprintMeeting, { foreignKey: "CourseBlueprintId", as: "meetings", onDelete: "CASCADE" });
+      CourseBlueprint.hasMany(models.Class, { foreignKey: "CourseBlueprintId", as: "batches" });
     }
   }
 

@@ -16,6 +16,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "uploadedBy",
         as: "uploader",
       });
+
+      Material.belongsTo(models.BlueprintMaterial, {
+        foreignKey: "BlueprintMaterialId",
+        as: "blueprintMaterial",
+      });
     }
   }
 
@@ -28,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       uploadedBy: DataTypes.INTEGER,
       fileUrl: DataTypes.STRING,
+      BlueprintMaterialId: DataTypes.INTEGER,
     },
     {
       sequelize,

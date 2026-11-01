@@ -17,6 +17,11 @@ module.exports = (sequelize, DataTypes) => {
         as: "creator",
       });
 
+      Task.belongsTo(models.BlueprintTask, {
+        foreignKey: "BlueprintTaskId",
+        as: "blueprintTask",
+      });
+
       Task.hasMany(models.TaskSubmission, {
         foreignKey: "TaskId",
         onDelete: "CASCADE",
@@ -40,6 +45,7 @@ module.exports = (sequelize, DataTypes) => {
       maxScore: DataTypes.INTEGER,
       status: DataTypes.STRING,
       fileUrl: DataTypes.STRING,
+      BlueprintTaskId: DataTypes.INTEGER,
     },
     {
       sequelize,

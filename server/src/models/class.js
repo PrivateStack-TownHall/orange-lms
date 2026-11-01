@@ -9,6 +9,11 @@ module.exports = (sequelize, DataTypes) => {
         as: "mentor",
       });
 
+      Class.belongsTo(models.CourseBlueprint, {
+        foreignKey: "CourseBlueprintId",
+        as: "blueprint",
+      });
+
       Class.belongsTo(models.User, {
         foreignKey: "createdBy",
         as: "creator",
@@ -81,6 +86,13 @@ module.exports = (sequelize, DataTypes) => {
       endDate: DataTypes.DATE,
       status: DataTypes.STRING,
       imageUrl: DataTypes.STRING,
+      CourseBlueprintId: DataTypes.INTEGER,
+      deliveryMode: DataTypes.STRING,
+      location: DataTypes.STRING,
+      meetingUrl: DataTypes.STRING,
+      scheduleDays: DataTypes.JSON,
+      startHour: DataTypes.TIME,
+      finishHour: DataTypes.TIME,
     },
     {
       sequelize,
