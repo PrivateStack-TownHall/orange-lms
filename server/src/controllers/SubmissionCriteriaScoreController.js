@@ -19,6 +19,7 @@ class SubmissionCriteriaScoreController {
     try {
       const scores = await submissionCriteriaScoreService.findAllByAssessment(
         req.params.assessmentResultId,
+        req.user,
       );
 
       res.status(200).json(scores);
@@ -31,6 +32,7 @@ class SubmissionCriteriaScoreController {
     try {
       const score = await submissionCriteriaScoreService.findById(
         req.params.id,
+        req.user,
       );
 
       res.status(200).json(score);

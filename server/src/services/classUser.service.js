@@ -116,6 +116,64 @@ class ClassUserService {
     return assignment;
   }
 
+  static async assignReviewer({ ClassId, UserId }, currentUser, meta = {}) {
+    const reviewer = await User.findByPk(UserId);
+
+    if (!reviewer || reviewer.role !== "Reviewer") {
+      throw new Error("Reviewer not found");
+    }
+
+    const existing = await ClassUser.findOne({
+      where: { ClassId, UserId, roleInClass: "Reviewer" },
+    });
+
+    if (existing) {
+      throw new Error("Reviewer is already assigned to this class");
+    }
+
+    const assignment = await ClassUser.create({
+      ClassId,
+      UserId,
+      roleInClass: "Reviewer",
+      progressPercentage: 0,
+      status: "Active",
+      assignedBy: currentUser?.id,
+      joinedAt: new Date(),
+    });
+
+    await logAudit({
+      user: currentUser,
+      action: "UPDATE",
+      resource: "Class",
+      resourceId: ClassId,
+      resourceDetail: `Reviewer assigned to class #${ClassId}`,
+      meta,
+    });
+
+    return assignment;
+  }
+
+  static async removeReviewer(ClassId, UserId, currentUser, meta = {}) {
+    const removed = await ClassUser.destroy({
+      where: { ClassId, UserId, roleInClass: "Reviewer" },
+    });
+
+    if (!removed) {
+      throw new Error("Reviewer assignment not found");
+    }
+
+    await logAudit({
+      user: currentUser,
+      action: "UPDATE",
+      resource: "Class",
+      resourceId: ClassId,
+      resourceDetail: `Reviewer removed from class #${ClassId}`,
+      meta,
+    });
+
+    return removed;
+  }
+
   static async getUsers(ClassId) {
     return ClassUser.findAll({
       where: { ClassId },
@@ -156,6 +214,13 @@ class ClassUserService {
         ClassId,
         roleInClass: "Mentor",
       },
+      include: User,
+    });
+  }
+
+  static async getReviewers(ClassId) {
+    return ClassUser.findAll({
+      where: { ClassId, roleInClass: "Reviewer" },
       include: User,
     });
   }
