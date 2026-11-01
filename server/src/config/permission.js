@@ -112,7 +112,7 @@ module.exports = {
   },
 
   reports: {
-    read: [ROLES.OWNER],
+    read: [ROLES.OWNER, ROLES.ADMIN, ROLES.MENTOR],
   },
 
   calendar: {
