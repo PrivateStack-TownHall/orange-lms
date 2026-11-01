@@ -115,6 +115,8 @@ class NoteService {
       throw new Error("Meeting not found");
     }
 
+    await this.assertMentorClassAccess(meeting.ClassId, currentUser);
+
     const note = await Note.create({
       ...data,
       MeetingId: Number(meetingId),
@@ -149,11 +151,13 @@ class NoteService {
       throw new Error("Permission denied");
     }
 
-    const note = await Note.findByPk(id);
+    const note = await Note.findByPk(id, { include: [Class] });
 
     if (!note) {
       throw new Error("Note not found");
     }
+
+    await this.assertMentorClassAccess(note.ClassId, currentUser, note.Class);
 
     await note.update(data);
 
@@ -174,11 +178,13 @@ class NoteService {
       throw new Error("Permission denied");
     }
 
-    const note = await Note.findByPk(id);
+    const note = await Note.findByPk(id, { include: [Class] });
 
     if (!note) {
       throw new Error("Note not found");
     }
+
+    await this.assertMentorClassAccess(note.ClassId, currentUser, note.Class);
 
     await logAudit({
       user: currentUser,
@@ -190,6 +196,16 @@ class NoteService {
     });
 
     return note.destroy();
+  }
+
+  static async assertMentorClassAccess(ClassId, currentUser, cls) {
+    if (currentUser.role !== ROLES.MENTOR) return;
+
+    const targetClass = cls || await Class.findByPk(ClassId);
+
+    if (!targetClass || targetClass.MentorId !== currentUser.id) {
+      throw new Error("Permission denied");
+    }
   }
 }
 

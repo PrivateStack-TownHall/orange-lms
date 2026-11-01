@@ -63,6 +63,8 @@ class TaskCriteriaService {
       throw new Error("Permission denied");
     }
 
+    await this.assertMentorTaskAccess(data.TaskId, currentUser);
+
     const totalPercentage = await TaskCriteria.sum("percentage", {
       where: {
         TaskId: data.TaskId,
@@ -151,6 +153,8 @@ class TaskCriteriaService {
       throw new Error("Task criteria not found");
     }
 
+    await this.assertMentorTaskAccess(criteria.TaskId, currentUser);
+
     const totalPercentage = await TaskCriteria.sum("percentage", {
       where: {
         TaskId: criteria.TaskId,
@@ -192,6 +196,8 @@ class TaskCriteriaService {
       throw new Error("Task criteria not found");
     }
 
+    await this.assertMentorTaskAccess(criteria.TaskId, currentUser);
+
     await logAudit({
       user: currentUser,
       action: "DELETE",
@@ -204,6 +210,16 @@ class TaskCriteriaService {
     await criteria.destroy();
 
     return true;
+  }
+
+  static async assertMentorTaskAccess(TaskId, currentUser) {
+    if (currentUser.role !== ROLES.MENTOR) return;
+
+    const task = await Task.findByPk(TaskId, { include: [Class] });
+
+    if (!task?.Class || task.Class.MentorId !== currentUser.id) {
+      throw new Error("Permission denied");
+    }
   }
 }
 

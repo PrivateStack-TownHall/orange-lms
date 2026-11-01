@@ -40,12 +40,29 @@ class TaskSubmissionService {
       throw new Error("Only mentee can submit task");
     }
 
-    const submission = await TaskSubmission.create({
-      ...data,
-      status: "Submitted",
+    const task = await Task.findByPk(data.TaskId, { include: [Class] });
+
+    if (!task) {
+      throw new Error("Task not found");
+    }
+
+    const enrollment = await ClassUser.findOne({
+      where: {
+        ClassId: task.ClassId,
+        UserId: currentUser.id,
+        roleInClass: "Mentee",
+      },
     });
 
-    const task = await Task.findByPk(data.TaskId, { include: [Class] });
+    if (!enrollment) {
+      throw new Error("Permission denied");
+    }
+
+    const submission = await TaskSubmission.create({
+      ...data,
+      UserId: currentUser.id,
+      status: "Submitted",
+    });
 
     await logAudit({
       user: currentUser,

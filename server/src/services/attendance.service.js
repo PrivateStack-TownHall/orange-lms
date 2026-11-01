@@ -1,4 +1,4 @@
-const { Attendance, User, Meeting, Class } = require("../models");
+const { Attendance, User, Meeting, Class, ClassUser } = require("../models");
 const ROLES = require("../constants/roles");
 const { logAudit, logActivity, notifyUsers } = require("../helpers");
 
@@ -6,6 +6,26 @@ class AttendanceService {
   static async markAttendance(currentUser, data, meta = {}) {
     if (!["Admin", "Owner", "Mentor"].includes(currentUser.role)) {
       throw new Error("Permission denied");
+    }
+
+    const meeting = await Meeting.findByPk(data.MeetingId);
+
+    if (!meeting) {
+      throw new Error("Meeting not found");
+    }
+
+    await this.assertMentorClassAccess(meeting.ClassId, currentUser);
+
+    const enrollment = await ClassUser.findOne({
+      where: {
+        ClassId: meeting.ClassId,
+        UserId: data.UserId,
+        roleInClass: "Mentee",
+      },
+    });
+
+    if (!enrollment) {
+      throw new Error("Mentee is not enrolled in this class");
     }
 
     const existing = await Attendance.findOne({
@@ -24,8 +44,6 @@ class AttendanceService {
       checkedBy: currentUser.id,
       checkInAt: new Date(),
     });
-
-    const meeting = await Meeting.findByPk(data.MeetingId);
 
     await logAudit({
       user: currentUser,
@@ -210,6 +228,16 @@ class AttendanceService {
     await attendance.destroy();
 
     return true;
+  }
+
+  static async assertMentorClassAccess(ClassId, currentUser) {
+    if (currentUser.role !== ROLES.MENTOR) return;
+
+    const cls = await Class.findByPk(ClassId);
+
+    if (!cls || cls.MentorId !== currentUser.id) {
+      throw new Error("Permission denied");
+    }
   }
 
   // tambahan new feature
