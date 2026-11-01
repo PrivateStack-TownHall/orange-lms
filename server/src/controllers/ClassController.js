@@ -28,6 +28,15 @@ class ClassController {
     }
   }
 
+  static async createFromBlueprint(req, res, next) {
+    try {
+      const cls = await classService.createFromBlueprint(req.body, req.user, req.meta);
+      res.status(201).json(cls);
+    } catch (err) {
+      next(err);
+    }
+  }
+
   static async update(req, res, next) {
     try {
       const cls = await classService.update(

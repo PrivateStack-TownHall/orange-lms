@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
         as: "creator",
       });
 
+      Meeting.belongsTo(models.BlueprintMeeting, {
+        foreignKey: "BlueprintMeetingId",
+        as: "blueprintMeeting",
+      });
+
       Meeting.hasMany(models.Task, {
         foreignKey: "MeetingId",
         as: "tasks",
@@ -45,6 +50,10 @@ module.exports = (sequelize, DataTypes) => {
       finishHour: DataTypes.TIME,
       imageUrl: DataTypes.STRING,
       createdBy: DataTypes.INTEGER,
+      BlueprintMeetingId: DataTypes.INTEGER,
+      mode: DataTypes.STRING,
+      location: DataTypes.STRING,
+      meetingUrl: DataTypes.STRING,
     },
     {
       sequelize,
