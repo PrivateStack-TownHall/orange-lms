@@ -216,15 +216,7 @@ class ClassService {
 
     if (!cls) return null;
 
-    if (currentUser?.role === ROLES.REVIEWER) {
-      const assignment = await ClassUser.findOne({
-        where: { ClassId: id, UserId: currentUser.id, roleInClass: "Reviewer" },
-      });
-
-      if (!assignment) {
-        throw new Error("Permission denied");
-      }
-    }
+    await this.assertCanAccess(id, currentUser);
 
     const menteeStats = await ClassService.computeMenteeStats(
       id,
@@ -245,6 +237,18 @@ class ClassService {
     plain.mentees = menteesWithStats;
 
     return plain;
+  }
+
+  static async assertCanAccess(ClassId, currentUser) {
+    if (currentUser?.role !== ROLES.REVIEWER) return;
+
+    const assignment = await ClassUser.findOne({
+      where: { ClassId, UserId: currentUser.id, roleInClass: "Reviewer" },
+    });
+
+    if (!assignment) {
+      throw new Error("Permission denied");
+    }
   }
 
   /**

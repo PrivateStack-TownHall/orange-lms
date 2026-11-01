@@ -144,6 +144,7 @@ class ClassController {
 
   static async getUsers(req, res, next) {
     try {
+      await classService.assertCanAccess(req.params.id, req.user);
       const users = await classUserService.getUsers(req.params.id);
       res.json(users);
     } catch (err) {
@@ -153,6 +154,7 @@ class ClassController {
 
   static async getMentees(req, res, next) {
     try {
+      await classService.assertCanAccess(req.params.id, req.user);
       const mentees = await classUserService.getMentees(req.params.id);
       res.json(mentees);
     } catch (err) {
@@ -162,6 +164,7 @@ class ClassController {
 
   static async getMentor(req, res, next) {
     try {
+      await classService.assertCanAccess(req.params.id, req.user);
       const mentor = await classUserService.getMentor(req.params.id);
       res.json(mentor);
     } catch (err) {
@@ -171,6 +174,7 @@ class ClassController {
 
   static async getReviewers(req, res, next) {
     try {
+      await classService.assertCanAccess(req.params.id, req.user);
       const reviewers = await classUserService.getReviewers(req.params.id);
       res.json(reviewers);
     } catch (err) {
