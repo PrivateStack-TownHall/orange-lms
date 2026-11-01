@@ -4,12 +4,12 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class BlueprintMaterial extends Model {
     static associate(models) {
-      BlueprintMaterial.belongsTo(models.BlueprintMeeting, { foreignKey: "BlueprintMeetingId", as: "meeting" });
+      BlueprintMaterial.belongsTo(models.BlueprintSession, { foreignKey: "BlueprintSessionId", as: "session" });
     }
   }
 
   BlueprintMaterial.init({
-    BlueprintMeetingId: DataTypes.INTEGER,
+    BlueprintSessionId: DataTypes.INTEGER,
     name: DataTypes.STRING,
     description: DataTypes.TEXT,
     type: DataTypes.STRING,

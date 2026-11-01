@@ -34,7 +34,7 @@ module.exports = {
 
       if (!blueprint) {
         const [created] = await queryInterface.sequelize.query(
-          `INSERT INTO "CourseBlueprints" (code, name, description, category, level, "totalMeetings", "durationWeeks", status, "createdBy", "updatedBy", "createdAt", "updatedAt")
+          `INSERT INTO "CourseBlueprints" (code, name, description, category, level, "totalSessions", "durationWeeks", status, "createdBy", "updatedBy", "createdAt", "updatedAt")
            VALUES (:code, :name, :description, :category, :level, 2, 1, 'Published', :userId, :userId, :now, :now)
            RETURNING id;`,
           { replacements: { code: BLUEPRINT_CODE, name: "Full Stack Web Foundations", description: "A reusable two-session web development curriculum.", category: "Web Development", level: "Beginner", userId: owner.id, now }, transaction },
@@ -42,23 +42,23 @@ module.exports = {
         blueprint = created[0];
       }
 
-      const meetings = [
+      const sessions = [
         { sequence: 1, title: "HTML Foundations", description: "Semantic structure and accessible page content." },
         { sequence: 2, title: "CSS Foundations", description: "Layouts, responsive styling, and reusable components." },
       ];
 
-      for (const meetingData of meetings) {
+      for (const sessionData of sessions) {
         const existing = await findOne(
           queryInterface,
-          `SELECT id FROM "BlueprintMeetings" WHERE "CourseBlueprintId" = :blueprintId AND sequence = :sequence LIMIT 1;`,
-          { blueprintId: blueprint.id, sequence: meetingData.sequence },
+          `SELECT id FROM "BlueprintSessions" WHERE "CourseBlueprintId" = :blueprintId AND sequence = :sequence LIMIT 1;`,
+          { blueprintId: blueprint.id, sequence: sessionData.sequence },
           transaction,
         );
 
         if (!existing) {
-          await queryInterface.bulkInsert("BlueprintMeetings", [{
+          await queryInterface.bulkInsert("BlueprintSessions", [{
             CourseBlueprintId: blueprint.id,
-            ...meetingData,
+            ...sessionData,
             durationMinutes: 120,
             learningObjectives: "Build practical web development foundations.",
             createdAt: now,
