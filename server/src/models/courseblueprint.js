@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       CourseBlueprint.belongsTo(models.User, { foreignKey: "createdBy", as: "creator" });
       CourseBlueprint.belongsTo(models.User, { foreignKey: "updatedBy", as: "updater" });
-      CourseBlueprint.hasMany(models.BlueprintSession, { foreignKey: "CourseBlueprintId", as: "sessions", onDelete: "CASCADE" });
+      CourseBlueprint.hasMany(models.BlueprintMeeting, { foreignKey: "CourseBlueprintId", as: "meetings", onDelete: "CASCADE" });
     }
   }
 
@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.TEXT,
     category: DataTypes.STRING,
     level: DataTypes.STRING,
-    totalSessions: DataTypes.INTEGER,
+    totalMeetings: DataTypes.INTEGER,
     durationWeeks: DataTypes.INTEGER,
     status: DataTypes.STRING,
     createdBy: DataTypes.INTEGER,

@@ -1,6 +1,6 @@
 const mockModels = {
   CourseBlueprint: { create: jest.fn(), findAll: jest.fn(), findByPk: jest.fn(), update: jest.fn() },
-  BlueprintSession: { create: jest.fn(), findByPk: jest.fn(), max: jest.fn(), count: jest.fn() },
+  BlueprintMeeting: { create: jest.fn(), findByPk: jest.fn(), max: jest.fn(), count: jest.fn() },
   BlueprintMaterial: { create: jest.fn(), findByPk: jest.fn(), max: jest.fn() },
   BlueprintTask: { create: jest.fn(), findByPk: jest.fn(), max: jest.fn() },
   User: {},
@@ -35,15 +35,15 @@ describe("CourseBlueprintService", () => {
     )).rejects.toThrow("Permission denied");
   });
 
-  it("assigns the next sequence and synchronizes total sessions", async () => {
+  it("assigns the next sequence and synchronizes total meetings", async () => {
     mockModels.CourseBlueprint.findByPk.mockResolvedValue({ id: 4 });
-    mockModels.BlueprintSession.max.mockResolvedValue(2);
-    mockModels.BlueprintSession.create.mockResolvedValue({ id: 9, title: "JavaScript" });
-    mockModels.BlueprintSession.count.mockResolvedValue(3);
+    mockModels.BlueprintMeeting.max.mockResolvedValue(2);
+    mockModels.BlueprintMeeting.create.mockResolvedValue({ id: 9, title: "JavaScript" });
+    mockModels.BlueprintMeeting.count.mockResolvedValue(3);
 
-    await CourseBlueprintService.createSession(4, { title: "JavaScript" }, { id: 1, role: "Owner" });
+    await CourseBlueprintService.createMeeting(4, { title: "JavaScript" }, { id: 1, role: "Owner" });
 
-    expect(mockModels.BlueprintSession.create).toHaveBeenCalledWith(expect.objectContaining({ CourseBlueprintId: 4, sequence: 3 }));
-    expect(mockModels.CourseBlueprint.update).toHaveBeenCalledWith({ totalSessions: 3, updatedBy: 1 }, { where: { id: 4 } });
+    expect(mockModels.BlueprintMeeting.create).toHaveBeenCalledWith(expect.objectContaining({ CourseBlueprintId: 4, sequence: 3 }));
+    expect(mockModels.CourseBlueprint.update).toHaveBeenCalledWith({ totalMeetings: 3, updatedBy: 1 }, { where: { id: 4 } });
   });
 });

@@ -82,7 +82,7 @@ class ErrorHandling {
       "Score not found",
       "No participants found",
       "Course blueprint not found",
-      "Blueprint session not found",
+      "Blueprint meeting not found",
       "Blueprint material not found",
       "Blueprint task not found",
     ];
