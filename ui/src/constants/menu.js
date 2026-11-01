@@ -98,4 +98,9 @@ export const MENU_BY_ROLE = {
     { title: "LEARNING RESOURCES", items: learningItems.slice(2) },
     { title: "REPORTS", items: assessmentItems },
   ],
+  [ROLES.REVIEWER]: [
+    mainSection,
+    { title: "REVIEW", items: [learningItems[0], learningItems[3]] },
+    { title: "ASSESSMENT", items: [assessmentItems[1]] },
+  ],
 };

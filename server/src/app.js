@@ -2,8 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
+const swaggerUi = require("swagger-ui-express");
 
 const routes = require("./routes");
+const openapi = require("./docs/openapi");
 
 const {
   ErrorHandling,
@@ -33,6 +35,15 @@ app.use(
 
 app.set("trust proxy", true);
 app.use(requestMeta);
+
+app.get("/api/openapi.json", (req, res) => {
+  res.json(openapi);
+});
+
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(openapi, {
+  customSiteTitle: "Orange LMS API Documentation",
+}));
+
 app.use(responseContract);
 
 /**

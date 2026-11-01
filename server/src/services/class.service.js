@@ -151,10 +151,29 @@ class ClassService {
       });
     }
 
+    if (currentUser.role === ROLES.REVIEWER) {
+      return Class.findAll({
+        order: [["id", "ASC"]],
+        include: [
+          {
+            model: User,
+            as: "reviewers",
+            attributes: [],
+            through: { attributes: [], where: { roleInClass: "Reviewer" } },
+            where: { id: currentUser.id },
+          },
+          { model: User, as: "creator", attributes: ["id", "name", "email"] },
+          { model: User, as: "mentor", attributes: ["id", "name", "email"] },
+          { model: Meeting, as: "meetings" },
+          { model: Task, as: "tasks" },
+        ],
+      });
+    }
+
     throw new Error("Unauthorized");
   }
 
-  static async findById(id) {
+  static async findById(id, currentUser) {
     const cls = await Class.findByPk(id, {
       include: [
         {
@@ -197,6 +216,8 @@ class ClassService {
 
     if (!cls) return null;
 
+    await this.assertCanAccess(id, currentUser);
+
     const menteeStats = await ClassService.computeMenteeStats(
       id,
       (cls.mentees || []).map((m) => m.id),
@@ -216,6 +237,18 @@ class ClassService {
     plain.mentees = menteesWithStats;
 
     return plain;
+  }
+
+  static async assertCanAccess(ClassId, currentUser) {
+    if (currentUser?.role !== ROLES.REVIEWER) return;
+
+    const assignment = await ClassUser.findOne({
+      where: { ClassId, UserId: currentUser.id, roleInClass: "Reviewer" },
+    });
+
+    if (!assignment) {
+      throw new Error("Permission denied");
+    }
   }
 
   /**

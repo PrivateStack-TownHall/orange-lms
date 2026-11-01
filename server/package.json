@@ -8,6 +8,8 @@
     "start": "cross-env NODE_ENV=production node servers.js",
     "dev": "cross-env NODE_ENV=development nodemon servers.js",
     "test": "cross-env NODE_ENV=test jest --runInBand",
+    "test:watch": "cross-env NODE_ENV=test jest --watch",
+    "test:coverage": "cross-env NODE_ENV=test jest --runInBand --coverage",
     "db:create": "sequelize-cli db:create",
     "db:migrate": "sequelize-cli db:migrate",
     "db:seed": "sequelize-cli db:seed:all",
@@ -32,7 +34,8 @@
     "pdfkit": "^0.17.2",
     "pg": "^8.17.2",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.7"
+    "sequelize": "^6.37.7",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "jest": "^30.5.2",

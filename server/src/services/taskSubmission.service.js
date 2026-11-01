@@ -6,6 +6,7 @@ const {
   AssessmentResult,
   SubmissionCriteriaScore,
   TaskCriteria,
+  ClassUser,
 } = require("../models");
 
 const ROLES = require("../constants/roles");
@@ -123,6 +124,40 @@ class TaskSubmissionService {
       });
     }
 
+    if (currentUser.role === ROLES.REVIEWER) {
+      return TaskSubmission.findAll({
+        include: [
+          {
+            model: Task,
+            include: [
+              {
+                model: Class,
+                include: [{
+                  model: User,
+                  as: "reviewers",
+                  attributes: [],
+                  through: { attributes: [], where: { roleInClass: "Reviewer" } },
+                  where: { id: currentUser.id },
+                }],
+              },
+            ],
+          },
+          User,
+          {
+            model: AssessmentResult,
+            include: [
+              {
+                model: SubmissionCriteriaScore,
+                as: "scores",
+                include: [{ model: TaskCriteria, as: "criteria" }],
+              },
+              { model: User, as: "grader", attributes: ["id", "name", "email"] },
+            ],
+          },
+        ],
+      });
+    }
+
     /**
      * Mentee
      */
@@ -183,6 +218,29 @@ class TaskSubmissionService {
       });
     }
 
+    if (currentUser.role === ROLES.REVIEWER) {
+      return TaskSubmission.findAll({
+        where: { TaskId },
+        include: [
+          {
+            model: Task,
+            include: [{
+              model: Class,
+              include: [{
+                model: User,
+                as: "reviewers",
+                attributes: [],
+                through: { attributes: [], where: { roleInClass: "Reviewer" } },
+                where: { id: currentUser.id },
+              }],
+            }],
+          },
+          User,
+          { model: AssessmentResult, include: DETAIL_INCLUDE[2].include },
+        ],
+      });
+    }
+
     /**
      * Mentee
      */
@@ -222,7 +280,12 @@ class TaskSubmissionService {
     const isOwningMentee =
       currentUser.role === ROLES.MENTEE && submission.UserId === currentUser.id;
 
-    if (!isOwnerOrAdmin && !isAssignedMentor && !isOwningMentee) {
+    const isAssignedReviewer = await this.isAssignedReviewer(
+      submission.Task?.ClassId,
+      currentUser,
+    );
+
+    if (!isOwnerOrAdmin && !isAssignedMentor && !isOwningMentee && !isAssignedReviewer) {
       throw new Error("Permission denied");
     }
 
@@ -290,6 +353,54 @@ class TaskSubmissionService {
     }
 
     return submission;
+  }
+
+  static async review(id, data, currentUser, meta = {}) {
+    const submission = await TaskSubmission.findByPk(id, {
+      include: [{ model: Task, include: [Class] }],
+    });
+
+    if (!submission) {
+      throw new Error("Submission not found");
+    }
+
+    const isOwnerOrAdmin = [ROLES.OWNER, ROLES.ADMIN].includes(currentUser.role);
+    const isAssignedMentor =
+      currentUser.role === ROLES.MENTOR &&
+      submission.Task?.Class?.MentorId === currentUser.id;
+    const isAssignedReviewer = await this.isAssignedReviewer(
+      submission.Task?.ClassId,
+      currentUser,
+    );
+
+    if (!isOwnerOrAdmin && !isAssignedMentor && !isAssignedReviewer) {
+      throw new Error("Permission denied");
+    }
+
+    await submission.update(data);
+
+    await logAudit({
+      user: currentUser,
+      action: "UPDATE",
+      resource: "TaskSubmission",
+      resourceId: submission.id,
+      resourceDetail: submission.Task?.name,
+      meta,
+    });
+
+    return submission;
+  }
+
+  static async isAssignedReviewer(ClassId, currentUser) {
+    if (currentUser.role !== ROLES.REVIEWER || !ClassId) {
+      return false;
+    }
+
+    const assignment = await ClassUser.findOne({
+      where: { ClassId, UserId: currentUser.id, roleInClass: "Reviewer" },
+    });
+
+    return Boolean(assignment);
   }
 
   static async delete(id, currentUser, meta = {}) {

@@ -7,6 +7,7 @@ const {
   Class,
   Meeting,
   User,
+  ClassUser,
 } = require("../models");
 
 const ROLES = require("../constants/roles");
@@ -14,7 +15,7 @@ const ROLES = require("../constants/roles");
 const { logAudit, logActivity, notifyUsers } = require("../helpers");
 
 class AssessmentResultService {
-  static getIncludes({ restrictToMentorId } = {}) {
+  static getIncludes({ restrictToMentorId, restrictToReviewerId } = {}) {
     return [
       {
         model: TaskSubmission,
@@ -33,16 +34,27 @@ class AssessmentResultService {
                 ...(restrictToMentorId
                   ? { where: { MentorId: restrictToMentorId } }
                   : {}),
+                ...(restrictToReviewerId
+                  ? {
+                    include: [{
+                      model: User,
+                      as: "reviewers",
+                      attributes: [],
+                      through: { attributes: [], where: { roleInClass: "Reviewer" } },
+                      where: { id: restrictToReviewerId },
+                    }],
+                  }
+                  : {}),
               },
             ],
-            ...(restrictToMentorId ? { required: true } : {}),
+            ...((restrictToMentorId || restrictToReviewerId) ? { required: true } : {}),
           },
           {
             model: User,
             attributes: ["id", "name", "email"],
           },
         ],
-        ...(restrictToMentorId ? { required: true } : {}),
+        ...((restrictToMentorId || restrictToReviewerId) ? { required: true } : {}),
       },
       {
         model: SubmissionCriteriaScore,
@@ -58,7 +70,7 @@ class AssessmentResultService {
   }
 
   static async create(currentUser, data, meta = {}) {
-    if (!["Admin", "Owner", "Mentor"].includes(currentUser.role)) {
+    if (![ROLES.ADMIN, ROLES.OWNER, ROLES.MENTOR, ROLES.REVIEWER].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
 
@@ -91,13 +103,15 @@ class AssessmentResultService {
     const submissionWhere = {};
     const restrictToMentorId =
       currentUser.role === ROLES.MENTOR ? currentUser.id : undefined;
+    const restrictToReviewerId =
+      currentUser.role === ROLES.REVIEWER ? currentUser.id : undefined;
 
     if (currentUser.role === ROLES.MENTEE) {
       submissionWhere.UserId = currentUser.id;
     }
 
     return AssessmentResult.findAll({
-      include: this.getIncludes({ restrictToMentorId }).map((include) =>
+      include: this.getIncludes({ restrictToMentorId, restrictToReviewerId }).map((include) =>
         include.model === TaskSubmission
           ? { ...include, ...(Object.keys(submissionWhere).length ? { where: submissionWhere } : {}) }
           : include,
@@ -119,6 +133,8 @@ class AssessmentResultService {
     const submissionWhere = {};
     const restrictToMentorId =
       currentUser.role === ROLES.MENTOR ? currentUser.id : undefined;
+    const restrictToReviewerId =
+      currentUser.role === ROLES.REVIEWER ? currentUser.id : undefined;
 
     if (currentUser.role === ROLES.MENTEE) {
       submissionWhere.UserId = currentUser.id;
@@ -126,7 +142,7 @@ class AssessmentResultService {
 
     const result = await AssessmentResult.findOne({
       where,
-      include: this.getIncludes({ restrictToMentorId }).map((include) =>
+      include: this.getIncludes({ restrictToMentorId, restrictToReviewerId }).map((include) =>
         include.model === TaskSubmission
           ? { ...include, ...(Object.keys(submissionWhere).length ? { where: submissionWhere } : {}) }
           : include,
@@ -141,7 +157,7 @@ class AssessmentResultService {
   }
 
   static async update(id, data, currentUser, meta = {}) {
-    if (!["Admin", "Owner", "Mentor"].includes(currentUser.role)) {
+    if (![ROLES.ADMIN, ROLES.OWNER, ROLES.MENTOR, ROLES.REVIEWER].includes(currentUser.role)) {
       throw new Error("Permission denied");
     }
 
@@ -175,6 +191,20 @@ class AssessmentResultService {
       submission.Task?.Class?.MentorId !== currentUser.id
     ) {
       throw new Error("Permission denied");
+    }
+
+    if (currentUser.role === ROLES.REVIEWER) {
+      const assignment = await ClassUser.findOne({
+        where: {
+          ClassId: submission.Task?.ClassId,
+          UserId: currentUser.id,
+          roleInClass: "Reviewer",
+        },
+      });
+
+      if (!assignment) {
+        throw new Error("Permission denied");
+      }
     }
 
     return submission;

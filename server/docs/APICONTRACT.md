@@ -23,6 +23,14 @@ also include an `errors` array. The frontend Axios client unwraps successful
 `data` automatically, preserving the existing service and page APIs. This
 contract was standardized in V4 and applies to V1–V4 routes.
 
+## Interactive reference
+
+Swagger UI is served at `/api/docs`; the raw OpenAPI 3.0 document is available
+at `/api/openapi.json`. Authenticate protected operations with the JWT returned
+by `/api/auth/login`, using the `Authorization: Bearer <access_token>` header.
+The Swagger request schemas show both JSON URL fields and multipart upload
+fields where the endpoint accepts a Cloudinary-backed file.
+
 | Route group | Version | Primary purpose |
 | --- | --- | --- |
 | `/auth` | V1 | Registration, login, and current user. |

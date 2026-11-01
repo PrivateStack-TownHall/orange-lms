@@ -24,6 +24,28 @@ describe("API response contract", () => {
     });
   });
 
+  it("exposes the OpenAPI document", async () => {
+    const response = await request(app).get("/api/openapi.json");
+
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({
+      openapi: "3.0.3",
+      info: { title: "Orange LMS API", version: "4.0.0" },
+    });
+    expect(response.body.paths["/calendar/events"].get).toMatchObject({
+      security: [{ bearerAuth: [] }],
+      tags: ["Learning"],
+    });
+  });
+
+  it("serves Swagger UI", async () => {
+    const response = await request(app).get("/api/docs").redirects(1);
+
+    expect(response.status).toBe(200);
+    expect(response.type).toMatch(/html/);
+    expect(response.text).toContain("Orange LMS API Documentation");
+  });
+
   it("returns the standard error contract for an unauthenticated route", async () => {
     const response = await request(app).get("/api/users");
 
@@ -41,6 +63,9 @@ describe("API response contract", () => {
     ["/api/task-criteria", "GET"],
     ["/api/history-classes", "GET"],
     ["/api/history-classes/1/certificate", "POST"],
+    ["/api/calendar/events", "GET"],
+    ["/api/notifications", "GET"],
+    ["/api/reports/dashboard", "GET"],
   ])("protects %s with the standard error contract", async (path, method) => {
     const response = await request(app)[method.toLowerCase()](path);
 

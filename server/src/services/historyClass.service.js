@@ -1,5 +1,3 @@
-const { HistoryClass, Class, User, ClassUser } = require("../models");
-const { logAudit, notifyUsers } = require("../helpers");
 const {
   HistoryClass,
   Class,
@@ -11,7 +9,7 @@ const {
   TaskSubmission,
   Task,
 } = require("../models");
-const { logAudit } = require("../helpers");
+const { logAudit, notifyUsers } = require("../helpers");
 const cloudinary = require("../config/cloudinary");
 const { createCertificateBuffer, makeCertificateId } = require("./certificate.service");
 
